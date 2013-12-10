@@ -1,4 +1,4 @@
-MCPrison
+ModJam3
 ========
 
-Prison mod for ModJam 2013
+My mod for ModJam 2013
