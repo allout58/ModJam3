@@ -19,7 +19,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class PrisonCraft
 {
-    public static CreativeTabs creativeTab = new CreativeTabs("MinecraftSpaceAgency")
+    public static CreativeTabs creativeTab = new CreativeTabs("PrisonCraft")
     {
         @Override
         @SideOnly(Side.CLIENT)
