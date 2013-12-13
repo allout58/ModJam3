@@ -14,15 +14,17 @@ import net.minecraft.tileentity.TileEntity;
 public class TileEntityPrisonManager extends TileEntity implements IInventory
 {
     private ItemStack[] playerInventory;
-    public static final int IVENTORY_SIZE=40;
+    public static final int INVENTORY_SIZE=40;
     
     public static final int START_MAIN=0;
     public static final int START_HOTBAR=32; //??
     public static final int START_ARMOR=36; //??
     
+    private boolean flag=false;
+    
     public TileEntityPrisonManager()
     {
-        playerInventory=new ItemStack[IVENTORY_SIZE];
+        playerInventory=new ItemStack[INVENTORY_SIZE];
     }
     
     public void changeBlocks(NBTTagCompound locs)
@@ -38,10 +40,53 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         
     }
     
+    public void click(EntityPlayerMP player)
+    {
+        if(!flag)
+        {
+            jailPlayer(player);
+            flag=false;
+        }
+        else
+        {
+            unjailPlayer(player);
+            flag=true;
+        }
+    }
+    
     public void jailPlayer(EntityPlayerMP player)
     {
         //Take their inventory
-        
+        for(int i=START_MAIN;i<START_HOTBAR;i++)
+        {
+            playerInventory[i]=player.inventory.mainInventory[i];
+        }
+        for(int i=START_HOTBAR;i<START_ARMOR;i++)
+        {
+            playerInventory[i]=player.inventory.mainInventory[i];
+        }
+        for(int i=START_ARMOR;i<INVENTORY_SIZE;i++)
+        {
+            playerInventory[i]=player.inventory.armorInventory[i-START_ARMOR];
+        }
+        player.inventory.clearInventory(-1, -1);
+    }
+    
+    public void unjailPlayer(EntityPlayerMP player)
+    {
+        //give their inventory
+        for(int i=START_MAIN;i<START_HOTBAR;i++)
+        {
+            player.inventory.mainInventory[i]=playerInventory[i];
+        }
+        for(int i=START_HOTBAR;i<START_ARMOR;i++)
+        {
+            player.inventory.mainInventory[i]=playerInventory[i];
+        }
+        for(int i=START_ARMOR;i<INVENTORY_SIZE;i++)
+        {
+            player.inventory.armorInventory[i-START_ARMOR]=playerInventory[i];
+        }
     }
 
     @Override
