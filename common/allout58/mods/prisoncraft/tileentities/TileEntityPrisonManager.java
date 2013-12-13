@@ -25,7 +25,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         int x2=locs.getInteger("x2");
         int y2=locs.getInteger("y2");
         int z2=locs.getInteger("z2");
-        //loop through each block
+        //loop through each block - todo... ;)
         
     }
 

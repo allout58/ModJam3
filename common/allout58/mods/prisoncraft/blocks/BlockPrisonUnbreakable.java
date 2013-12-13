@@ -17,7 +17,8 @@ public class BlockPrisonUnbreakable extends BlockContainer
     public BlockPrisonUnbreakable(int par1, Material par2Material)
     {
         super(par1, par2Material);
-        setHardness(200.0F);//hopefully unbreakable...
+        setBlockUnbreakable();
+        setResistance(6000000.0F);
         setUnlocalizedName("prisonUnbreakable");
         //setCreativeTab(PrisonCraft.creativeTab);
     }

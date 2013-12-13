@@ -12,6 +12,11 @@ public class TileEntityPrisonUnbreakable extends TileEntity
         return blockID;
     }
     
+    public void setBlockID(int id)
+    {
+        blockID=id;
+    }
+    
     public void wallBroken(int x, int y, int z)
     {
         //reset broken block

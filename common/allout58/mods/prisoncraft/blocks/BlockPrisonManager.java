@@ -18,7 +18,8 @@ public class BlockPrisonManager extends Block
     public BlockPrisonManager(int par1, Material par2Material)
     {
         super(par1, par2Material);
-        setHardness(200.0F);
+        setBlockUnbreakable();
+        setResistance(6000000.0F);
         setUnlocalizedName("prisonManager");
         setCreativeTab(PrisonCraft.creativeTab);
     }

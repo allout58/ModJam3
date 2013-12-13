@@ -6,7 +6,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import allout58.mods.prisoncraft.CommonProxy;
 import allout58.mods.prisoncraft.PrisonCraft;
+import allout58.mods.prisoncraft.blocks.BlockPrisonManager;
 import allout58.mods.prisoncraft.constants.TextureConstants;
+import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -39,10 +41,16 @@ public class ItemConfigWand extends Item
     @Override
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
     {
+        TileEntity te=world.getBlockTileEntity(x, y, z);
+        if(te instanceof TileEntityPrisonManager && stack.stackTagCompound!=null)
+        {
+            ((TileEntityPrisonManager)te).changeBlocks(stack.stackTagCompound);
+        }
         if (player.isSneaking())
         {
             // reset
             stack.stackTagCompound = null;
+            return true;
         }
         if (stack.stackTagCompound == null) stack.stackTagCompound = new NBTTagCompound();
         if (!stack.stackTagCompound.hasKey("x1"))
