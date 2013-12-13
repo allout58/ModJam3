@@ -64,7 +64,6 @@ public class ItemConfigWand extends Item
             stack.stackTagCompound.setInteger("x2", x);
             stack.stackTagCompound.setInteger("y2", y);
             stack.stackTagCompound.setInteger("z2", z);
-//            System.out.println("1:{" + stack.stackTagCompound.getInteger("x1") + ", " + stack.stackTagCompound.getInteger("y1") + ", " + stack.stackTagCompound.getInteger("z1") + "} 2:{" + stack.stackTagCompound.getInteger("x2") + ", " + stack.stackTagCompound.getInteger("y2") + ", " + stack.stackTagCompound.getInteger("z2") + "}");
         }
 
         return true;

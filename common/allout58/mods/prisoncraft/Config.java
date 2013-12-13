@@ -9,6 +9,7 @@ public class Config
     public static int prisonUnbreak;
     //Items
     public static int configWand;
+    //public static int shackles;
     
     public static void init(Configuration config)
     {

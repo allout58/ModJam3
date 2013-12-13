@@ -20,7 +20,6 @@ public class BlockPrisonUnbreakable extends BlockContainer
         setBlockUnbreakable();
         setResistance(6000000.0F);
         setUnlocalizedName("prisonUnbreakable");
-        //setCreativeTab(PrisonCraft.creativeTab);
     }
     
     @Override
