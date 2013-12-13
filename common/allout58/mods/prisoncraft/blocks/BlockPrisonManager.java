@@ -1,6 +1,7 @@
 package allout58.mods.prisoncraft.blocks;
 
 import allout58.mods.prisoncraft.PrisonCraft;
+import allout58.mods.prisoncraft.PrisonCraftWorldSave;
 import allout58.mods.prisoncraft.constants.TextureConstants;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonUnbreakable;
@@ -59,7 +60,11 @@ public class BlockPrisonManager extends BlockContainer
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack par6ItemStack)
     {
-        
+        TileEntity te=world.getBlockTileEntity(x, y, z);
+        if(te instanceof TileEntityPrisonManager)
+        {
+            PrisonCraftWorldSave.forWorld(world).tesList.add((TileEntityPrisonManager)te);
+        }
     }
     
     @Override

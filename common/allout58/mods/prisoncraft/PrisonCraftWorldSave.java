@@ -1,6 +1,10 @@
 package allout58.mods.prisoncraft;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import net.minecraft.world.storage.MapStorage;
@@ -8,6 +12,8 @@ import net.minecraft.world.storage.MapStorage;
 public class PrisonCraftWorldSave extends WorldSavedData
 {
     public static final String key = "prisoncraft";
+
+    public List tesList = new ArrayList();
 
     public PrisonCraftWorldSave()
     {
@@ -29,17 +35,26 @@ public class PrisonCraftWorldSave extends WorldSavedData
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbttagcompound)
+    public void readFromNBT(NBTTagCompound tags)
     {
-        // TODO Auto-generated method stub
-
+        if (tags.hasKey("NumTEs"))
+        {
+            int size = tags.getInteger("NumTEs");
+        }
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbttagcompound)
+    public void writeToNBT(NBTTagCompound tags)
     {
-        // TODO Auto-generated method stub
-
+        tags.setInteger("NumTEs", tesList.size());
+        for (int i = 0; i < tesList.size(); i++)
+        {
+            NBTTagCompound t = new NBTTagCompound();
+            t.setInteger("x", ((TileEntity) tesList.get(i)).xCoord);
+            t.setInteger("y", ((TileEntity) tesList.get(i)).yCoord);
+            t.setInteger("z", ((TileEntity) tesList.get(i)).zCoord);
+            tags.setCompoundTag(i + "", t);// HACKY! :D
+        }
     }
 
 }
