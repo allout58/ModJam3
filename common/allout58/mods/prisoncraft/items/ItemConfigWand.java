@@ -4,6 +4,7 @@ import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import allout58.mods.prisoncraft.CommonProxy;
 import allout58.mods.prisoncraft.constants.TextureConstants;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -19,7 +20,7 @@ public class ItemConfigWand extends Item
     {
         super(id);
         setUnlocalizedName("prisonConfigWand");
-        setTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + getUnlocalizedName());
+        setTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + getUnlocalizedName().substring(5));
     }
 
     @Override
@@ -48,7 +49,7 @@ public class ItemConfigWand extends Item
             stack.stackTagCompound.setInteger("x2", x);
             stack.stackTagCompound.setInteger("y2", y);
             stack.stackTagCompound.setInteger("z2", z);
-            System.out.println("1:{" + stack.stackTagCompound.getInteger("x1") + ", " + stack.stackTagCompound.getInteger("y1") + ", " + stack.stackTagCompound.getInteger("z1") + "} 2:{" + stack.stackTagCompound.getInteger("x2") + ", " + stack.stackTagCompound.getInteger("y2") + ", " + stack.stackTagCompound.getInteger("z2") + "}");
+//            System.out.println("1:{" + stack.stackTagCompound.getInteger("x1") + ", " + stack.stackTagCompound.getInteger("y1") + ", " + stack.stackTagCompound.getInteger("z1") + "} 2:{" + stack.stackTagCompound.getInteger("x2") + ", " + stack.stackTagCompound.getInteger("y2") + ", " + stack.stackTagCompound.getInteger("z2") + "}");
         }
 
         return true;
@@ -59,14 +60,22 @@ public class ItemConfigWand extends Item
     /** Allows items to add custom lines of information to the mouseover description. */
     public void addInformation(ItemStack stack, EntityPlayer entityPlayer, List infoList, boolean par4)
     {
-        
-        if (stack.stackTagCompound != null)
+        infoList.add("Right-click on two blocks to set");
+        infoList.add("the bounds of the jail.");
+        if (CommonProxy.shouldAddAdditionalInfo())
         {
-            infoList.add(String.format("Block 1 {X: %d, Y: %d, Z: %d}", stack.stackTagCompound.getInteger("x1"), stack.stackTagCompound.getInteger("y1"), stack.stackTagCompound.getInteger("z1")));
-            if(stack.stackTagCompound.hasKey("x2"))
+            if (stack.stackTagCompound != null)
             {
-                infoList.add(String.format("Block 2 {X: %d, Y: %d, Z: %d}", stack.stackTagCompound.getInteger("x2"), stack.stackTagCompound.getInteger("y2"), stack.stackTagCompound.getInteger("z2")));
+                infoList.add(String.format("Block 1 {X: %d, Y: %d, Z: %d}", stack.stackTagCompound.getInteger("x1"), stack.stackTagCompound.getInteger("y1"), stack.stackTagCompound.getInteger("z1")));
+                if (stack.stackTagCompound.hasKey("x2"))
+                {
+                    infoList.add(String.format("Block 2 {X: %d, Y: %d, Z: %d}", stack.stackTagCompound.getInteger("x2"), stack.stackTagCompound.getInteger("y2"), stack.stackTagCompound.getInteger("z2")));
+                }
             }
+        }
+        else
+        {
+            infoList.add(CommonProxy.additionalInfoInstructions());
         }
     }
 }
