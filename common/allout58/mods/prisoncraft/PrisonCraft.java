@@ -4,6 +4,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.Configuration;
 import allout58.mods.prisoncraft.blocks.BlockList;
+import allout58.mods.prisoncraft.commands.JailCommand;
+import allout58.mods.prisoncraft.commands.UnJailCommand;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.items.ItemList;
 import allout58.mods.prisoncraft.tileentities.TileEntityList;
@@ -11,6 +13,7 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -46,5 +49,12 @@ public class PrisonCraft
         BlockList.init();
         ItemList.init();
         TileEntityList.init();
+    }
+    
+    @EventHandler
+    public void serverLoad(FMLServerStartingEvent event)
+    {
+      event.registerServerCommand(new JailCommand());
+      event.registerServerCommand(new UnJailCommand());
     }
 }

@@ -19,7 +19,6 @@ public class JailCommand implements ICommand
     @Override
     public int compareTo(Object arg0)
     {
-        // TODO Auto-generated method stub
         return 0;
     }
 
@@ -46,29 +45,27 @@ public class JailCommand implements ICommand
     {
         if(astring.length==0)
         {
-            icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"))
+            icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
         }
+        icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName()+" sends "+astring[0]+" to jail..."));
     }
 
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender icommandsender)
     {
-        // TODO Auto-generated method stub
-        return false;
+        return true;
     }
 
     @Override
     public List addTabCompletionOptions(ICommandSender icommandsender, String[] astring)
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     public boolean isUsernameIndex(String[] astring, int i)
     {
-        // TODO Auto-generated method stub
-        return false;
+        return i==0;
     }
 
 }
