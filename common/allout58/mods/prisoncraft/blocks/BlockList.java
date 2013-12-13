@@ -12,7 +12,7 @@ public class BlockList
     
     public static void init()
     {
-        prisonMan=new BlockPrisonMaintainer(Config.prisonManager, Material.rock);
+        prisonMan=new BlockPrisonManager(Config.prisonManager, Material.rock);
         prisonUnbreak=new BlockPrisonUnbreakable(Config.prisonUnbreak, Material.rock);
         
         GameRegistry.registerBlock(prisonMan,"prisonMan");
