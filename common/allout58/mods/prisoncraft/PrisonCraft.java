@@ -4,6 +4,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.Configuration;
 import allout58.mods.prisoncraft.blocks.BlockList;
+import allout58.mods.prisoncraft.items.ItemList;
 import allout58.mods.prisoncraft.tileentities.TileEntityList;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -42,6 +43,7 @@ public class PrisonCraft
         Config.init(new Configuration(event.getSuggestedConfigurationFile()));
         
         BlockList.init();
+        ItemList.init();
         TileEntityList.init();
     }
 }

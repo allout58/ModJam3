@@ -7,6 +7,8 @@ public class Config
     //Blocks
     public static int prisonManager;
     public static int prisonUnbreak;
+    //Items
+    public static int configWand;
     
     public static void init(Configuration config)
     {
@@ -14,6 +16,8 @@ public class Config
         
         prisonManager=config.getBlock("prisonManager", 4000).getInt();
         prisonUnbreak=config.getBlock("prisonUnbreak", 4001).getInt();
+        
+        configWand=config.getItem("configWand", 8000).getInt();
         
         config.save();
     }
