@@ -2,20 +2,24 @@ package allout58.mods.prisoncraft.blocks;
 
 import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.constants.TextureConstants;
+import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
+import allout58.mods.prisoncraft.tileentities.TileEntityPrisonUnbreakable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
-public class BlockPrisonManager extends Block
+public class BlockPrisonManager extends BlockContainer
 {
     public Icon top, bottom, side;
 
@@ -59,12 +63,23 @@ public class BlockPrisonManager extends Block
     }
     
     @Override
+    public TileEntity createNewTileEntity(World world)
+    {
+        return new TileEntityPrisonManager();
+    }
+    
+    @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
     {
         super.onBlockActivated(world, x, y, z, entityPlayer, par6, par7, par8, par9);
         if (entityPlayer.isSneaking()) return false;
         else
         {
+            TileEntity te=world.getBlockTileEntity(x, y, z);
+            if(te instanceof TileEntityPrisonManager)
+            {
+                ((TileEntityPrisonManager)te).click(entityPlayer);
+            }
             return true;
         }
     }

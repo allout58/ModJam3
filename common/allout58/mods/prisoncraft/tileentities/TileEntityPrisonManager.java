@@ -40,21 +40,21 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         
     }
     
-    public void click(EntityPlayerMP player)
+    public void click(EntityPlayer player)
     {
         if(!flag)
         {
             jailPlayer(player);
-            flag=false;
+            flag=true;
         }
         else
         {
             unjailPlayer(player);
-            flag=true;
+            flag=false;
         }
     }
     
-    public void jailPlayer(EntityPlayerMP player)
+    public void jailPlayer(EntityPlayer player)
     {
         //Take their inventory
         for(int i=START_MAIN;i<START_HOTBAR;i++)
@@ -72,7 +72,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         player.inventory.clearInventory(-1, -1);
     }
     
-    public void unjailPlayer(EntityPlayerMP player)
+    public void unjailPlayer(EntityPlayer player)
     {
         //give their inventory
         for(int i=START_MAIN;i<START_HOTBAR;i++)
