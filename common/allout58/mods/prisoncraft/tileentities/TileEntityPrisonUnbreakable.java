@@ -4,7 +4,7 @@ import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityPrisonUnbreakable extends TileEntity
 {
-    private int blockID=2;
+    private int blockID=1;
     
     public int getBlockID()
     {
