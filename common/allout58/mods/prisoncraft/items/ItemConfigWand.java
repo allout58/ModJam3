@@ -5,6 +5,7 @@ import java.util.List;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import allout58.mods.prisoncraft.CommonProxy;
+import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.constants.TextureConstants;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -21,6 +22,7 @@ public class ItemConfigWand extends Item
         super(id);
         setUnlocalizedName("prisonConfigWand");
         setTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + getUnlocalizedName().substring(5));
+        setCreativeTab(PrisonCraft.creativeTab);
     }
 
     @Override
@@ -37,6 +39,11 @@ public class ItemConfigWand extends Item
     @Override
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
     {
+        if (player.isSneaking())
+        {
+            // reset
+            stack.stackTagCompound = null;
+        }
         if (stack.stackTagCompound == null) stack.stackTagCompound = new NBTTagCompound();
         if (!stack.stackTagCompound.hasKey("x1"))
         {

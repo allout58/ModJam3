@@ -1,6 +1,6 @@
 package allout58.mods.prisoncraft.blocks;
 
-import allout58.mods.MSA.constants.MSATextures;
+import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.constants.TextureConstants;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -20,6 +20,7 @@ public class BlockPrisonManager extends Block
         super(par1, par2Material);
         setHardness(200.0F);
         setUnlocalizedName("prisonManager");
+        setCreativeTab(PrisonCraft.creativeTab);
     }
 
     @Override
