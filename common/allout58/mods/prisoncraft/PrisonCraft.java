@@ -10,6 +10,7 @@ import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.items.ItemList;
 import allout58.mods.prisoncraft.tileentities.TileEntityList;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -40,6 +41,9 @@ public class PrisonCraft
     
     @Instance("PrisonCraft")
     public static PrisonCraft instance;
+    
+    @SidedProxy(clientSide = "allout58.mods.prisoncraft.client.ClientProxy", serverSide = "allout58.mods.prisoncraft.CommonProxy")
+    public static CommonProxy proxy;
     
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)

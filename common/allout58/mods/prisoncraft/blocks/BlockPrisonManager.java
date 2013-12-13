@@ -7,8 +7,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
 public class BlockPrisonManager extends Block
@@ -46,5 +50,22 @@ public class BlockPrisonManager extends Block
     {
         this.side = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side");
         this.bottom = this.top = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":"+this.getUnlocalizedName().substring(5) + "_top_bottom");
+    }
+    
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack par6ItemStack)
+    {
+        
+    }
+    
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
+    {
+        super.onBlockActivated(world, x, y, z, entityPlayer, par6, par7, par8, par9);
+        if (entityPlayer.isSneaking()) return false;
+        else
+        {
+            return true;
+        }
     }
 }

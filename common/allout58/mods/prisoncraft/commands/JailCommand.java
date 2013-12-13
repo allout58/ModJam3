@@ -10,12 +10,13 @@ import net.minecraft.util.ChatMessageComponent;
 public class JailCommand implements ICommand
 {
     private List aliases;
-    
+
     public JailCommand()
     {
-        this.aliases=new ArrayList();
+        this.aliases = new ArrayList();
         this.aliases.add("jail");
     }
+
     @Override
     public int compareTo(Object arg0)
     {
@@ -31,7 +32,7 @@ public class JailCommand implements ICommand
     @Override
     public String getCommandUsage(ICommandSender icommandsender)
     {
-        return "jail <playername>";
+        return "/jail <playername>";
     }
 
     @Override
@@ -43,11 +44,14 @@ public class JailCommand implements ICommand
     @Override
     public void processCommand(ICommandSender icommandsender, String[] astring)
     {
-        if(astring.length==0)
+        if (astring.length == 0)
         {
             icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
         }
-        icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName()+" sends "+astring[0]+" to jail..."));
+        else
+        {
+            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName() + " sends " + astring[0] + " to jail..."));
+        }
     }
 
     @Override
@@ -65,7 +69,8 @@ public class JailCommand implements ICommand
     @Override
     public boolean isUsernameIndex(String[] astring, int i)
     {
-        return i==0;
+        //return i == 0;
+        return true;
     }
 
 }
