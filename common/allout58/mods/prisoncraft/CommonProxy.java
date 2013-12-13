@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.Side;
 
 public class CommonProxy
 {
+    
     public void registerRenderers()
     {
         
