@@ -59,9 +59,14 @@ public class ItemConfigWand extends Item
     /** Allows items to add custom lines of information to the mouseover description. */
     public void addInformation(ItemStack stack, EntityPlayer entityPlayer, List infoList, boolean par4)
     {
+        
         if (stack.stackTagCompound != null)
         {
-            infoList.add(String.format("X: %d, Y: %d, Z: %d", stack.stackTagCompound.getInteger("targetX"), stack.stackTagCompound.getInteger("targetY"), stack.stackTagCompound.getInteger("targetZ")));
+            infoList.add(String.format("Block 1 {X: %d, Y: %d, Z: %d}", stack.stackTagCompound.getInteger("x1"), stack.stackTagCompound.getInteger("y1"), stack.stackTagCompound.getInteger("z1")));
+            if(stack.stackTagCompound.hasKey("x2"))
+            {
+                infoList.add(String.format("Block 2 {X: %d, Y: %d, Z: %d}", stack.stackTagCompound.getInteger("x2"), stack.stackTagCompound.getInteger("y2"), stack.stackTagCompound.getInteger("z2")));
+            }
         }
     }
 }
