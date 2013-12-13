@@ -1,5 +1,6 @@
 package allout58.mods.prisoncraft;
 
+import allout58.mods.prisoncraft.blocks.BlockList;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -16,5 +17,6 @@ public class PrisonCraft
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+        BlockList.init();
     }
 }
