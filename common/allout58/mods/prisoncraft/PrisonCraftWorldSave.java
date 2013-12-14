@@ -17,10 +17,14 @@ public class PrisonCraftWorldSave extends WorldSavedData
 
     private List tesList = new ArrayList();
 
-    public PrisonCraftWorldSave(String key)
+    public PrisonCraftWorldSave()
     {
-        if(key!=this.key)throw new Shit();
         super(key);
+    }
+    
+    public PrisonCraftWorldSave(String keyIn)
+    {
+        super(PrisonCraftWorldSave.key);
     }
     
     public List getTesList()

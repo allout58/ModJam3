@@ -96,6 +96,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     {
         hasJailedPlayer = false;
         jailedPlayer = null;
+        playerName="";
         // give their inventory
 
         for (int i = START_MAIN; i < START_HOTBAR; i++)
