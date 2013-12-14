@@ -6,6 +6,7 @@ public class TileEntityPrisonUnbreakable extends TileEntity
 {
     private int blockID=1;
    
+    private Boolean isDirty=false;
     
     public int getBlockID()
     {
@@ -15,10 +16,21 @@ public class TileEntityPrisonUnbreakable extends TileEntity
     public void setBlockID(int id)
     {
         blockID=id;
+        isDirty=true;
     }
     
     public void wallBroken(int x, int y, int z)
     {
         //reset broken block
+    }
+    
+    @Override
+    public void updateEntity()
+    {
+        if (isDirty)
+        {
+            isDirty = false;
+            worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+        }
     }
 }

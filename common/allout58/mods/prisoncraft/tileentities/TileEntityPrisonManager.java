@@ -5,6 +5,7 @@ import java.util.Vector;
 import allout58.mods.prisoncraft.blocks.BlockList;
 import allout58.mods.prisoncraft.constants.ModConstants;
 
+import net.minecraft.block.Block;
 import net.minecraft.command.CommandBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -82,12 +83,13 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                     int id=worldObj.getBlockId(i, j, k);
                     if(isValidID(id))
                     {
-                        worldObj.setBlock(i, j, k, BlockList.prisonUnbreak.blockID, 0, 3);
-                        TileEntity te=worldObj.getBlockTileEntity(i, j, k);
-                        if(te instanceof TileEntityPrisonUnbreakable)
-                        {
-                            ((TileEntityPrisonUnbreakable)te).setBlockID(id);
-                        }
+                        worldObj.setBlock(i, j, k, Block.fire.blockID);
+//                        worldObj.setBlock(i, j, k, BlockList.prisonUnbreak.blockID, 0, 3);
+//                        TileEntity te=worldObj.getBlockTileEntity(i, j, k);
+//                        if(te instanceof TileEntityPrisonUnbreakable)
+//                        {
+//                            ((TileEntityPrisonUnbreakable)te).setBlockID(id);
+//                        }
                     }
                 }
             }
