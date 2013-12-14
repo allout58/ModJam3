@@ -1,6 +1,7 @@
 package allout58.mods.prisoncraft.commands;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import allout58.mods.prisoncraft.PrisonCraftWorldSave;
@@ -62,18 +63,19 @@ public class JailCommand implements ICommand
             }
             else
             {
+                EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[0]);
                 boolean foundOpen = false;
                 for (int i = 0; i < ws.getTesList().size(); i++)
                 {
                     TileEntityPrisonManager te = (TileEntityPrisonManager) ws.getTesList().get(i);
                     if (!te.hasJailedPlayer)
                     {
-                        EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[0]);
                         if (player != null)
                         {
                             te.jailPlayer(player);
                             foundOpen = true;
                         }
+                        icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No player with that name found"));
                     }
                 }
                 if (foundOpen) icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName() + " sends " + astring[0] + " to jail..."));
@@ -91,7 +93,12 @@ public class JailCommand implements ICommand
     @Override
     public List addTabCompletionOptions(ICommandSender icommandsender, String[] astring)
     {
-        return null;
+        final List<String> MATCHES = new LinkedList<String>();
+        final String ARG_LC = astring[0].toLowerCase();
+        for (String un : MinecraftServer.getServer().getAllUsernames())
+                if(un.toLowerCase().startsWith(ARG_LC))
+                        MATCHES.add(un);
+        return MATCHES.isEmpty() ? null : MATCHES;
     }
 
     @Override
