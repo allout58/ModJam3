@@ -84,7 +84,7 @@ public class UnJailCommand implements ICommand
                         }
                     }
                 }
-                if (foundOpen) icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName() + " frees " + astring[0] + " to jail..."));//TODO Localize
+                if (foundOpen) icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName() + " frees " + astring[0] + " from jail..."));//TODO Localize
                 else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No player with that name found"));//TODO Localize
             }
         }

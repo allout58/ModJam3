@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import allout58.mods.prisoncraft.CommonProxy;
 import allout58.mods.prisoncraft.PrisonCraft;
+import allout58.mods.prisoncraft.blocks.BlockList;
 import allout58.mods.prisoncraft.blocks.BlockPrisonManager;
 import allout58.mods.prisoncraft.constants.TextureConstants;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
@@ -50,6 +51,7 @@ public class ItemConfigWand extends Item
             stack.stackTagCompound = null;
             return true;
         }
+        if(world.getBlockId(x, y, z)==BlockList.prisonMan.blockID) return false;
         if (stack.stackTagCompound == null) stack.stackTagCompound = new NBTTagCompound();
         if (!stack.stackTagCompound.hasKey("x1"))
         {

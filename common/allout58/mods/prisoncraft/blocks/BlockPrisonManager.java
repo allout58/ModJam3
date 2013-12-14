@@ -51,70 +51,75 @@ public class BlockPrisonManager extends BlockContainer
         if (side == ForgeDirection.UP.ordinal()) return this.top;
         return this.side;
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister ir)
     {
         this.side = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side");
-        this.bottom = this.top = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":"+this.getUnlocalizedName().substring(5) + "_top_bottom");
+        this.bottom = this.top = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_top_bottom");
     }
-    
+
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack par6ItemStack)
     {
-        TileEntity te=world.getBlockTileEntity(x, y, z);
-        if(te instanceof TileEntityPrisonManager)
+        TileEntity te = world.getBlockTileEntity(x, y, z);
+        if (te instanceof TileEntityPrisonManager)
         {
-            PrisonCraftWorldSave.forWorld(world).getTesList().add((TileEntityPrisonManager)te);
+            PrisonCraftWorldSave.forWorld(world).getTesList().add((TileEntityPrisonManager) te);
         }
     }
-    
+
     @Override
     public TileEntity createNewTileEntity(World world)
     {
         return new TileEntityPrisonManager();
     }
-    
+
     @Override
     public void breakBlock(World world, int x, int y, int z, int par5, int par6)
     {
         TileEntity logic = world.getBlockTileEntity(x, y, z);
         if (logic instanceof TileEntityPrisonManager)
         {
-            PrisonCraftWorldSave.forWorld(world).getTesList().remove((TileEntityPrisonManager)logic);
+            PrisonCraftWorldSave.forWorld(world).getTesList().remove((TileEntityPrisonManager) logic);
         }
         super.breakBlock(world, x, y, z, par5, par6);
     }
-    
+
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
     {
         super.onBlockActivated(world, x, y, z, entityPlayer, par6, par7, par8, par9);
         /*
-        TileEntity te=world.getBlockTileEntity(x, y, z);
-        if(te instanceof TileEntityPrisonManager && stack.stackTagCompound!=null)
+         * TileEntity te=world.getBlockTileEntity(x, y, z); if(te instanceof
+         * TileEntityPrisonManager && stack.stackTagCompound!=null) {
+         * ((TileEntityPrisonManager)te).changeBlocks(stack.stackTagCompound); }
+         */
+        TileEntity te = world.getBlockTileEntity(x, y, z);
+        if (te instanceof TileEntityPrisonManager)
         {
-            ((TileEntityPrisonManager)te).changeBlocks(stack.stackTagCompound);
-        }
-        */
-        TileEntity te=world.getBlockTileEntity(x, y, z);
-        if(te instanceof TileEntityPrisonUnbreakable && entityPlayer.inventory.getCurrentItem().itemID==ItemList.configWand.itemID && entityPlayer.inventory.getCurrentItem().stackTagCompound!=null)
-        {
-            ((TileEntityPrisonManager)te).changeBlocks(entityPlayer.inventory.getCurrentItem().stackTagCompound);
-            return true;
+            if (entityPlayer.inventory.getCurrentItem() != null)
+            {
+                if (entityPlayer.inventory.getCurrentItem().itemID == ItemList.configWand.itemID)
+                {
+                    if (entityPlayer.inventory.getCurrentItem().stackTagCompound != null)
+                    {
+                        ((TileEntityPrisonManager) te).changeBlocks(entityPlayer.inventory.getCurrentItem().stackTagCompound);
+                        return true;
+                    }
+                }
+            }
         }
         if (entityPlayer.isSneaking()) return false;
         else
         {
-            if(te instanceof TileEntityPrisonManager && !te.worldObj.isRemote)
+            if (te instanceof TileEntityPrisonManager && !te.worldObj.isRemote)
             {
-                ChatMessageComponent chat=new ChatMessageComponent();
+                ChatMessageComponent chat = new ChatMessageComponent();
                 chat.addKey("string.playerInJail");
-                if(((TileEntityPrisonManager)te).hasJailedPlayer)
-                    chat.addText(((TileEntityPrisonManager)te).playerName);
-                else
-                    chat.addKey("string.noOne");
+                if (((TileEntityPrisonManager) te).hasJailedPlayer) chat.addText(((TileEntityPrisonManager) te).playerName);
+                else chat.addKey("string.noOne");
                 entityPlayer.sendChatToPlayer(chat);
             }
             return true;
