@@ -66,7 +66,7 @@ public class UnJailCommand implements ICommand
             PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(icommandsender.getEntityWorld());
             if (ws.getTesList().size() == 0)
             {
-                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No prison found in world"));
+                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No prison found in world"));//TODO Localize
             }
             else
             {
@@ -84,8 +84,8 @@ public class UnJailCommand implements ICommand
                         }
                     }
                 }
-                if (foundOpen) icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName() + " frees " + astring[0] + " to jail..."));
-                else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No player with that name found"));
+                if (foundOpen) icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName() + " frees " + astring[0] + " to jail..."));//TODO Localize
+                else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No player with that name found"));//TODO Localize
             }
         }
     }

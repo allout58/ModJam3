@@ -9,11 +9,13 @@ import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.blocks.BlockPrisonManager;
 import allout58.mods.prisoncraft.constants.TextureConstants;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
+import net.minecraft.client.gui.ChatLine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.World;
 
 public class ItemConfigWand extends Item
@@ -25,6 +27,7 @@ public class ItemConfigWand extends Item
         setUnlocalizedName("prisonConfigWand");
         setTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + getUnlocalizedName().substring(5));
         setCreativeTab(PrisonCraft.creativeTab);
+        setMaxStackSize(1);
     }
 
     @Override
@@ -55,15 +58,36 @@ public class ItemConfigWand extends Item
         if (stack.stackTagCompound == null) stack.stackTagCompound = new NBTTagCompound();
         if (!stack.stackTagCompound.hasKey("x1"))
         {
+            //change to int array
             stack.stackTagCompound.setInteger("x1", x);
             stack.stackTagCompound.setInteger("y1", y);
             stack.stackTagCompound.setInteger("z1", z);
+            player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.nextpt"));
         }
         else if (!stack.stackTagCompound.hasKey("x2"))
         {
+            //change to int array
             stack.stackTagCompound.setInteger("x2", x);
             stack.stackTagCompound.setInteger("y2", y);
             stack.stackTagCompound.setInteger("z2", z);
+            player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.tpin"));
+        }
+        else if (!stack.stackTagCompound.hasKey("tpIn"))
+        {
+            int coord[]=new int[3];
+            coord[0]=x;
+            coord[1]=y;
+            coord[2]=z;
+            stack.stackTagCompound.setIntArray("tpIn", coord);
+            player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.tpout"));
+        }
+        else if (!stack.stackTagCompound.hasKey("tpOut"))
+        {
+            int coord[]=new int[3];
+            coord[0]=x;
+            coord[1]=y;
+            coord[2]=z;
+            stack.stackTagCompound.setIntArray("tpOut", coord);
         }
 
         return true;
@@ -74,6 +98,7 @@ public class ItemConfigWand extends Item
     /** Allows items to add custom lines of information to the mouseover description. */
     public void addInformation(ItemStack stack, EntityPlayer entityPlayer, List infoList, boolean par4)
     {
+        //TODO See if this can be localized
         infoList.add("Right-click on two blocks to set");
         infoList.add("the bounds of the jail.");
         if (CommonProxy.shouldAddAdditionalInfo())

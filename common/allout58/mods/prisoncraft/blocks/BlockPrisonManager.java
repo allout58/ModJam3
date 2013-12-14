@@ -97,11 +97,11 @@ public class BlockPrisonManager extends BlockContainer
             if(te instanceof TileEntityPrisonManager)
             {
                 ChatMessageComponent chat=new ChatMessageComponent();
-                chat.addKey("playerInJail");
+                chat.addKey("string.playerInJail");
                 if(((TileEntityPrisonManager)te).hasJailedPlayer)
                     chat.addText(((TileEntityPrisonManager)te).playerName);
                 else
-                    chat.addKey("noOne");
+                    chat.addKey("string.noOne");
                 entityPlayer.sendChatToPlayer(chat);
             }
             return true;

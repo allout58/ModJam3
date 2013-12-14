@@ -47,6 +47,8 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     public void changeBlocks(NBTTagCompound locs)
     {
+        tpCoordIn=locs.getIntArray("tpIn");
+        tpCoordOut=locs.getIntArray("tpOut");
         // give xyz names
         int x1 = locs.getInteger("x1");
         int y1 = locs.getInteger("y1");
@@ -83,7 +85,6 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                     int id=worldObj.getBlockId(i, j, k);
                     if(isValidID(id))
                     {
-//                        worldObj.setBlock(i, j, k, Block.fire.blockID);
                         worldObj.setBlock(i, j, k, BlockList.prisonUnbreak.blockID, 0, 3);
                         TileEntity te=worldObj.getBlockTileEntity(i, j, k);
                         if(te instanceof TileEntityPrisonUnbreakable)
@@ -125,12 +126,12 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     public void jailPlayer(EntityPlayer player)
     {
         isDirty = true;
-        tpCoordIn[0] = xCoord;
-        tpCoordIn[1] = yCoord + 1;
-        tpCoordIn[2] = zCoord;
-        tpCoordOut[0] = xCoord + 5;
-        tpCoordOut[1] = yCoord + 1;
-        tpCoordOut[2] = zCoord;
+//        tpCoordIn[0] = xCoord;
+//        tpCoordIn[1] = yCoord + 1;
+//        tpCoordIn[2] = zCoord;
+//        tpCoordOut[0] = xCoord + 5;
+//        tpCoordOut[1] = yCoord + 1;
+//        tpCoordOut[2] = zCoord;
         jailedPlayer = player;
         playerName = player.username;
         hasJailedPlayer = true;

@@ -8,3 +8,6 @@ itemGroup.PrisonCraft=PrisonCraft
 string.invalidArgument=Invalid Arguments
 string.playerInJail=Player currently in this jail is 
 string.noOne=no one
+string.configwand.nextpt=Now click the other corner of the cell.
+string.configwand.tpin=Now click where you want the jailed player to be teleported to.
+string.configwand.tpout=Now click where you want the released player to be teleported to.
