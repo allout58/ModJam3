@@ -123,7 +123,8 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     @Override
     public void readFromNBT(NBTTagCompound tags)
     {
-        hasJailedPlayer=tags.getBoolean(")
+        hasJailedPlayer=tags.getBoolean("HasJailedPlayer");
+        tpCoord=tags.getIntArray("tpCoord");
         NBTTagList tagList = tags.getTagList("Items");
         playerInventory = new ItemStack[this.getSizeInventory()];
         for (int i = 0; i < tagList.tagCount(); ++i)
