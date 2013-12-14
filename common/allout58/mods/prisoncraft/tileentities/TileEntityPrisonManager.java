@@ -69,9 +69,8 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     {
         jailedPlayer=player;
         hasJailedPlayer=true;
-        player.posX=tpCoord[0];
-        player.posY=tpCoord[1];
-        player.posZ=tpCoord[2];
+        player.mountEntity(null);
+        player.setPositionAndUpdate(tpCoord[0], tpCoord[1], tpCoord[2]);
         //Take their inventory
         for(int i=START_MAIN;i<START_HOTBAR;i++)
         {
@@ -108,9 +107,6 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             player.inventory.armorInventory[i-START_ARMOR]=playerInventory[i];
         }
         player.removePotionEffect(Potion.moveSpeed.id);
-        player.posX=player.prevPosX;
-        player.posY=player.prevPosY;
-        player.posZ=player.prevPosZ;
     }
 
     @Override
