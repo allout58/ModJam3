@@ -9,6 +9,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityPrisonManager extends TileEntity implements IInventory
@@ -20,7 +22,9 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     public static final int START_HOTBAR=32; //??
     public static final int START_ARMOR=36; //??
     
-    private boolean flag=false;
+    public boolean hasJailedPlayer=false;
+    
+    private String jailedPlayerName;
     
     public TileEntityPrisonManager()
     {
@@ -42,20 +46,22 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     
     public void click(EntityPlayer player)
     {
-        if(!flag)
+        if(!hasJailedPlayer)
         {
             jailPlayer(player);
-            flag=true;
+            
         }
         else
         {
             unjailPlayer(player);
-            flag=false;
+            hasJailedPlayer=false;
         }
     }
     
     public void jailPlayer(EntityPlayer player)
     {
+        jailedPlayerName=player.username;
+        hasJailedPlayer=true;
         //Take their inventory
         for(int i=START_MAIN;i<START_HOTBAR;i++)
         {
@@ -70,11 +76,13 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             playerInventory[i]=player.inventory.armorInventory[i-START_ARMOR];
         }
         player.inventory.clearInventory(-1, -1);
+        player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id,200,128,false));
     }
     
     public void unjailPlayer(EntityPlayer player)
     {
         //give their inventory
+        hasJailedPlayer=false;
         for(int i=START_MAIN;i<START_HOTBAR;i++)
         {
             player.inventory.mainInventory[i]=playerInventory[i];
@@ -87,6 +95,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         {
             player.inventory.armorInventory[i-START_ARMOR]=playerInventory[i];
         }
+        player.removePotionEffect(Potion.moveSpeed.id);
     }
 
     @Override
