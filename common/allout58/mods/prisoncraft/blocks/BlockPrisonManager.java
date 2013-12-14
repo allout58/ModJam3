@@ -16,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -95,7 +96,13 @@ public class BlockPrisonManager extends BlockContainer
             TileEntity te=world.getBlockTileEntity(x, y, z);
             if(te instanceof TileEntityPrisonManager)
             {
-                ((TileEntityPrisonManager)te).click(entityPlayer);
+                ChatMessageComponent chat=new ChatMessageComponent();
+                chat.addKey("playerInJail");
+                if(((TileEntityPrisonManager)te).hasJailedPlayer)
+                    chat.addText(((TileEntityPrisonManager)te).playerName);
+                else
+                    chat.addKey("noOne");
+                entityPlayer.sendChatToPlayer(chat);
             }
             return true;
         }

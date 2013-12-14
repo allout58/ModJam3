@@ -28,7 +28,8 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     public boolean hasJailedPlayer = false;
 
-    public int tpCoord[] = new int[3];
+    public int tpCoordIn[] = new int[3];
+    public int tpCoordOut[] = new int[3];
 
     private EntityPlayer jailedPlayer;
     public String playerName;
@@ -70,14 +71,17 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     public void jailPlayer(EntityPlayer player)
     {
         isDirty=true;
-        tpCoord[0] = xCoord;
-        tpCoord[1] = yCoord + 1;
-        tpCoord[2] = zCoord;
+        tpCoordIn[0] = xCoord;
+        tpCoordIn[1] = yCoord + 1;
+        tpCoordIn[2] = zCoord;
+        tpCoordOut[0] = xCoord+5;
+        tpCoordOut[1] = yCoord +1;
+        tpCoordOut[2] = zCoord;
         jailedPlayer = player;
         playerName=player.username;
         hasJailedPlayer = true;
         player.mountEntity(null);
-        player.setPositionAndUpdate(tpCoord[0] + .5, tpCoord[1], tpCoord[2] + .5);
+        player.setPositionAndUpdate(tpCoordIn[0] + .5, tpCoordIn[1], tpCoordIn[2] + .5);
         // Take their inventory
         for (int i = START_MAIN; i < START_HOTBAR; i++)
         {
@@ -115,6 +119,8 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         }
         jailedPlayer.removePotionEffect(Potion.moveSlowdown.id);
         jailedPlayer.removePotionEffect(Potion.jump.id);
+        jailedPlayer.setPositionAndUpdate(tpCoordOut[0], tpCoordOut[1], tpCoordOut[2]);
+        jailedPlayer.inventory.onInventoryChanged();
         hasJailedPlayer = false;
         jailedPlayer = null;
         playerName="";
@@ -141,7 +147,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     public void readFromNBT(NBTTagCompound tags)
     {
         hasJailedPlayer = tags.getBoolean("HasJailedPlayer");
-        tpCoord = tags.getIntArray("tpCoord");
+        tpCoordIn = tags.getIntArray("tpCoord");
         jailedPlayer = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(tags.getString("PlayerUsername"));
         NBTTagList tagList = tags.getTagList("Items");
         playerInventory = new ItemStack[this.getSizeInventory()];
@@ -160,7 +166,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     public void writeToNBT(NBTTagCompound tags)
     {
         tags.setBoolean("HasJailedPlayer", hasJailedPlayer);
-        tags.setIntArray("tpCoord", tpCoord);
+        tags.setIntArray("tpCoord", tpCoordIn);
         if (hasJailedPlayer)
         {
             tags.setString("PlayerUsername", jailedPlayer.username);

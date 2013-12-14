@@ -1,5 +1,10 @@
 tile.prisonUnbreakable.name=Unbreakable Prison Wall
 tile.prisonManager.name=Prison Manager
+
 item.prisonConfigWand.name=Prison Configuration Tool
+
 itemGroup.PrisonCraft=PrisonCraft
+
 string.invalidArgument=Invalid Arguments
+string.playerInJail=Player currently in this jail is 
+string.noOne=no one

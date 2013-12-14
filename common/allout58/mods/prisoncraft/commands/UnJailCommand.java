@@ -74,26 +74,26 @@ private List aliases;
                 TileEntityPrisonManager te = (TileEntityPrisonManager) ws.getTesList().get(i);
                 if (te.hasJailedPlayer)
                 {
-                    if (player != null&&te.playerName==astring[0])
+                    if (player != null&&te.playerName.equalsIgnoreCase(astring[0]))
                     {
                         te.unjailPlayer();
-                        ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
-                        DataOutputStream outputStream = new DataOutputStream(bos);
-                        try {
-                                outputStream.writeUTF("unjail");
-                                //outputStream.writeUTF(player.username);
-                                outputStream.writeInt(te.xCoord);
-                                outputStream.writeInt(te.yCoord);
-                                outputStream.writeInt(te.zCoord);
-                        } catch (Exception ex) {
-                                ex.printStackTrace();
-                        }
-
-                        Packet250CustomPayload packet = new Packet250CustomPayload();
-                        packet.channel = ModConstants.PACKETCHANNEL;
-                        packet.data = bos.toByteArray();
-                        packet.length = bos.size();
-                        PacketDispatcher.sendPacketToAllAround(te.xCoord, te.yCoord, te.zCoord, 20, player.dimension, packet);
+//                        ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
+//                        DataOutputStream outputStream = new DataOutputStream(bos);
+//                        try {
+//                                outputStream.writeUTF("unjail");
+//                                //outputStream.writeUTF(player.username);
+//                                outputStream.writeInt(te.xCoord);
+//                                outputStream.writeInt(te.yCoord);
+//                                outputStream.writeInt(te.zCoord);
+//                        } catch (Exception ex) {
+//                                ex.printStackTrace();
+//                        }
+//
+//                        Packet250CustomPayload packet = new Packet250CustomPayload();
+//                        packet.channel = ModConstants.PACKETCHANNEL;
+//                        packet.data = bos.toByteArray();
+//                        packet.length = bos.size();
+//                        PacketDispatcher.sendPacketToAllAround(te.xCoord, te.yCoord, te.zCoord, 20, player.dimension, packet);
                         foundOpen=true;
                     }
                 }

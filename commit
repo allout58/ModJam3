@@ -1,1 +1,5 @@
-Noms
+Finished Jail/Unjail Commands
+
+Steals players inventory till they are released
+TPs them to a spot and gives them Immobility until released
+TPs them to another spot and returns items when released
