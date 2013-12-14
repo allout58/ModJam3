@@ -49,6 +49,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     {
         tpCoordIn=locs.getIntArray("tpIn");
         tpCoordOut=locs.getIntArray("tpOut");
+        isDirty=true;
         // give xyz names
         int x1 = locs.getInteger("x1");
         int y1 = locs.getInteger("y1");
@@ -202,7 +203,8 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     public void readFromNBT(NBTTagCompound tags)
     {
         hasJailedPlayer = tags.getBoolean("HasJailedPlayer");
-        tpCoordIn = tags.getIntArray("tpCoord");
+        tpCoordIn = tags.getIntArray("tpCoordIn");
+        tpCoordOut = tags.getIntArray("tpCoordOut");
         jailedPlayer = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(tags.getString("PlayerUsername"));
         NBTTagList tagList = tags.getTagList("Items");
         playerInventory = new ItemStack[this.getSizeInventory()];
@@ -221,7 +223,8 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     public void writeToNBT(NBTTagCompound tags)
     {
         tags.setBoolean("HasJailedPlayer", hasJailedPlayer);
-        tags.setIntArray("tpCoord", tpCoordIn);
+        tags.setIntArray("tpCoordIn", tpCoordIn);
+        tags.setIntArray("tpCoordOut", tpCoordOut);
         if (hasJailedPlayer)
         {
             tags.setString("PlayerUsername", jailedPlayer.username);

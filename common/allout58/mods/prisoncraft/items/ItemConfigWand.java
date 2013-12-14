@@ -88,6 +88,7 @@ public class ItemConfigWand extends Item
             coord[1]=y;
             coord[2]=z;
             stack.stackTagCompound.setIntArray("tpOut", coord);
+            player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.done"));
         }
 
         return true;
