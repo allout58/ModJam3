@@ -31,6 +31,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     public int tpCoord[] = new int[3];
 
     private EntityPlayer jailedPlayer;
+    public String playerName;
 
     public TileEntityPrisonManager()
     {
@@ -52,9 +53,6 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     public void click(EntityPlayer player)// tmp test fcn
     {
-        tpCoord[0] = xCoord;
-        tpCoord[1] = yCoord + 1;
-        tpCoord[2] = zCoord;
         if (!hasJailedPlayer)
         {
             jailPlayer(player);
@@ -69,7 +67,11 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     public void jailPlayer(EntityPlayer player)
     {
+        tpCoord[0] = xCoord;
+        tpCoord[1] = yCoord + 1;
+        tpCoord[2] = zCoord;
         jailedPlayer = player;
+        playerName=player.username;
         hasJailedPlayer = true;
         player.mountEntity(null);
         player.setPositionAndUpdate(tpCoord[0] + .5, tpCoord[1], tpCoord[2] + .5);
