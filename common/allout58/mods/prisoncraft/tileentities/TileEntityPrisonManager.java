@@ -2,6 +2,7 @@ package allout58.mods.prisoncraft.tileentities;
 
 import java.util.Vector;
 
+import net.minecraft.command.CommandBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
@@ -13,6 +14,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityPrisonManager extends TileEntity implements IInventory
@@ -85,7 +87,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             playerInventory[i] = player.inventory.armorInventory[i - START_ARMOR];
         }
         player.inventory.clearInventory(-1, -1);
-        player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 20, 300, false));
+        player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, Integer.MAX_VALUE, 300, false));
     }
 
     public void unjailPlayer(EntityPlayer player)
@@ -106,7 +108,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         {
             player.inventory.armorInventory[i - START_ARMOR] = playerInventory[i];
         }
-        player.removePotionEffect(Potion.moveSpeed.id);
+        player.removePotionEffect(Potion.moveSlowdown.id);
     }
 
     @Override
@@ -114,7 +116,8 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     {
         if (hasJailedPlayer)
         {
-            jailedPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 20, 300, false));
+            // jailedPlayer.addPotionEffect(new
+            // PotionEffect(Potion.moveSlowdown.id, 20, 300, false));
         }
     }
 
@@ -123,8 +126,9 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     @Override
     public void readFromNBT(NBTTagCompound tags)
     {
-        hasJailedPlayer=tags.getBoolean("HasJailedPlayer");
-        tpCoord=tags.getIntArray("tpCoord");
+        hasJailedPlayer = tags.getBoolean("HasJailedPlayer");
+        tpCoord = tags.getIntArray("tpCoord");
+        jailedPlayer = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(tags.getString("PlayerUsername"));
         NBTTagList tagList = tags.getTagList("Items");
         playerInventory = new ItemStack[this.getSizeInventory()];
         for (int i = 0; i < tagList.tagCount(); ++i)
@@ -143,7 +147,10 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     {
         tags.setBoolean("HasJailedPlayer", hasJailedPlayer);
         tags.setIntArray("tpCoord", tpCoord);
-        tags.setString("PlayerUsername", jailedPlayer.username);
+        if (hasJailedPlayer)
+        {
+            tags.setString("PlayerUsername", jailedPlayer.username);
+        }
         // Write the ItemStacks in the inventory to NBT
         NBTTagList tagList = new NBTTagList();
         for (int currentIndex = 0; currentIndex < playerInventory.length; ++currentIndex)
