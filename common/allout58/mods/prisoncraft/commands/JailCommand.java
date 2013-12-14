@@ -56,22 +56,28 @@ public class JailCommand implements ICommand
         else
         {
             PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(icommandsender.getEntityWorld());
-            if (ws.tesList.size() == 0)
+            if (ws.getTesList().size() == 0)
             {
                 icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No prison found in world"));
             }
             else
             {
-                for(int i=0;i<ws.tesList.size();i++)
+                boolean foundOpen = false;
+                for (int i = 0; i < ws.getTesList().size(); i++)
                 {
-                    TileEntityPrisonManager te=(TileEntityPrisonManager) ws.tesList.get(i);
-                    if(!te.hasJailedPlayer)
+                    TileEntityPrisonManager te = (TileEntityPrisonManager) ws.getTesList().get(i);
+                    if (!te.hasJailedPlayer)
                     {
-                        EntityPlayer player=MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[0]);
-                        te.jailPlayer(player);
+                        EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[0]);
+                        if (player != null)
+                        {
+                            te.jailPlayer(player);
+                            foundOpen = true;
+                        }
                     }
                 }
-                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName() + " sends " + astring[0] + " to jail..."));
+                if (foundOpen) icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName() + " sends " + astring[0] + " to jail..."));
+                else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No open jails. Build more!"));
             }
         }
     }

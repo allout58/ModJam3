@@ -64,7 +64,7 @@ public class BlockPrisonManager extends BlockContainer
         TileEntity te=world.getBlockTileEntity(x, y, z);
         if(te instanceof TileEntityPrisonManager)
         {
-            PrisonCraftWorldSave.forWorld(world).tesList.add((TileEntityPrisonManager)te);
+            PrisonCraftWorldSave.forWorld(world).getTesList().add((TileEntityPrisonManager)te);
         }
     }
     
@@ -72,6 +72,17 @@ public class BlockPrisonManager extends BlockContainer
     public TileEntity createNewTileEntity(World world)
     {
         return new TileEntityPrisonManager();
+    }
+    
+    @Override
+    public void breakBlock(World world, int x, int y, int z, int par5, int par6)
+    {
+        TileEntity logic = world.getBlockTileEntity(x, y, z);
+        if (logic instanceof TileEntityPrisonManager)
+        {
+            PrisonCraftWorldSave.forWorld(world).getTesList().remove((TileEntityPrisonManager)logic);
+        }
+        super.breakBlock(world, x, y, z, par5, par6);
     }
     
     @Override

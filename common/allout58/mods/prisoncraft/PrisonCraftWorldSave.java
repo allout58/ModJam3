@@ -15,11 +15,17 @@ public class PrisonCraftWorldSave extends WorldSavedData
     
     public static World worldObj;
 
-    public List tesList = new ArrayList();
+    private List tesList = new ArrayList();
 
     public PrisonCraftWorldSave()
     {
         super(key);
+    }
+    
+    public List getTesList()
+    {
+        this.markDirty();
+        return tesList;
     }
 
     public static PrisonCraftWorldSave forWorld(World world)
