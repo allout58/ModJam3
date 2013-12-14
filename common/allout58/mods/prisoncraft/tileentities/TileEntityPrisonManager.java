@@ -87,10 +87,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             playerInventory[i] = player.inventory.armorInventory[i - START_ARMOR];
         }
         player.inventory.clearInventory(-1, -1);
-        PotionEffect slow=new PotionEffect(Potion.moveSlowdown.id, 1, 300, false);
-        slow.performEffect(player);
-        PotionEffect nojump=new PotionEffect(Potion.jump.id,600,0,false);
-        slow.performEffect(player);
+        player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 10, 300, false));
     }
 
     public void unjailPlayer(EntityPlayer player)
@@ -120,7 +117,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     {
         if (hasJailedPlayer)
         {
-             //jailedPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, Integer.MAX_VALUE, 300, false));
+            jailedPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 10, 300, false));
         }
     }
 
