@@ -70,7 +70,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         jailedPlayer=player;
         hasJailedPlayer=true;
         player.mountEntity(null);
-        player.setPositionAndUpdate(tpCoord[0], tpCoord[1], tpCoord[2]);
+        player.setPositionAndUpdate(tpCoord[0]+.5, tpCoord[1], tpCoord[2]+.5);
         //Take their inventory
         for(int i=START_MAIN;i<START_HOTBAR;i++)
         {
@@ -85,7 +85,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             playerInventory[i]=player.inventory.armorInventory[i-START_ARMOR];
         }
         player.inventory.clearInventory(-1, -1);
-        player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id,200,-1,false));
+        player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id,20,300,false));
     }
     
     public void unjailPlayer(EntityPlayer player)
@@ -109,6 +109,14 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         player.removePotionEffect(Potion.moveSpeed.id);
     }
 
+    @Override
+    public void updateEntity()
+    {
+        jailedPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id,20,300,false));
+    }
+    
+    /*NBT*/
+    
     @Override
     public void readFromNBT(NBTTagCompound tags)
     {
