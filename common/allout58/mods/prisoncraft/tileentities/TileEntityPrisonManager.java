@@ -32,6 +32,8 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     private EntityPlayer jailedPlayer;
     public String playerName;
+    
+    private Boolean isDirty=false;
 
     public TileEntityPrisonManager()
     {
@@ -67,6 +69,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     public void jailPlayer(EntityPlayer player)
     {
+        isDirty=true;
         tpCoord[0] = xCoord;
         tpCoord[1] = yCoord + 1;
         tpCoord[2] = zCoord;
@@ -94,6 +97,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     public void unjailPlayer(EntityPlayer player)
     {
+        isDirty=true;
         hasJailedPlayer = false;
         jailedPlayer = null;
         playerName="";
@@ -113,11 +117,17 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         }
         player.removePotionEffect(Potion.moveSlowdown.id);
         player.removePotionEffect(Potion.jump.id);
+        
     }
 
     @Override
     public void updateEntity()
     {
+        if (isDirty)
+        {
+            isDirty = false;
+            worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+        }
         if (hasJailedPlayer)
         {
             jailedPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 10, 300, false));
