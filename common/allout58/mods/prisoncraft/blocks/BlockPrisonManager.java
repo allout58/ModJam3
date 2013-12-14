@@ -3,6 +3,7 @@ package allout58.mods.prisoncraft.blocks;
 import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.PrisonCraftWorldSave;
 import allout58.mods.prisoncraft.constants.TextureConstants;
+import allout58.mods.prisoncraft.items.ItemList;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonUnbreakable;
 import cpw.mods.fml.relauncher.Side;
@@ -90,6 +91,18 @@ public class BlockPrisonManager extends BlockContainer
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
     {
         super.onBlockActivated(world, x, y, z, entityPlayer, par6, par7, par8, par9);
+        /*
+        TileEntity te=world.getBlockTileEntity(x, y, z);
+        if(te instanceof TileEntityPrisonManager && stack.stackTagCompound!=null)
+        {
+            ((TileEntityPrisonManager)te).changeBlocks(stack.stackTagCompound);
+        }
+        */
+        TileEntity te=world.getBlockTileEntity(x, y, z);
+        if(te instanceof TileEntityPrisonUnbreakable && entityPlayer.inventory.getCurrentItem().itemID==ItemList.configWand.itemID && entityPlayer.inventory.getCurrentItem().stackTagCompound!=null)
+        {
+            ((TileEntityPrisonManager)te).changeBlocks(entityPlayer.inventory.getCurrentItem().stackTagCompound);
+        }
         if (entityPlayer.isSneaking()) return false;
         else
         {

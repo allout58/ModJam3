@@ -44,11 +44,6 @@ public class ItemConfigWand extends Item
     @Override
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
     {
-        TileEntity te=world.getBlockTileEntity(x, y, z);
-        if(te instanceof TileEntityPrisonManager && stack.stackTagCompound!=null)
-        {
-            ((TileEntityPrisonManager)te).changeBlocks(stack.stackTagCompound);
-        }
         if (player.isSneaking())
         {
             // reset
@@ -58,7 +53,7 @@ public class ItemConfigWand extends Item
         if (stack.stackTagCompound == null) stack.stackTagCompound = new NBTTagCompound();
         if (!stack.stackTagCompound.hasKey("x1"))
         {
-            //change to int array
+            // change to int array
             stack.stackTagCompound.setInteger("x1", x);
             stack.stackTagCompound.setInteger("y1", y);
             stack.stackTagCompound.setInteger("z1", z);
@@ -66,7 +61,7 @@ public class ItemConfigWand extends Item
         }
         else if (!stack.stackTagCompound.hasKey("x2"))
         {
-            //change to int array
+            // change to int array
             stack.stackTagCompound.setInteger("x2", x);
             stack.stackTagCompound.setInteger("y2", y);
             stack.stackTagCompound.setInteger("z2", z);
@@ -74,19 +69,19 @@ public class ItemConfigWand extends Item
         }
         else if (!stack.stackTagCompound.hasKey("tpIn"))
         {
-            int coord[]=new int[3];
-            coord[0]=x;
-            coord[1]=y;
-            coord[2]=z;
+            int coord[] = new int[3];
+            coord[0] = x;
+            coord[1] = y;
+            coord[2] = z;
             stack.stackTagCompound.setIntArray("tpIn", coord);
             player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.tpout"));
         }
         else if (!stack.stackTagCompound.hasKey("tpOut"))
         {
-            int coord[]=new int[3];
-            coord[0]=x;
-            coord[1]=y;
-            coord[2]=z;
+            int coord[] = new int[3];
+            coord[0] = x;
+            coord[1] = y;
+            coord[2] = z;
             stack.stackTagCompound.setIntArray("tpOut", coord);
             player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.done"));
         }
@@ -99,7 +94,7 @@ public class ItemConfigWand extends Item
     /** Allows items to add custom lines of information to the mouseover description. */
     public void addInformation(ItemStack stack, EntityPlayer entityPlayer, List infoList, boolean par4)
     {
-        //TODO See if this can be localized
+        // TODO See if this can be localized
         infoList.add("Right-click on two blocks to set");
         infoList.add("the bounds of the jail.");
         if (CommonProxy.shouldAddAdditionalInfo())
