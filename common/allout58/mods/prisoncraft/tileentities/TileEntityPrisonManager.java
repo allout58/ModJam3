@@ -18,93 +18,93 @@ import net.minecraft.tileentity.TileEntity;
 public class TileEntityPrisonManager extends TileEntity implements IInventory
 {
     private ItemStack[] playerInventory;
-    public static final int INVENTORY_SIZE=40;
-    
-    public static final int START_MAIN=0;
-    public static final int START_HOTBAR=32; //??
-    public static final int START_ARMOR=36; //??
-    
-    public boolean hasJailedPlayer=false;
-    
-    public int tpCoord[]=new int[3];
-    
+    public static final int INVENTORY_SIZE = 40;
+
+    public static final int START_MAIN = 0;
+    public static final int START_HOTBAR = 32; // ??
+    public static final int START_ARMOR = 36; // ??
+
+    public boolean hasJailedPlayer = false;
+
+    public int tpCoord[] = new int[3];
+
     private EntityPlayer jailedPlayer;
-    
+
     public TileEntityPrisonManager()
     {
-        playerInventory=new ItemStack[INVENTORY_SIZE];
+        playerInventory = new ItemStack[INVENTORY_SIZE];
     }
-    
+
     public void changeBlocks(NBTTagCompound locs)
     {
-        //give xyz names
-        int x1=locs.getInteger("x1");
-        int y1=locs.getInteger("y1");
-        int z1=locs.getInteger("z1");
-        int x2=locs.getInteger("x2");
-        int y2=locs.getInteger("y2");
-        int z2=locs.getInteger("z2");
-        //loop through each block - todo... ;)
-        
+        // give xyz names
+        int x1 = locs.getInteger("x1");
+        int y1 = locs.getInteger("y1");
+        int z1 = locs.getInteger("z1");
+        int x2 = locs.getInteger("x2");
+        int y2 = locs.getInteger("y2");
+        int z2 = locs.getInteger("z2");
+        // loop through each block - todo... ;)
+
     }
-    
-    public void click(EntityPlayer player)//tmp test fcn
+
+    public void click(EntityPlayer player)// tmp test fcn
     {
-        tpCoord[0]=xCoord;
-        tpCoord[1]=yCoord+1;
-        tpCoord[2]=zCoord;
-        if(!hasJailedPlayer)
+        tpCoord[0] = xCoord;
+        tpCoord[1] = yCoord + 1;
+        tpCoord[2] = zCoord;
+        if (!hasJailedPlayer)
         {
             jailPlayer(player);
-            
+
         }
         else
         {
             unjailPlayer(player);
-            hasJailedPlayer=false;
+            hasJailedPlayer = false;
         }
     }
-    
+
     public void jailPlayer(EntityPlayer player)
     {
-        jailedPlayer=player;
-        hasJailedPlayer=true;
+        jailedPlayer = player;
+        hasJailedPlayer = true;
         player.mountEntity(null);
-        player.setPositionAndUpdate(tpCoord[0]+.5, tpCoord[1], tpCoord[2]+.5);
-        //Take their inventory
-        for(int i=START_MAIN;i<START_HOTBAR;i++)
+        player.setPositionAndUpdate(tpCoord[0] + .5, tpCoord[1], tpCoord[2] + .5);
+        // Take their inventory
+        for (int i = START_MAIN; i < START_HOTBAR; i++)
         {
-            playerInventory[i]=player.inventory.mainInventory[i];
+            playerInventory[i] = player.inventory.mainInventory[i];
         }
-        for(int i=START_HOTBAR;i<START_ARMOR;i++)
+        for (int i = START_HOTBAR; i < START_ARMOR; i++)
         {
-            playerInventory[i]=player.inventory.mainInventory[i];
+            playerInventory[i] = player.inventory.mainInventory[i];
         }
-        for(int i=START_ARMOR;i<INVENTORY_SIZE;i++)
+        for (int i = START_ARMOR; i < INVENTORY_SIZE; i++)
         {
-            playerInventory[i]=player.inventory.armorInventory[i-START_ARMOR];
+            playerInventory[i] = player.inventory.armorInventory[i - START_ARMOR];
         }
         player.inventory.clearInventory(-1, -1);
-        player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id,20,300,false));
+        player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 20, 300, false));
     }
-    
+
     public void unjailPlayer(EntityPlayer player)
     {
-        hasJailedPlayer=false;
-        jailedPlayer=null;
-        //give their inventory
-        
-        for(int i=START_MAIN;i<START_HOTBAR;i++)
+        hasJailedPlayer = false;
+        jailedPlayer = null;
+        // give their inventory
+
+        for (int i = START_MAIN; i < START_HOTBAR; i++)
         {
-            player.inventory.mainInventory[i]=playerInventory[i];
+            player.inventory.mainInventory[i] = playerInventory[i];
         }
-        for(int i=START_HOTBAR;i<START_ARMOR;i++)
+        for (int i = START_HOTBAR; i < START_ARMOR; i++)
         {
-            player.inventory.mainInventory[i]=playerInventory[i];
+            player.inventory.mainInventory[i] = playerInventory[i];
         }
-        for(int i=START_ARMOR;i<INVENTORY_SIZE;i++)
+        for (int i = START_ARMOR; i < INVENTORY_SIZE; i++)
         {
-            player.inventory.armorInventory[i-START_ARMOR]=playerInventory[i];
+            player.inventory.armorInventory[i - START_ARMOR] = playerInventory[i];
         }
         player.removePotionEffect(Potion.moveSpeed.id);
     }
@@ -112,14 +112,18 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     @Override
     public void updateEntity()
     {
-        jailedPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id,20,300,false));
+        if (hasJailedPlayer)
+        {
+            jailedPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 20, 300, false));
+        }
     }
-    
-    /*NBT*/
-    
+
+    /* NBT */
+
     @Override
     public void readFromNBT(NBTTagCompound tags)
     {
+        
         NBTTagList tagList = tags.getTagList("Items");
         playerInventory = new ItemStack[this.getSizeInventory()];
         for (int i = 0; i < tagList.tagCount(); ++i)
@@ -136,6 +140,9 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     @Override
     public void writeToNBT(NBTTagCompound tags)
     {
+        tags.setBoolean("HasJailedPlayer", hasJailedPlayer);
+        tags.setIntArray("tpCoord", tpCoord);
+        tags.setString("PlayerUsername", jailedPlayer.username);
         // Write the ItemStacks in the inventory to NBT
         NBTTagList tagList = new NBTTagList();
         for (int currentIndex = 0; currentIndex < playerInventory.length; ++currentIndex)
@@ -151,7 +158,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         tags.setTag("Items", tagList);
 
     }
-    
+
     /* Packets */
     @Override
     public Packet getDescriptionPacket()
@@ -167,8 +174,8 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         readFromNBT(packet.data);
         worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
-    
-    /*Inventory*/
+
+    /* Inventory */
     @Override
     public int getSizeInventory()
     {
