@@ -3,8 +3,13 @@ package allout58.mods.prisoncraft.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import allout58.mods.prisoncraft.PrisonCraftWorldSave;
+import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
+
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
 
 public class JailCommand implements ICommand
@@ -50,7 +55,24 @@ public class JailCommand implements ICommand
         }
         else
         {
-            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName() + " sends " + astring[0] + " to jail..."));
+            PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(icommandsender.getEntityWorld());
+            if (ws.tesList.size() == 0)
+            {
+                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No prison found in world"));
+            }
+            else
+            {
+                for(int i=0;i<ws.tesList.size();i++)
+                {
+                    TileEntityPrisonManager te=(TileEntityPrisonManager) ws.tesList.get(i);
+                    if(!te.hasJailedPlayer)
+                    {
+                        EntityPlayer player=MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[0]);
+                        te.jailPlayer(player);
+                    }
+                }
+                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName() + " sends " + astring[0] + " to jail..."));
+            }
         }
     }
 
@@ -69,7 +91,7 @@ public class JailCommand implements ICommand
     @Override
     public boolean isUsernameIndex(String[] astring, int i)
     {
-        //return i == 0;
+        // return i == 0;
         return true;
     }
 
