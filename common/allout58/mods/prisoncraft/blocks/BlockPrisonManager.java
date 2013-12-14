@@ -102,12 +102,12 @@ public class BlockPrisonManager extends BlockContainer
         if(te instanceof TileEntityPrisonUnbreakable && entityPlayer.inventory.getCurrentItem().itemID==ItemList.configWand.itemID && entityPlayer.inventory.getCurrentItem().stackTagCompound!=null)
         {
             ((TileEntityPrisonManager)te).changeBlocks(entityPlayer.inventory.getCurrentItem().stackTagCompound);
+            return true;
         }
         if (entityPlayer.isSneaking()) return false;
         else
         {
-            TileEntity te=world.getBlockTileEntity(x, y, z);
-            if(te instanceof TileEntityPrisonManager)
+            if(te instanceof TileEntityPrisonManager && !te.worldObj.isRemote)
             {
                 ChatMessageComponent chat=new ChatMessageComponent();
                 chat.addKey("string.playerInJail");
