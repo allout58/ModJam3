@@ -62,7 +62,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         }
         else
         {
-            unjailPlayer(player);
+            unjailPlayer();
             hasJailedPlayer = false;
         }
     }
@@ -95,28 +95,29 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 10, 300, false));
     }
 
-    public void unjailPlayer(EntityPlayer player)
+    public void unjailPlayer()
     {
         isDirty=true;
-        hasJailedPlayer = false;
-        jailedPlayer = null;
-        playerName="";
+
         // give their inventory
 
         for (int i = START_MAIN; i < START_HOTBAR; i++)
         {
-            player.inventory.mainInventory[i] = playerInventory[i];
+            jailedPlayer.inventory.mainInventory[i] = playerInventory[i];
         }
         for (int i = START_HOTBAR; i < START_ARMOR; i++)
         {
-            player.inventory.mainInventory[i] = playerInventory[i];
+            jailedPlayer.inventory.mainInventory[i] = playerInventory[i];
         }
         for (int i = START_ARMOR; i < INVENTORY_SIZE; i++)
         {
-            player.inventory.armorInventory[i - START_ARMOR] = playerInventory[i];
+            jailedPlayer.inventory.armorInventory[i - START_ARMOR] = playerInventory[i];
         }
-        player.removePotionEffect(Potion.moveSlowdown.id);
-        player.removePotionEffect(Potion.jump.id);
+        jailedPlayer.removePotionEffect(Potion.moveSlowdown.id);
+        jailedPlayer.removePotionEffect(Potion.jump.id);
+        hasJailedPlayer = false;
+        jailedPlayer = null;
+        playerName="";
         
     }
 

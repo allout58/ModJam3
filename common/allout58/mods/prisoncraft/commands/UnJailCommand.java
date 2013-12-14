@@ -1,15 +1,22 @@
 package allout58.mods.prisoncraft.commands;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.network.PacketDispatcher;
+
 import allout58.mods.prisoncraft.PrisonCraftWorldSave;
+import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
 
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
 
@@ -69,7 +76,24 @@ private List aliases;
                 {
                     if (player != null&&te.playerName==astring[0])
                     {
-                        te.unjailPlayer(player);
+                        te.unjailPlayer();
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
+                        DataOutputStream outputStream = new DataOutputStream(bos);
+                        try {
+                                outputStream.writeUTF("unjail");
+                                //outputStream.writeUTF(player.username);
+                                outputStream.writeInt(te.xCoord);
+                                outputStream.writeInt(te.yCoord);
+                                outputStream.writeInt(te.zCoord);
+                        } catch (Exception ex) {
+                                ex.printStackTrace();
+                        }
+
+                        Packet250CustomPayload packet = new Packet250CustomPayload();
+                        packet.channel = ModConstants.PACKETCHANNEL;
+                        packet.data = bos.toByteArray();
+                        packet.length = bos.size();
+                        PacketDispatcher.sendPacketToAllAround(te.xCoord, te.yCoord, te.zCoord, 20, player.dimension, packet);
                         foundOpen=true;
                     }
                 }
