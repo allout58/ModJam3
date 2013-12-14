@@ -1,5 +1,7 @@
 package allout58.mods.prisoncraft.tileentities;
 
+import java.util.Vector;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
@@ -24,7 +26,9 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     
     public boolean hasJailedPlayer=false;
     
-    private String jailedPlayerName;
+    public int tpCoord[]=new int[3];
+    
+    private EntityPlayer jailedPlayer;
     
     public TileEntityPrisonManager()
     {
@@ -44,8 +48,11 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         
     }
     
-    public void click(EntityPlayer player)
+    public void click(EntityPlayer player)//tmp test fcn
     {
+        tpCoord[0]=xCoord;
+        tpCoord[1]=yCoord+1;
+        tpCoord[2]=zCoord;
         if(!hasJailedPlayer)
         {
             jailPlayer(player);
@@ -60,8 +67,11 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     
     public void jailPlayer(EntityPlayer player)
     {
-        jailedPlayerName=player.username;
+        jailedPlayer=player;
         hasJailedPlayer=true;
+        player.posX=tpCoord[0];
+        player.posY=tpCoord[1];
+        player.posZ=tpCoord[2];
         //Take their inventory
         for(int i=START_MAIN;i<START_HOTBAR;i++)
         {
@@ -76,13 +86,15 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             playerInventory[i]=player.inventory.armorInventory[i-START_ARMOR];
         }
         player.inventory.clearInventory(-1, -1);
-        player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id,200,128,false));
+        player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id,200,-1,false));
     }
     
     public void unjailPlayer(EntityPlayer player)
     {
-        //give their inventory
         hasJailedPlayer=false;
+        jailedPlayer=null;
+        //give their inventory
+        
         for(int i=START_MAIN;i<START_HOTBAR;i++)
         {
             player.inventory.mainInventory[i]=playerInventory[i];
@@ -96,6 +108,9 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             player.inventory.armorInventory[i-START_ARMOR]=playerInventory[i];
         }
         player.removePotionEffect(Potion.moveSpeed.id);
+        player.posX=player.prevPosX;
+        player.posY=player.prevPosY;
+        player.posZ=player.prevPosZ;
     }
 
     @Override
