@@ -22,13 +22,14 @@ import net.minecraft.util.ChatMessageComponent;
 
 public class UnJailCommand implements ICommand
 {
-private List aliases;
-    
+    private List aliases;
+
     public UnJailCommand()
     {
-        this.aliases=new ArrayList();
+        this.aliases = new ArrayList();
         this.aliases.add("unjail");
     }
+
     @Override
     public int compareTo(Object arg0)
     {
@@ -56,50 +57,36 @@ private List aliases;
     @Override
     public void processCommand(ICommandSender icommandsender, String[] astring)
     {
-        if(astring.length==0)
+        if (astring.length == 0)
         {
             icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
         }
-        PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(icommandsender.getEntityWorld());
-        if (ws.getTesList().size() == 0)
-        {
-            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No prison found in world"));
-        }
         else
         {
-            EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[0]);
-            boolean foundOpen = false;
-            for (int i = 0; i < ws.getTesList().size(); i++)
+            PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(icommandsender.getEntityWorld());
+            if (ws.getTesList().size() == 0)
             {
-                TileEntityPrisonManager te = (TileEntityPrisonManager) ws.getTesList().get(i);
-                if (te.hasJailedPlayer)
+                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No prison found in world"));
+            }
+            else
+            {
+                EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[0]);
+                boolean foundOpen = false;
+                for (int i = 0; i < ws.getTesList().size(); i++)
                 {
-                    if (player != null&&te.playerName.equalsIgnoreCase(astring[0]))
+                    TileEntityPrisonManager te = (TileEntityPrisonManager) ws.getTesList().get(i);
+                    if (te.hasJailedPlayer)
                     {
-                        te.unjailPlayer();
-//                        ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
-//                        DataOutputStream outputStream = new DataOutputStream(bos);
-//                        try {
-//                                outputStream.writeUTF("unjail");
-//                                //outputStream.writeUTF(player.username);
-//                                outputStream.writeInt(te.xCoord);
-//                                outputStream.writeInt(te.yCoord);
-//                                outputStream.writeInt(te.zCoord);
-//                        } catch (Exception ex) {
-//                                ex.printStackTrace();
-//                        }
-//
-//                        Packet250CustomPayload packet = new Packet250CustomPayload();
-//                        packet.channel = ModConstants.PACKETCHANNEL;
-//                        packet.data = bos.toByteArray();
-//                        packet.length = bos.size();
-//                        PacketDispatcher.sendPacketToAllAround(te.xCoord, te.yCoord, te.zCoord, 20, player.dimension, packet);
-                        foundOpen=true;
+                        if (player != null && te.playerName.equalsIgnoreCase(astring[0]))
+                        {
+                            te.unjailPlayer();
+                            foundOpen = true;
+                        }
                     }
                 }
+                if (foundOpen) icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName() + " frees " + astring[0] + " to jail..."));
+                else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No player with that name found"));
             }
-            if (foundOpen) icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName() + " frees " + astring[0] + " to jail..."));
-            else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No player with that name found"));
         }
     }
 
@@ -115,14 +102,13 @@ private List aliases;
         final List<String> MATCHES = new LinkedList<String>();
         final String ARG_LC = astring[0].toLowerCase();
         for (String un : MinecraftServer.getServer().getAllUsernames())
-                if(un.toLowerCase().startsWith(ARG_LC))
-                        MATCHES.add(un);
+            if (un.toLowerCase().startsWith(ARG_LC)) MATCHES.add(un);
         return MATCHES.isEmpty() ? null : MATCHES;
     }
 
     @Override
     public boolean isUsernameIndex(String[] astring, int i)
     {
-        return i==0;
+        return i == 0;
     }
 }

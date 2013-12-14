@@ -33,8 +33,8 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     private EntityPlayer jailedPlayer;
     public String playerName;
-    
-    private Boolean isDirty=false;
+
+    private Boolean isDirty = false;
 
     public TileEntityPrisonManager()
     {
@@ -50,35 +50,54 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         int x2 = locs.getInteger("x2");
         int y2 = locs.getInteger("y2");
         int z2 = locs.getInteger("z2");
-        // loop through each block - todo... ;)
-
+        // force ..1 to be lower than ..2
+        if (x1 > x2)
+        {
+            x1 += x2;
+            x2 = x1 - x2;
+            x1 -= x2;
+        }
+        if (y1 > y2)
+        {
+            y1 += y2;
+            y2 = y1 - y2;
+            y1 -= y2;
+        }
+        if (z1 > z2)
+        {
+            z1 += z2;
+            z2 = z1 - z2;
+            z1 -= z2;
+        }
+        // loop through each block
+        
     }
 
-    public void click(EntityPlayer player)// tmp test fcn
-    {
-        if (!hasJailedPlayer)
-        {
-            jailPlayer(player);
-
-        }
-        else
-        {
-            unjailPlayer();
-            hasJailedPlayer = false;
-        }
-    }
+    // public void click(EntityPlayer player)// tmp test fcn
+    // {
+    // if (!hasJailedPlayer)
+    // {
+    // jailPlayer(player);
+    //
+    // }
+    // else
+    // {
+    // unjailPlayer();
+    // hasJailedPlayer = false;
+    // }
+    // }
 
     public void jailPlayer(EntityPlayer player)
     {
-        isDirty=true;
+        isDirty = true;
         tpCoordIn[0] = xCoord;
         tpCoordIn[1] = yCoord + 1;
         tpCoordIn[2] = zCoord;
-        tpCoordOut[0] = xCoord+5;
-        tpCoordOut[1] = yCoord +1;
+        tpCoordOut[0] = xCoord + 5;
+        tpCoordOut[1] = yCoord + 1;
         tpCoordOut[2] = zCoord;
         jailedPlayer = player;
-        playerName=player.username;
+        playerName = player.username;
         hasJailedPlayer = true;
         player.mountEntity(null);
         player.setPositionAndUpdate(tpCoordIn[0] + .5, tpCoordIn[1], tpCoordIn[2] + .5);
@@ -101,7 +120,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     public void unjailPlayer()
     {
-        isDirty=true;
+        isDirty = true;
 
         // give their inventory
 
@@ -123,8 +142,8 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         jailedPlayer.inventory.onInventoryChanged();
         hasJailedPlayer = false;
         jailedPlayer = null;
-        playerName="";
-        
+        playerName = "";
+
     }
 
     @Override
