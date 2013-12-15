@@ -229,6 +229,14 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         jailedPlayer.removePotionEffect(Potion.jump.id);
         jailedPlayer.setPositionAndUpdate(tpCoordOut[0]+.5, tpCoordOut[1], tpCoordOut[2]+.5);
         jailedPlayer.inventory.onInventoryChanged();
+        if(jailedPlayer instanceof EntityPlayerMP)
+        {
+            ((EntityPlayerMP)jailedPlayer).setGameType(jailedPlayerGM);
+        }
+        else
+        {
+            System.out.println("Game mode could not be reverted. Jailed Player obj in not of type EntityPlayerMP.");
+        }
         jailedPlayer.jumpMovementFactor=.02F;
         hasJailedPlayer = false;
         jailedPlayer = null;

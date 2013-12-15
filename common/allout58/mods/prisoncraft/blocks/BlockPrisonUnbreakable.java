@@ -21,7 +21,7 @@ public class BlockPrisonUnbreakable extends BlockContainer
         setResistance(6000000.0F);
         setUnlocalizedName("prisonUnbreakable");
     }
-    
+
     @Override
     public int quantityDropped(Random rand)
     {
@@ -31,33 +31,35 @@ public class BlockPrisonUnbreakable extends BlockContainer
     @Override
     public TileEntity createNewTileEntity(World world)
     {
-//        return null;
-//        return new TileEntityPrisonUnbreakable();
+        // return null;
+        // return new TileEntityPrisonUnbreakable();
         return new TileEntityPrisonUnbreakable();
     }
-    
+
     @Override
     public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
     {
-        int id=100;
+        int id = 100;
         TileEntity logic = world.getBlockTileEntity(x, y, z);
         if (logic instanceof TileEntityPrisonUnbreakable)
         {
-            id=((TileEntityPrisonUnbreakable) logic).getFakeBlockID();
+            id = ((TileEntityPrisonUnbreakable) logic).getFakeBlockID();
         }
-        Block fake=Block.blocksList[id];
+        Block fake = Block.blocksList[id];
         return fake.getBlockTexture(world, x, y, z, side);
     }
-    
+
     @Override
     public void breakBlock(World world, int x, int y, int z, int par5, int par6)
     {
         TileEntity logic = world.getBlockTileEntity(x, y, z);
         if (logic instanceof TileEntityPrisonUnbreakable)
         {
-            ((TileEntityPrisonUnbreakable) logic).wallBroken(x,y,z);
+            if (((TileEntityPrisonUnbreakable) logic).canDestroy())
+            {
+                super.breakBlock(world, x, y, z, par5, par6);
+            }
         }
-        super.breakBlock(world, x, y, z, par5, par6);
     }
-    
+
 }

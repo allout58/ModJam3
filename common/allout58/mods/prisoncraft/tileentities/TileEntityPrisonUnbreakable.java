@@ -1,5 +1,6 @@
 package allout58.mods.prisoncraft.tileentities;
 
+import allout58.mods.prisoncraft.blocks.BlockList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
@@ -9,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 public class TileEntityPrisonUnbreakable extends TileEntity
 {
     private int fakeBlockID=1;
+    private boolean isReverting=false;
    
     private Boolean isDirty=false;
     
@@ -23,9 +25,15 @@ public class TileEntityPrisonUnbreakable extends TileEntity
         isDirty=true;
     }
     
-    public void wallBroken(int x, int y, int z)
+    public void revert()
     {
-        //reset broken block
+        isReverting=true;
+        worldObj.setBlock(xCoord, yCoord, zCoord, fakeBlockID, 0, 3);
+    }
+    
+    public boolean canDestroy()
+    {
+        return !isReverting;
     }
     
     @Override
