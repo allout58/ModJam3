@@ -96,17 +96,20 @@ public class BlockPrisonManager extends BlockContainer
          * TileEntityPrisonManager && stack.stackTagCompound!=null) {
          * ((TileEntityPrisonManager)te).changeBlocks(stack.stackTagCompound); }
          */
-        TileEntity te = world.getBlockTileEntity(x, y, z);
-        if (te instanceof TileEntityPrisonManager)
+        if (!world.isRemote)
         {
-            if (entityPlayer.inventory.getCurrentItem() != null)
+            TileEntity te = world.getBlockTileEntity(x, y, z);
+            if (te instanceof TileEntityPrisonManager)
             {
-                if (entityPlayer.inventory.getCurrentItem().itemID == ItemList.configWand.itemID)
+                if (entityPlayer.inventory.getCurrentItem() != null)
                 {
-                    if (entityPlayer.inventory.getCurrentItem().stackTagCompound != null)
+                    if (entityPlayer.inventory.getCurrentItem().itemID == ItemList.configWand.itemID)
                     {
-                        ((TileEntityPrisonManager) te).changeBlocks(entityPlayer.inventory.getCurrentItem().stackTagCompound);
-                        return true;
+                        if (entityPlayer.inventory.getCurrentItem().stackTagCompound != null)
+                        {
+                            ((TileEntityPrisonManager) te).changeBlocks(entityPlayer.inventory.getCurrentItem().stackTagCompound);
+                            return true;
+                        }
                     }
                 }
             }
@@ -114,6 +117,7 @@ public class BlockPrisonManager extends BlockContainer
         if (entityPlayer.isSneaking()) return false;
         else
         {
+            TileEntity te = world.getBlockTileEntity(x, y, z);
             if (te instanceof TileEntityPrisonManager && !te.worldObj.isRemote)
             {
                 ChatMessageComponent chat = new ChatMessageComponent();
