@@ -30,7 +30,6 @@ public class ItemConfigWand extends Item
     {
         super(id);
         setUnlocalizedName("prisonConfigWand");
-        setTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + getUnlocalizedName().substring(5));
         setCreativeTab(PrisonCraft.creativeTab);
         setMaxStackSize(1);
     }
@@ -47,7 +46,7 @@ public class ItemConfigWand extends Item
     public void registerIcons(IconRegister ir)
     {
         main = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + getUnlocalizedName().substring(5));
-        lock = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":lock");
+        lock = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + getUnlocalizedName().substring(5) + ".lock");
     }
 
     @Override
