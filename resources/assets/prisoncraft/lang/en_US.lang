@@ -2,6 +2,7 @@ tile.prisonUnbreakable.name=Unbreakable Prison Wall
 tile.prisonManager.name=Prison Manager
 
 item.prisonConfigWand.name=Prison Configuration Tool
+item.prisonConfigWandLocked.name=Prison Configuration Tool (Locked)
 
 itemGroup.PrisonCraft=PrisonCraft
 

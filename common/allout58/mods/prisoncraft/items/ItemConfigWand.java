@@ -81,17 +81,18 @@ public class ItemConfigWand extends Item
                 // reset
                 stack.stackTagCompound = null;
             }
-//            else if (stack.stackTagCompound != null)
-//            {
-//                if (!stack.stackTagCompound.hasKey("locked") || !stack.stackTagCompound.getBoolean("locked"))
-//                {
-//                    stack.stackTagCompound.setBoolean("locked", true);
-//                }
-//                else
-//                {
-//                    stack.stackTagCompound.setBoolean("locked", false);
-//                }
-//            }
+            // else if (stack.stackTagCompound != null)
+            // {
+            // if (!stack.stackTagCompound.hasKey("locked") ||
+            // !stack.stackTagCompound.getBoolean("locked"))
+            // {
+            // stack.stackTagCompound.setBoolean("locked", true);
+            // }
+            // else
+            // {
+            // stack.stackTagCompound.setBoolean("locked", false);
+            // }
+            // }
         }
         return stack;
     }
@@ -101,60 +102,60 @@ public class ItemConfigWand extends Item
     {
         if (!world.isRemote)
         {
+            if (player.isSneaking())
+            {
+                
+                return true;
+            }
             if (stack.stackTagCompound == null)
             {
                 stack.stackTagCompound = new NBTTagCompound();
-//                stack.stackTagCompound.setBoolean("locked", false);
             }
-//            if (stack.stackTagCompound.hasKey("locked") && !stack.stackTagCompound.getBoolean("locked"))
-//            {
-                if (player.isSneaking())
-                {
-                    // reset
-                    stack.stackTagCompound = null;
-                    return true;
-                }
-                if (world.getBlockId(x, y, z) == BlockList.prisonMan.blockID) return false;
+            // if (stack.stackTagCompound.hasKey("locked") &&
+            // !stack.stackTagCompound.getBoolean("locked"))
+            // {
 
-                if (!stack.stackTagCompound.hasKey("jailCoord1"))
-                {
-                    int coord[] = new int[3];
-                    coord[0] = x;
-                    coord[1] = y;
-                    coord[2] = z;
-                    stack.stackTagCompound.setIntArray("jailCoord1", coord);
-                    player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.nextpt"));
-                }
-                else if (!stack.stackTagCompound.hasKey("jailCoord2"))
-                {
-                    int coord[] = new int[3];
-                    coord[0] = x;
-                    coord[1] = y;
-                    coord[2] = z;
-                    stack.stackTagCompound.setIntArray("jailCoord2", coord);
-                    player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.tpin"));
-                }
-                else if (!stack.stackTagCompound.hasKey("tpIn"))
-                {
-                    int coord[] = new int[3];
-                    coord[0] = x;
-                    coord[1] = y + 1;
-                    coord[2] = z;
-                    stack.stackTagCompound.setIntArray("tpIn", coord);
-                    player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.tpout"));
-                }
-                else if (!stack.stackTagCompound.hasKey("tpOut"))
-                {
-                    int coord[] = new int[3];
-                    coord[0] = x;
-                    coord[1] = y + 1;
-                    coord[2] = z;
-                    stack.stackTagCompound.setIntArray("tpOut", coord);
-                    player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.done"));
-                }
-                return true;
-//            }
-//            return false;
+            if (world.getBlockId(x, y, z) == BlockList.prisonMan.blockID) return false;
+
+            if (!stack.stackTagCompound.hasKey("jailCoord1"))
+            {
+                int coord[] = new int[3];
+                coord[0] = x;
+                coord[1] = y;
+                coord[2] = z;
+                stack.stackTagCompound.setIntArray("jailCoord1", coord);
+                player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.nextpt"));
+            }
+            else if (!stack.stackTagCompound.hasKey("jailCoord2"))
+            {
+                int coord[] = new int[3];
+                coord[0] = x;
+                coord[1] = y;
+                coord[2] = z;
+                stack.stackTagCompound.setIntArray("jailCoord2", coord);
+                player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.tpin"));
+            }
+            else if (!stack.stackTagCompound.hasKey("tpIn"))
+            {
+                int coord[] = new int[3];
+                coord[0] = x;
+                coord[1] = y + 1;
+                coord[2] = z;
+                stack.stackTagCompound.setIntArray("tpIn", coord);
+                player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.tpout"));
+            }
+            else if (!stack.stackTagCompound.hasKey("tpOut"))
+            {
+                int coord[] = new int[3];
+                coord[0] = x;
+                coord[1] = y + 1;
+                coord[2] = z;
+                stack.stackTagCompound.setIntArray("tpOut", coord);
+                player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.done"));
+            }
+            return true;
+            // }
+            // return false;
         }
         else return false;
     }
@@ -169,12 +170,10 @@ public class ItemConfigWand extends Item
         infoList.add("the bounds of the jail.");
         if (CommonProxy.shouldAddAdditionalInfo())
         {
+            infoList.add((stack.getItemDamage() == 1) ? "Locked" : "Unlocked");
             if (stack.stackTagCompound != null)
             {
-                if (stack.stackTagCompound.hasKey("locked"))
-                {
-                    infoList.add((stack.stackTagCompound.getBoolean("locked")) ? "Locked" : "Unlocked");
-                }
+
                 if (stack.stackTagCompound.hasKey("jailCoord1"))
                 {
                     int coord[] = stack.stackTagCompound.getIntArray("jailCoord1");
