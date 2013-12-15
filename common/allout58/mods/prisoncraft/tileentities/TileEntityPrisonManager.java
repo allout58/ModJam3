@@ -129,17 +129,11 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     public void jailPlayer(EntityPlayer player)
     {
         isDirty = true;
-//        tpCoordIn[0] = xCoord;
-//        tpCoordIn[1] = yCoord + 1;
-//        tpCoordIn[2] = zCoord;
-//        tpCoordOut[0] = xCoord + 5;
-//        tpCoordOut[1] = yCoord + 1;
-//        tpCoordOut[2] = zCoord;
         jailedPlayer = player;
         playerName = player.username;
         hasJailedPlayer = true;
         player.mountEntity(null);
-//        player.setPositionAndUpdate(tpCoordIn[0] + .5, tpCoordIn[1], tpCoordIn[2] + .5);
+        player.setPositionAndUpdate(tpCoordIn[0] + .5, tpCoordIn[1], tpCoordIn[2] + .5);
         // Take their inventory
         for (int i = START_MAIN; i < START_HOTBAR; i++)
         {
@@ -177,7 +171,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         }
         jailedPlayer.removePotionEffect(Potion.moveSlowdown.id);
         jailedPlayer.removePotionEffect(Potion.jump.id);
-//        jailedPlayer.setPositionAndUpdate(tpCoordOut[0], tpCoordOut[1], tpCoordOut[2]);
+        jailedPlayer.setPositionAndUpdate(tpCoordOut[0], tpCoordOut[1], tpCoordOut[2]);
         jailedPlayer.inventory.onInventoryChanged();
         hasJailedPlayer = false;
         jailedPlayer = null;
@@ -191,10 +185,10 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         if (isDirty)
         {
             isDirty = false;
-            if(worldObj.isRemote)
-            {
-                PacketDispatcher.sendPacketToServer(this.getDescriptionPacket());
-            }
+//            if(worldObj.isRemote)
+//            {
+//                PacketDispatcher.sendPacketToServer(this.getDescriptionPacket());
+//            }
             worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
         }
         if (hasJailedPlayer)
