@@ -1,6 +1,9 @@
 package allout58.mods.prisoncraft.tileentities;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.INetworkManager;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityPrisonUnbreakable extends TileEntity
@@ -39,13 +42,29 @@ public class TileEntityPrisonUnbreakable extends TileEntity
     public void readFromNBT(NBTTagCompound tags)
     {
         super.writeToNBT(tags);
-//        blockID=tags.getInteger("blockID");
+        blockID=tags.getInteger("blockID");
     }
     
     @Override
     public void writeToNBT(NBTTagCompound tags)
     {
         super.writeToNBT(tags);
-//        tags.setInteger("blockID",blockID);
+        tags.setInteger("blockID",blockID);
+    }
+    
+    /* Packets */
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+        writeToNBT(tag);
+        return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
+    }
+
+    @Override
+    public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
+    {
+        readFromNBT(packet.data);
+        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
 }
