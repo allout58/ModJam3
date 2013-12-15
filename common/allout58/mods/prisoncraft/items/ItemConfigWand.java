@@ -61,20 +61,22 @@ public class ItemConfigWand extends Item
             }
             if (world.getBlockId(x, y, z) == BlockList.prisonMan.blockID) return false;
             if (stack.stackTagCompound == null) stack.stackTagCompound = new NBTTagCompound();
-            if (!stack.stackTagCompound.hasKey("x1"))
+            if (!stack.stackTagCompound.hasKey("jailCoord1"))
             {
-                // change to int array
-                stack.stackTagCompound.setInteger("x1", x);
-                stack.stackTagCompound.setInteger("y1", y);
-                stack.stackTagCompound.setInteger("z1", z);
+                int coord[] = new int[3];
+                coord[0] = x;
+                coord[1] = y;
+                coord[2] = z;
+                stack.stackTagCompound.setIntArray("jailCoord1", coord);
                 player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.nextpt"));
             }
-            else if (!stack.stackTagCompound.hasKey("x2"))
+            else if (!stack.stackTagCompound.hasKey("jailCoord2"))
             {
-                // change to int array
-                stack.stackTagCompound.setInteger("x2", x);
-                stack.stackTagCompound.setInteger("y2", y);
-                stack.stackTagCompound.setInteger("z2", z);
+                int coord[] = new int[3];
+                coord[0] = x;
+                coord[1] = y;
+                coord[2] = z;
+                stack.stackTagCompound.setIntArray("jailCoord2", coord);
                 player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.tpin"));
             }
             else if (!stack.stackTagCompound.hasKey("tpIn"))
@@ -113,10 +115,12 @@ public class ItemConfigWand extends Item
         {
             if (stack.stackTagCompound != null)
             {
-                infoList.add(String.format("Block 1 {X: %d, Y: %d, Z: %d}", stack.stackTagCompound.getInteger("x1"), stack.stackTagCompound.getInteger("y1"), stack.stackTagCompound.getInteger("z1")));
-                if (stack.stackTagCompound.hasKey("x2"))
+                int coord[]=stack.stackTagCompound.getIntArray("jailCoord1");
+                infoList.add(String.format("Block 1 {X: %d, Y: %d, Z: %d}", coord[0], coord[1], coord[2]));
+                if (stack.stackTagCompound.hasKey("jailCoord2"))
                 {
-                    infoList.add(String.format("Block 2 {X: %d, Y: %d, Z: %d}", stack.stackTagCompound.getInteger("x2"), stack.stackTagCompound.getInteger("y2"), stack.stackTagCompound.getInteger("z2")));
+                    int coord2[]=stack.stackTagCompound.getIntArray("jailCoord2");
+                    infoList.add(String.format("Block 2 {X: %d, Y: %d, Z: %d}", coord2[0], coord2[1], coord2[2]));
                 }
             }
         }

@@ -5,6 +5,7 @@ import java.util.Vector;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 import allout58.mods.prisoncraft.blocks.BlockList;
+import allout58.mods.prisoncraft.commands.JailCommand;
 import allout58.mods.prisoncraft.constants.ModConstants;
 
 import net.minecraft.block.Block;
@@ -34,6 +35,8 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     public boolean hasJailedPlayer = false;
 
+    public int jailCoord1[] = new int[3];
+    public int jailCoord2[] = new int[3];
     public int tpCoordIn[] = new int[3];
     public int tpCoordOut[] = new int[3];
 
@@ -51,14 +54,16 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     {
         tpCoordIn = locs.getIntArray("tpIn");
         tpCoordOut = locs.getIntArray("tpOut");
+        jailCoord1 = locs.getIntArray("jailCoord1");
+        jailCoord2 = locs.getIntArray("jailCoord2");
         isDirty = true;
         // give xyz names
-        int x1 = locs.getInteger("x1");
-        int y1 = locs.getInteger("y1");
-        int z1 = locs.getInteger("z1");
-        int x2 = locs.getInteger("x2");
-        int y2 = locs.getInteger("y2");
-        int z2 = locs.getInteger("z2");
+        int x1 = jailCoord1[0];
+        int y1 = jailCoord1[1];
+        int z1 = jailCoord1[2];
+        int x2 = jailCoord2[0];
+        int y2 = jailCoord2[1];
+        int z2 = jailCoord2[2];
         // force ..1 to be lower than ..2
         if (x1 > x2)
         {
