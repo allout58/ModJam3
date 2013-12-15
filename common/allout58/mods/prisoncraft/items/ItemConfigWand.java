@@ -53,7 +53,7 @@ public class ItemConfigWand extends Item
     public Icon getIcon(ItemStack stack, int renderPass)
     {
         // If locked
-        if (stack.stackTagCompound.hasKey("locked") && stack.stackTagCompound.getBoolean("locked"))
+        if (stack.stackTagCompound != null && stack.stackTagCompound.hasKey("locked") && stack.stackTagCompound.getBoolean("locked"))
         {
             if (renderPass != 1) return lock;
             else return main;
@@ -81,17 +81,17 @@ public class ItemConfigWand extends Item
                 // reset
                 stack.stackTagCompound = null;
             }
-            else if (stack.stackTagCompound != null)
-            {
-                if (!stack.stackTagCompound.hasKey("locked") || !stack.stackTagCompound.getBoolean("locked"))
-                {
-                    stack.stackTagCompound.setBoolean("locked", true);
-                }
-                else
-                {
-                    stack.stackTagCompound.setBoolean("locked", false);
-                }
-            }
+//            else if (stack.stackTagCompound != null)
+//            {
+//                if (!stack.stackTagCompound.hasKey("locked") || !stack.stackTagCompound.getBoolean("locked"))
+//                {
+//                    stack.stackTagCompound.setBoolean("locked", true);
+//                }
+//                else
+//                {
+//                    stack.stackTagCompound.setBoolean("locked", false);
+//                }
+//            }
         }
         return stack;
     }
@@ -101,8 +101,13 @@ public class ItemConfigWand extends Item
     {
         if (!world.isRemote)
         {
-            if (stack.stackTagCompound.hasKey("locked") && !stack.stackTagCompound.getBoolean("locked"))
+            if (stack.stackTagCompound == null)
             {
+                stack.stackTagCompound = new NBTTagCompound();
+//                stack.stackTagCompound.setBoolean("locked", false);
+            }
+//            if (stack.stackTagCompound.hasKey("locked") && !stack.stackTagCompound.getBoolean("locked"))
+//            {
                 if (player.isSneaking())
                 {
                     // reset
@@ -110,7 +115,7 @@ public class ItemConfigWand extends Item
                     return true;
                 }
                 if (world.getBlockId(x, y, z) == BlockList.prisonMan.blockID) return false;
-                if (stack.stackTagCompound == null) stack.stackTagCompound = new NBTTagCompound();
+
                 if (!stack.stackTagCompound.hasKey("jailCoord1"))
                 {
                     int coord[] = new int[3];
@@ -147,10 +152,9 @@ public class ItemConfigWand extends Item
                     stack.stackTagCompound.setIntArray("tpOut", coord);
                     player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.done"));
                 }
-
                 return true;
-            }
-            return false;
+//            }
+//            return false;
         }
         else return false;
     }
@@ -167,8 +171,15 @@ public class ItemConfigWand extends Item
         {
             if (stack.stackTagCompound != null)
             {
-                int coord[] = stack.stackTagCompound.getIntArray("jailCoord1");
-                infoList.add(String.format("Block 1 {X: %d, Y: %d, Z: %d}", coord[0], coord[1], coord[2]));
+                if (stack.stackTagCompound.hasKey("locked"))
+                {
+                    infoList.add((stack.stackTagCompound.getBoolean("locked")) ? "Locked" : "Unlocked");
+                }
+                if (stack.stackTagCompound.hasKey("jailCoord1"))
+                {
+                    int coord[] = stack.stackTagCompound.getIntArray("jailCoord1");
+                    infoList.add(String.format("Block 1 {X: %d, Y: %d, Z: %d}", coord[0], coord[1], coord[2]));
+                }
                 if (stack.stackTagCompound.hasKey("jailCoord2"))
                 {
                     int coord2[] = stack.stackTagCompound.getIntArray("jailCoord2");
