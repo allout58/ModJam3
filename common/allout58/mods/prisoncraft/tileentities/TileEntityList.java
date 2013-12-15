@@ -7,5 +7,6 @@ public class TileEntityList
     public static void init()
     {
         GameRegistry.registerTileEntity(TileEntityPrisonUnbreakable.class, "prisonUnbreakable");
+        GameRegistry.registerTileEntity(TileEntityPrisonManager.class,"prisonManager");
     }
 }
