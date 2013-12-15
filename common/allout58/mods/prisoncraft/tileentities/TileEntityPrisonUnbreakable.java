@@ -8,18 +8,18 @@ import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityPrisonUnbreakable extends TileEntity
 {
-    private int blockID=1;
+    private int fakeBlockID=1;
    
     private Boolean isDirty=false;
     
     public int getFakeBlockID()
     {
-        return blockID;
+        return fakeBlockID;
     }
     
     public void setFakeBlockID(int id)
     {
-        blockID=id;
+        fakeBlockID=id;
         isDirty=true;
     }
     
@@ -42,14 +42,14 @@ public class TileEntityPrisonUnbreakable extends TileEntity
     public void readFromNBT(NBTTagCompound tags)
     {
         super.writeToNBT(tags);
-        blockID=tags.getInteger("blockID");
+        fakeBlockID=tags.getInteger("fakeBlockID");
     }
     
     @Override
     public void writeToNBT(NBTTagCompound tags)
     {
         super.writeToNBT(tags);
-        tags.setInteger("blockID",blockID);
+        tags.setInteger("fakeBlockID",fakeBlockID);
     }
     
     /* Packets */

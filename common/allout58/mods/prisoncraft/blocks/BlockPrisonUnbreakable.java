@@ -31,13 +31,14 @@ public class BlockPrisonUnbreakable extends BlockContainer
     @Override
     public TileEntity createNewTileEntity(World world)
     {
-        return new TileEntityPrisonUnbreakable();
+        return null;
+//        return new TileEntityPrisonUnbreakable();
     }
     
     @Override
     public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
     {
-        int id=1;
+        int id=100;
         TileEntity logic = world.getBlockTileEntity(x, y, z);
         if (logic instanceof TileEntityPrisonUnbreakable)
         {
