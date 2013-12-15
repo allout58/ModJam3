@@ -1,5 +1,6 @@
 package allout58.mods.prisoncraft.tileentities;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityPrisonUnbreakable extends TileEntity
@@ -32,5 +33,19 @@ public class TileEntityPrisonUnbreakable extends TileEntity
             isDirty = false;
             worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
         }
+    }
+    
+    @Override
+    public void readFromNBT(NBTTagCompound tags)
+    {
+        super.writeToNBT(tags);
+        blockID=tags.getInteger("blockID");
+    }
+    
+    @Override
+    public void writeToNBT(NBTTagCompound tags)
+    {
+        super.writeToNBT(tags);
+        tags.setInteger("blockID",blockID);
     }
 }

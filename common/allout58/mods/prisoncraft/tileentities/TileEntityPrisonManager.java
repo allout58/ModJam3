@@ -49,9 +49,9 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     public void changeBlocks(NBTTagCompound locs)
     {
-        tpCoordIn=locs.getIntArray("tpIn");
-        tpCoordOut=locs.getIntArray("tpOut");
-        isDirty=true;
+        tpCoordIn = locs.getIntArray("tpIn");
+        tpCoordOut = locs.getIntArray("tpOut");
+        isDirty = true;
         // give xyz names
         int x1 = locs.getInteger("x1");
         int y1 = locs.getInteger("y1");
@@ -79,52 +79,38 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             z1 -= z2;
         }
         // loop through each block
-        for(int i=x1;i<=x2;i++)
+        for (int i = x1; i <= x2; i++)
         {
-            for(int j=y1;j<=y2;j++)
+            for (int j = y1; j <= y2; j++)
             {
-                for(int k=z1;k<=z2;k++)
+                for (int k = z1; k <= z2; k++)
                 {
-                    int id=worldObj.getBlockId(i, j, k);
-                    if(isValidID(id))
+                    int id = worldObj.getBlockId(i, j, k);
+                    if (isValidID(id))
                     {
                         worldObj.setBlock(i, j, k, BlockList.prisonUnbreak.blockID, 0, 3);
-                        TileEntity te=worldObj.getBlockTileEntity(i, j, k);
-                        if(te instanceof TileEntityPrisonUnbreakable)
+                        TileEntity te = worldObj.getBlockTileEntity(i, j, k);
+                        if (te instanceof TileEntityPrisonUnbreakable)
                         {
-                            ((TileEntityPrisonUnbreakable)te).setBlockID(id);
+                            ((TileEntityPrisonUnbreakable) te).setBlockID(id);
                         }
                     }
                 }
             }
         }
     }
-    
+
     private Boolean isValidID(int id)
     {
-        for(int i=0;i<ModConstants.WHITELIST_WALL_IDS.length;i++)
+        for (int i = 0; i < ModConstants.WHITELIST_WALL_IDS.length; i++)
         {
-            if(id==ModConstants.WHITELIST_WALL_IDS[i])
+            if (id == ModConstants.WHITELIST_WALL_IDS[i])
             {
                 return true;
             }
         }
         return false;
     }
-
-    // public void click(EntityPlayer player)// tmp test fcn
-    // {
-    // if (!hasJailedPlayer)
-    // {
-    // jailPlayer(player);
-    //
-    // }
-    // else
-    // {
-    // unjailPlayer();
-    // hasJailedPlayer = false;
-    // }
-    // }
 
     public void jailPlayer(EntityPlayer player)
     {
@@ -185,10 +171,6 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         if (isDirty)
         {
             isDirty = false;
-//            if(worldObj.isRemote)
-//            {
-//                PacketDispatcher.sendPacketToServer(this.getDescriptionPacket());
-//            }
             worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
         }
         if (hasJailedPlayer)
@@ -202,6 +184,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     @Override
     public void readFromNBT(NBTTagCompound tags)
     {
+        super.readFromNBT(tags);
         hasJailedPlayer = tags.getBoolean("HasJailedPlayer");
         tpCoordIn = tags.getIntArray("tpCoordIn");
         tpCoordOut = tags.getIntArray("tpCoordOut");
@@ -222,6 +205,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     @Override
     public void writeToNBT(NBTTagCompound tags)
     {
+        super.writeToNBT(tags);
         tags.setBoolean("HasJailedPlayer", hasJailedPlayer);
         tags.setIntArray("tpCoordIn", tpCoordIn);
         tags.setIntArray("tpCoordOut", tpCoordOut);
