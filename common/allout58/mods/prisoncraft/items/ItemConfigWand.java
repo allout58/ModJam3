@@ -11,16 +11,21 @@ import allout58.mods.prisoncraft.blocks.BlockPrisonManager;
 import allout58.mods.prisoncraft.constants.TextureConstants;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
 import net.minecraft.client.gui.ChatLine;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 
 public class ItemConfigWand extends Item
 {
+    private Icon main;
+    private Icon lock;
+
     public ItemConfigWand(int id)
     {
         super(id);
@@ -28,6 +33,37 @@ public class ItemConfigWand extends Item
         setTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + getUnlocalizedName().substring(5));
         setCreativeTab(PrisonCraft.creativeTab);
         setMaxStackSize(1);
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public boolean requiresMultipleRenderPasses()
+    {
+        return true;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IconRegister ir)
+    {
+        main = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + getUnlocalizedName().substring(5));
+        lock = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":lock");
+    }
+
+    @Override
+    public Icon getIcon(ItemStack stack, int renderPass)
+    {
+        // If locked
+        if (stack.stackTagCompound.hasKey("locked") && stack.stackTagCompound.getBoolean("locked"))
+        {
+            if (renderPass != 1) return lock;
+            else return main;
+        }
+        // Else, unlocked
+        else
+        {
+            return main;
+        }
     }
 
     @Override
@@ -46,9 +82,9 @@ public class ItemConfigWand extends Item
                 // reset
                 stack.stackTagCompound = null;
             }
-            else if (stack.stackTagCompound!=null)
+            else if (stack.stackTagCompound != null)
             {
-                if(!stack.stackTagCompound.hasKey("locked") || !stack.stackTagCompound.getBoolean("locked"))
+                if (!stack.stackTagCompound.hasKey("locked") || !stack.stackTagCompound.getBoolean("locked"))
                 {
                     stack.stackTagCompound.setBoolean("locked", true);
                 }
