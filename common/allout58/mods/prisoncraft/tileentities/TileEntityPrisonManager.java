@@ -1,5 +1,6 @@
 package allout58.mods.prisoncraft.tileentities;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -306,7 +307,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         {
             jailedPlayerGM = EnumGameType.getByID(tags.getInteger("gameMode"));
         }
-        jailedPlayer = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(tags.getString("PlayerUsername"));
+        jailedPlayer = findPlayerFromName(tags.getString("PlayerUsername"));
         NBTTagList tagList = tags.getTagList("Items");
         playerInventory = new ItemStack[this.getSizeInventory()];
         for (int i = 0; i < tagList.tagCount(); ++i)
@@ -318,6 +319,22 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 playerInventory[slot] = ItemStack.loadItemStackFromNBT(tagCompound);
             }
         }
+    }
+
+    private EntityPlayer findPlayerFromName(String uname)
+    {
+        if (worldObj != null)
+        {
+            ArrayList players = (ArrayList) worldObj.playerEntities;
+            for (int i = 0; i < players.size(); i++)
+            {
+                if (((EntityPlayer) players.get(i)).username.equalsIgnoreCase(uname))
+                {
+                    return ((EntityPlayer) players.get(i));
+                }
+            }
+        }
+        return null;
     }
 
     @Override
