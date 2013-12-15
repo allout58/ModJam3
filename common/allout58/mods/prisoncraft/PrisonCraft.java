@@ -32,12 +32,6 @@ public class PrisonCraft
         {
             return Item.plateChain;
         }
-
-//        @Override
-//        public String getTranslatedTabLabel()
-//        {
-//            return StringUtils.localize("strings.Title");
-//        }
     };
     
     @Instance(ModConstants.MODID)

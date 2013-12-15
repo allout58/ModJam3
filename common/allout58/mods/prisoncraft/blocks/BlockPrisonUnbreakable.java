@@ -41,7 +41,7 @@ public class BlockPrisonUnbreakable extends BlockContainer
         TileEntity logic = world.getBlockTileEntity(x, y, z);
         if (logic instanceof TileEntityPrisonUnbreakable)
         {
-            id=((TileEntityPrisonUnbreakable) logic).getBlockID();
+            id=((TileEntityPrisonUnbreakable) logic).getFakeBlockID();
         }
         Block fake=Block.blocksList[id];
         return fake.getBlockTexture(world, x, y, z, side);

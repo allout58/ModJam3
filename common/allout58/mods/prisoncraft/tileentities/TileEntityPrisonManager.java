@@ -97,7 +97,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                         TileEntity te = worldObj.getBlockTileEntity(i, j, k);
                         if (te instanceof TileEntityPrisonUnbreakable)
                         {
-                            ((TileEntityPrisonUnbreakable) te).setBlockID(id);
+                            ((TileEntityPrisonUnbreakable) te).setFakeBlockID(id);
                         }
                     }
                 }

@@ -12,12 +12,12 @@ public class TileEntityPrisonUnbreakable extends TileEntity
    
     private Boolean isDirty=false;
     
-    public int getBlockID()
+    public int getFakeBlockID()
     {
         return blockID;
     }
     
-    public void setBlockID(int id)
+    public void setFakeBlockID(int id)
     {
         blockID=id;
         isDirty=true;
