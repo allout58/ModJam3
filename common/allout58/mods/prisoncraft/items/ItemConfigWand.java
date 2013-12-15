@@ -32,6 +32,12 @@ public class ItemConfigWand extends Item
     }
 
     @Override
+    public boolean getShareTag()
+    {
+        return true;
+    }
+
+    @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
     {
         if (player.isSneaking())
@@ -45,50 +51,54 @@ public class ItemConfigWand extends Item
     @Override
     public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
     {
-        if (player.isSneaking())
+        if (!world.isRemote)
         {
-            // reset
-            stack.stackTagCompound = null;
+            if (player.isSneaking())
+            {
+                // reset
+                stack.stackTagCompound = null;
+                return true;
+            }
+            if (world.getBlockId(x, y, z) == BlockList.prisonMan.blockID) return false;
+            if (stack.stackTagCompound == null) stack.stackTagCompound = new NBTTagCompound();
+            if (!stack.stackTagCompound.hasKey("x1"))
+            {
+                // change to int array
+                stack.stackTagCompound.setInteger("x1", x);
+                stack.stackTagCompound.setInteger("y1", y);
+                stack.stackTagCompound.setInteger("z1", z);
+                player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.nextpt"));
+            }
+            else if (!stack.stackTagCompound.hasKey("x2"))
+            {
+                // change to int array
+                stack.stackTagCompound.setInteger("x2", x);
+                stack.stackTagCompound.setInteger("y2", y);
+                stack.stackTagCompound.setInteger("z2", z);
+                player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.tpin"));
+            }
+            else if (!stack.stackTagCompound.hasKey("tpIn"))
+            {
+                int coord[] = new int[3];
+                coord[0] = x;
+                coord[1] = y;
+                coord[2] = z;
+                stack.stackTagCompound.setIntArray("tpIn", coord);
+                player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.tpout"));
+            }
+            else if (!stack.stackTagCompound.hasKey("tpOut"))
+            {
+                int coord[] = new int[3];
+                coord[0] = x;
+                coord[1] = y;
+                coord[2] = z;
+                stack.stackTagCompound.setIntArray("tpOut", coord);
+                player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.done"));
+            }
+
             return true;
         }
-        if(world.getBlockId(x, y, z)==BlockList.prisonMan.blockID) return false;
-        if (stack.stackTagCompound == null) stack.stackTagCompound = new NBTTagCompound();
-        if (!stack.stackTagCompound.hasKey("x1"))
-        {
-            // change to int array
-            stack.stackTagCompound.setInteger("x1", x);
-            stack.stackTagCompound.setInteger("y1", y);
-            stack.stackTagCompound.setInteger("z1", z);
-            player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.nextpt"));
-        }
-        else if (!stack.stackTagCompound.hasKey("x2"))
-        {
-            // change to int array
-            stack.stackTagCompound.setInteger("x2", x);
-            stack.stackTagCompound.setInteger("y2", y);
-            stack.stackTagCompound.setInteger("z2", z);
-            player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.tpin"));
-        }
-        else if (!stack.stackTagCompound.hasKey("tpIn"))
-        {
-            int coord[] = new int[3];
-            coord[0] = x;
-            coord[1] = y;
-            coord[2] = z;
-            stack.stackTagCompound.setIntArray("tpIn", coord);
-            player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.tpout"));
-        }
-        else if (!stack.stackTagCompound.hasKey("tpOut"))
-        {
-            int coord[] = new int[3];
-            coord[0] = x;
-            coord[1] = y;
-            coord[2] = z;
-            stack.stackTagCompound.setIntArray("tpOut", coord);
-            player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.done"));
-        }
-
-        return true;
+        else return false;
     }
 
     @Override
