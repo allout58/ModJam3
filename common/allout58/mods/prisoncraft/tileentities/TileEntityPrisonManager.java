@@ -23,6 +23,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.EnumGameType;
 
 public class TileEntityPrisonManager extends TileEntity implements IInventory
 {
@@ -39,6 +40,8 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     public int jailCoord2[] = new int[3];
     public int tpCoordIn[] = new int[3];
     public int tpCoordOut[] = new int[3];
+    
+    private EnumGameType jailedPlayerGM;
 
     private EntityPlayer jailedPlayer;
     public String playerName;
@@ -105,6 +108,58 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         }
     }
 
+    public void revertBlocks()
+    {
+        isDirty = true;
+        // give xyz names
+        int x1 = jailCoord1[0];
+        int y1 = jailCoord1[1];
+        int z1 = jailCoord1[2];
+        int x2 = jailCoord2[0];
+        int y2 = jailCoord2[1];
+        int z2 = jailCoord2[2];
+        // force ..1 to be lower than ..2
+        if (x1 > x2)
+        {
+            x1 += x2;
+            x2 = x1 - x2;
+            x1 -= x2;
+        }
+        if (y1 > y2)
+        {
+            y1 += y2;
+            y2 = y1 - y2;
+            y1 -= y2;
+        }
+        if (z1 > z2)
+        {
+            z1 += z2;
+            z2 = z1 - z2;
+            z1 -= z2;
+        }
+        // loop through each block
+        for (int i = x1; i <= x2; i++)
+        {
+            for (int j = y1; j <= y2; j++)
+            {
+                for (int k = z1; k <= z2; k++)
+                {
+                    int id = worldObj.getBlockId(i, j, k);
+                    if (isValidID(id))
+                    {
+                        
+                        TileEntity te = worldObj.getBlockTileEntity(i, j, k);
+                        if (te instanceof TileEntityPrisonUnbreakable)
+                        {
+                            int revID=((TileEntityPrisonUnbreakable) te).getFakeBlockID();
+                            worldObj.setBlock(i, j, k, revID, 0, 3);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     private Boolean isValidID(int id)
     {
         for (int i = 0; i < ModConstants.WHITELIST_WALL_IDS.length; i++)
@@ -122,6 +177,15 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         isDirty = true;
         jailedPlayer = player;
         playerName = player.username;
+        if(player instanceof EntityPlayerMP)
+        {
+            jailedPlayerGM=((EntityPlayerMP)player).theItemInWorldManager.getGameType();
+            ((EntityPlayerMP)player).setGameType(EnumGameType.ADVENTURE);
+        }
+        else
+        {
+            System.out.println("Gamemode not set. Player obj not of type EntityPlayerMP.");
+        }
         hasJailedPlayer = true;
         player.mountEntity(null);
         player.setPositionAndUpdate(tpCoordIn[0] + .5, tpCoordIn[1], tpCoordIn[2] + .5);
@@ -140,6 +204,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         }
         player.inventory.clearInventory(-1, -1);
         player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 10, 300, false));
+        player.jumpMovementFactor=-1;
     }
 
     public void unjailPlayer()
@@ -164,6 +229,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         jailedPlayer.removePotionEffect(Potion.jump.id);
         jailedPlayer.setPositionAndUpdate(tpCoordOut[0]+.5, tpCoordOut[1], tpCoordOut[2]+.5);
         jailedPlayer.inventory.onInventoryChanged();
+        jailedPlayer.jumpMovementFactor=.02F;
         hasJailedPlayer = false;
         jailedPlayer = null;
         playerName = "";
@@ -181,6 +247,8 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         if (hasJailedPlayer)
         {
             jailedPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 10, 300, false));
+            float j=jailedPlayer.jumpMovementFactor;
+            j=1;
         }
     }
 
