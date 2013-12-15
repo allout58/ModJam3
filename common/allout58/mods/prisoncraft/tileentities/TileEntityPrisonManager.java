@@ -214,10 +214,10 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         {
             player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 10, 300, false));
         }
-//        if (Config.noJumping)
-//        {
-//            player.jumpMovementFactor = -1;
-//        }
+        // if (Config.noJumping)
+        // {
+        // player.jumpMovementFactor = -1;
+        // }
     }
 
     public void unjailPlayer()
@@ -262,10 +262,10 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 System.out.println("Game mode could not be reverted. Jailed Player obj in not of type EntityPlayerMP.");
             }
         }
-//        if (Config.noJumping)
-//        {
-//            jailedPlayer.jumpMovementFactor = .02F;
-//        }
+        // if (Config.noJumping)
+        // {
+        // jailedPlayer.jumpMovementFactor = .02F;
+        // }
         hasJailedPlayer = false;
         jailedPlayer = null;
         playerName = "";
@@ -286,7 +286,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             {
                 jailedPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 10, 300, false));
             }
-            if (Config.noJumping && worldObj.getTotalWorldTime()%10==0)
+            if (Config.noJumping && worldObj.getTotalWorldTime() % 10 == 0)
             {
                 jailedPlayer.setPositionAndUpdate(jailedPlayer.posX, tpCoordIn[1], jailedPlayer.posZ);
             }
@@ -302,7 +302,10 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         hasJailedPlayer = tags.getBoolean("HasJailedPlayer");
         tpCoordIn = tags.getIntArray("tpCoordIn");
         tpCoordOut = tags.getIntArray("tpCoordOut");
-        jailedPlayerGM = EnumGameType.getByID(tags.getInteger("gameMode"));
+        if (tags.hasKey("gameMode"))
+        {
+            jailedPlayerGM = EnumGameType.getByID(tags.getInteger("gameMode"));
+        }
         jailedPlayer = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(tags.getString("PlayerUsername"));
         NBTTagList tagList = tags.getTagList("Items");
         playerInventory = new ItemStack[this.getSizeInventory()];
@@ -324,7 +327,10 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         tags.setBoolean("HasJailedPlayer", hasJailedPlayer);
         tags.setIntArray("tpCoordIn", tpCoordIn);
         tags.setIntArray("tpCoordOut", tpCoordOut);
-        tags.setInteger("gameMode", jailedPlayerGM.getID());
+        if (jailedPlayerGM != null)
+        {
+            tags.setInteger("gameMode", jailedPlayerGM.getID());
+        }
         if (hasJailedPlayer)
         {
             tags.setString("PlayerUsername", jailedPlayer.username);

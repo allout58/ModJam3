@@ -104,6 +104,7 @@ public class BlockPrisonManager extends BlockContainer
                         if (entityPlayer.inventory.getCurrentItem().stackTagCompound != null)
                         {
                             ((TileEntityPrisonManager) te).changeBlocks(entityPlayer.inventory.getCurrentItem().stackTagCompound);
+                            entityPlayer.sendChatToPlayer(new ChatMessageComponent().addKey("string.blockprisonmanager.success"));
                             return true;
                         }
                     }

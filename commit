@@ -1,5 +1,4 @@
-Finished Jail/Unjail Commands
+Finished basically everything
 
-Steals players inventory till they are released
-TPs them to a spot and gives them Immobility until released
-TPs them to another spot and returns items when released
+Need more testing (server client specifically) but basically done for ModJam I think
+AFK for an hour or so...
