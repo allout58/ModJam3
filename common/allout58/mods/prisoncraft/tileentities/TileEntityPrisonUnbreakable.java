@@ -42,14 +42,14 @@ public class TileEntityPrisonUnbreakable extends TileEntity
     public void readFromNBT(NBTTagCompound tags)
     {
         super.writeToNBT(tags);
-        fakeBlockID=tags.getInteger("fakeBlockID");
+        //fakeBlockID=tags.getInteger("fakeBlockID");
     }
     
     @Override
     public void writeToNBT(NBTTagCompound tags)
     {
         super.writeToNBT(tags);
-        tags.setInteger("fakeBlockID",fakeBlockID);
+        //tags.setInteger("fakeBlockID",fakeBlockID);
     }
     
     /* Packets */
