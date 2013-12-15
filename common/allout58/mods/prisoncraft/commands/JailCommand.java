@@ -75,7 +75,7 @@ public class JailCommand implements ICommand
                             te.jailPlayer(player);
                             foundOpen = true;
                         }
-                        icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No player with that name found"));
+                        else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No player with that name found"));
                     }
                 }
                 if (foundOpen) icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName() + " sends " + astring[0] + " to jail..."));

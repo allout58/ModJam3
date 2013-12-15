@@ -81,7 +81,7 @@ public class ItemConfigWand extends Item
             {
                 int coord[] = new int[3];
                 coord[0] = x;
-                coord[1] = y;
+                coord[1] = y+1;
                 coord[2] = z;
                 stack.stackTagCompound.setIntArray("tpIn", coord);
                 player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.tpout"));
@@ -90,7 +90,7 @@ public class ItemConfigWand extends Item
             {
                 int coord[] = new int[3];
                 coord[0] = x;
-                coord[1] = y;
+                coord[1] = y+1;
                 coord[2] = z;
                 stack.stackTagCompound.setIntArray("tpOut", coord);
                 player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.done"));
