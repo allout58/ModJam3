@@ -83,6 +83,7 @@ public class BlockPrisonManager extends BlockContainer
         if (logic instanceof TileEntityPrisonManager)
         {
             PrisonCraftWorldSave.forWorld(world).getTesList().remove((TileEntityPrisonManager) logic);
+            ((TileEntityPrisonManager)logic).revertBlocks();
         }
         super.breakBlock(world, x, y, z, par5, par6);
     }
@@ -91,11 +92,6 @@ public class BlockPrisonManager extends BlockContainer
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
     {
         super.onBlockActivated(world, x, y, z, entityPlayer, par6, par7, par8, par9);
-        /*
-         * TileEntity te=world.getBlockTileEntity(x, y, z); if(te instanceof
-         * TileEntityPrisonManager && stack.stackTagCompound!=null) {
-         * ((TileEntityPrisonManager)te).changeBlocks(stack.stackTagCompound); }
-         */
         if (!world.isRemote)
         {
             TileEntity te = world.getBlockTileEntity(x, y, z);

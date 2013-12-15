@@ -59,6 +59,17 @@ public class BlockPrisonUnbreakable extends BlockContainer
             {
                 super.breakBlock(world, x, y, z, par5, par6);
             }
+            else
+            {
+                int fakeID=((TileEntityPrisonUnbreakable)logic).getFakeBlockID();
+                super.breakBlock(world, x, y, z, par5, par6);
+                world.setBlock(x, y, z, BlockList.prisonUnbreak.blockID, 0, 3);
+                TileEntity te = world.getBlockTileEntity(x, y, z);
+                if(te instanceof TileEntityPrisonUnbreakable)
+                {
+                    ((TileEntityPrisonUnbreakable)te).setFakeBlockID(fakeID);
+                }
+            }
         }
     }
 

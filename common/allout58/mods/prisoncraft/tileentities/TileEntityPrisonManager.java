@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 
+import allout58.mods.prisoncraft.Config;
 import allout58.mods.prisoncraft.blocks.BlockList;
 import allout58.mods.prisoncraft.commands.JailCommand;
 import allout58.mods.prisoncraft.constants.ModConstants;
@@ -40,7 +41,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     public int jailCoord2[] = new int[3];
     public int tpCoordIn[] = new int[3];
     public int tpCoordOut[] = new int[3];
-    
+
     private EnumGameType jailedPlayerGM;
 
     private EntityPlayer jailedPlayer;
@@ -144,22 +145,16 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             {
                 for (int k = z1; k <= z2; k++)
                 {
-                    int id = worldObj.getBlockId(i, j, k);
-                    if (isValidID(id))
+                    TileEntity te = worldObj.getBlockTileEntity(i, j, k);
+                    if (te instanceof TileEntityPrisonUnbreakable)
                     {
-                        
-                        TileEntity te = worldObj.getBlockTileEntity(i, j, k);
-                        if (te instanceof TileEntityPrisonUnbreakable)
-                        {
-                            int revID=((TileEntityPrisonUnbreakable) te).getFakeBlockID();
-                            worldObj.setBlock(i, j, k, revID, 0, 3);
-                        }
+                        ((TileEntityPrisonUnbreakable) te).revert();
                     }
                 }
             }
         }
     }
-    
+
     private Boolean isValidID(int id)
     {
         for (int i = 0; i < ModConstants.WHITELIST_WALL_IDS.length; i++)
@@ -172,72 +167,105 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         return false;
     }
 
+    public Boolean isInitialized()
+    {
+        return !(jailCoord1[0] == 0 && jailCoord1[1] == 0 && jailCoord1[2] == 0);
+
+    }
+
     public void jailPlayer(EntityPlayer player)
     {
         isDirty = true;
         jailedPlayer = player;
         playerName = player.username;
-        if(player instanceof EntityPlayerMP)
+        if (Config.changeGameMode)
         {
-            jailedPlayerGM=((EntityPlayerMP)player).theItemInWorldManager.getGameType();
-            ((EntityPlayerMP)player).setGameType(EnumGameType.ADVENTURE);
-        }
-        else
-        {
-            System.out.println("Gamemode not set. Player obj not of type EntityPlayerMP.");
+            if (player instanceof EntityPlayerMP)
+            {
+                jailedPlayerGM = ((EntityPlayerMP) player).theItemInWorldManager.getGameType();
+                ((EntityPlayerMP) player).setGameType(EnumGameType.ADVENTURE);
+            }
+            else
+            {
+                System.out.println("Gamemode not set. Player obj not of type EntityPlayerMP.");
+            }
         }
         hasJailedPlayer = true;
         player.mountEntity(null);
         player.setPositionAndUpdate(tpCoordIn[0] + .5, tpCoordIn[1], tpCoordIn[2] + .5);
-        // Take their inventory
-        for (int i = START_MAIN; i < START_HOTBAR; i++)
+        if (Config.takeInventory)
         {
-            playerInventory[i] = player.inventory.mainInventory[i];
+            // Take their inventory
+            for (int i = START_MAIN; i < START_HOTBAR; i++)
+            {
+                playerInventory[i] = player.inventory.mainInventory[i];
+            }
+            for (int i = START_HOTBAR; i < START_ARMOR; i++)
+            {
+                playerInventory[i] = player.inventory.mainInventory[i];
+            }
+            for (int i = START_ARMOR; i < INVENTORY_SIZE; i++)
+            {
+                playerInventory[i] = player.inventory.armorInventory[i - START_ARMOR];
+            }
+            player.inventory.clearInventory(-1, -1);
         }
-        for (int i = START_HOTBAR; i < START_ARMOR; i++)
+        if (Config.noMovement)
         {
-            playerInventory[i] = player.inventory.mainInventory[i];
+            player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 10, 300, false));
         }
-        for (int i = START_ARMOR; i < INVENTORY_SIZE; i++)
-        {
-            playerInventory[i] = player.inventory.armorInventory[i - START_ARMOR];
-        }
-        player.inventory.clearInventory(-1, -1);
-        player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 10, 300, false));
-        player.jumpMovementFactor=-1;
+//        if (Config.noJumping)
+//        {
+//            player.jumpMovementFactor = -1;
+//        }
     }
 
     public void unjailPlayer()
     {
         isDirty = true;
 
-        // give their inventory
+        if (Config.takeInventory)
+        {
+            // give their inventory
 
-        for (int i = START_MAIN; i < START_HOTBAR; i++)
-        {
-            jailedPlayer.inventory.mainInventory[i] = playerInventory[i];
+            for (int i = START_MAIN; i < START_HOTBAR; i++)
+            {
+                jailedPlayer.inventory.mainInventory[i] = playerInventory[i];
+            }
+            for (int i = START_HOTBAR; i < START_ARMOR; i++)
+            {
+                jailedPlayer.inventory.mainInventory[i] = playerInventory[i];
+            }
+            for (int i = START_ARMOR; i < INVENTORY_SIZE; i++)
+            {
+                jailedPlayer.inventory.armorInventory[i - START_ARMOR] = playerInventory[i];
+            }
+            jailedPlayer.inventory.onInventoryChanged();
         }
-        for (int i = START_HOTBAR; i < START_ARMOR; i++)
+        if (Config.noMovement)
         {
-            jailedPlayer.inventory.mainInventory[i] = playerInventory[i];
+            jailedPlayer.removePotionEffect(Potion.moveSlowdown.id);
         }
-        for (int i = START_ARMOR; i < INVENTORY_SIZE; i++)
+        if (Config.noJumping)
         {
-            jailedPlayer.inventory.armorInventory[i - START_ARMOR] = playerInventory[i];
+            jailedPlayer.removePotionEffect(Potion.jump.id);
         }
-        jailedPlayer.removePotionEffect(Potion.moveSlowdown.id);
-        jailedPlayer.removePotionEffect(Potion.jump.id);
-        jailedPlayer.setPositionAndUpdate(tpCoordOut[0]+.5, tpCoordOut[1], tpCoordOut[2]+.5);
-        jailedPlayer.inventory.onInventoryChanged();
-        if(jailedPlayer instanceof EntityPlayerMP)
+        jailedPlayer.setPositionAndUpdate(tpCoordOut[0] + .5, tpCoordOut[1], tpCoordOut[2] + .5);
+        if (Config.changeGameMode)
         {
-            ((EntityPlayerMP)jailedPlayer).setGameType(jailedPlayerGM);
+            if (jailedPlayer instanceof EntityPlayerMP)
+            {
+                ((EntityPlayerMP) jailedPlayer).setGameType(jailedPlayerGM);
+            }
+            else
+            {
+                System.out.println("Game mode could not be reverted. Jailed Player obj in not of type EntityPlayerMP.");
+            }
         }
-        else
-        {
-            System.out.println("Game mode could not be reverted. Jailed Player obj in not of type EntityPlayerMP.");
-        }
-        jailedPlayer.jumpMovementFactor=.02F;
+//        if (Config.noJumping)
+//        {
+//            jailedPlayer.jumpMovementFactor = .02F;
+//        }
         hasJailedPlayer = false;
         jailedPlayer = null;
         playerName = "";
@@ -254,9 +282,14 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         }
         if (hasJailedPlayer)
         {
-            jailedPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 10, 300, false));
-            float j=jailedPlayer.jumpMovementFactor;
-            j=1;
+            if (Config.noMovement)
+            {
+                jailedPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 10, 300, false));
+            }
+            if (Config.noJumping && worldObj.getTotalWorldTime()%10==0)
+            {
+                jailedPlayer.setPositionAndUpdate(jailedPlayer.posX, tpCoordIn[1], jailedPlayer.posZ);
+            }
         }
     }
 
@@ -269,6 +302,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         hasJailedPlayer = tags.getBoolean("HasJailedPlayer");
         tpCoordIn = tags.getIntArray("tpCoordIn");
         tpCoordOut = tags.getIntArray("tpCoordOut");
+        jailedPlayerGM = EnumGameType.getByID(tags.getInteger("gameMode"));
         jailedPlayer = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(tags.getString("PlayerUsername"));
         NBTTagList tagList = tags.getTagList("Items");
         playerInventory = new ItemStack[this.getSizeInventory()];
@@ -290,6 +324,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         tags.setBoolean("HasJailedPlayer", hasJailedPlayer);
         tags.setIntArray("tpCoordIn", tpCoordIn);
         tags.setIntArray("tpCoordOut", tpCoordOut);
+        tags.setInteger("gameMode", jailedPlayerGM.getID());
         if (hasJailedPlayer)
         {
             tags.setString("PlayerUsername", jailedPlayer.username);

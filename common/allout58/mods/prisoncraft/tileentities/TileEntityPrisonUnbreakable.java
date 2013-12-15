@@ -33,7 +33,7 @@ public class TileEntityPrisonUnbreakable extends TileEntity
     
     public boolean canDestroy()
     {
-        return !isReverting;
+        return isReverting;
     }
     
     @Override

@@ -9,7 +9,11 @@ public class Config
     public static int prisonUnbreak;
     //Items
     public static int configWand;
-    //public static int shackles;
+    //Config options
+    public static boolean changeGameMode;
+    public static boolean takeInventory;
+    public static boolean noMovement;
+    public static boolean noJumping;
     
     public static void init(Configuration config)
     {
@@ -19,6 +23,11 @@ public class Config
         prisonUnbreak=config.getBlock("prisonUnbreak", 4001).getInt();
         
         configWand=config.getItem("configWand", 8000).getInt();
+        
+        changeGameMode=config.get("JailOptions", "ChangePlayerGameMode", true).getBoolean(true);
+        takeInventory=config.get("JailOptions", "TakePlayerInventory", true).getBoolean(true);
+        noMovement=config.get("JailOptions","AllowNoPlayerMovement",true).getBoolean(true);
+        noJumping=config.get("JailOptions","AllowNoPlayerJumping",true).getBoolean(true);
         
         config.save();
     }
