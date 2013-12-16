@@ -48,7 +48,7 @@ public class ChangeJailPermsCommand implements ICommand
         if (astring.length == 1)
         {
             final List<String> MATCHES = new LinkedList<String>();
-            final String ARG_LC = astring[1].toLowerCase();
+            final String ARG_LC = astring[0].toLowerCase();
             if ("add".toLowerCase().startsWith(ARG_LC))
             {
                 MATCHES.add("add");
@@ -79,7 +79,6 @@ public class ChangeJailPermsCommand implements ICommand
     @Override
     public void processCommand(ICommandSender icommandsender, String[] astring)
     {
-        // TODO Auto-generated method stub
         if (astring.length != 2)
         {
             icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));

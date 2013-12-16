@@ -111,6 +111,18 @@ public class JailPermissions
         {
             SaveHandler saveHandler = (SaveHandler) server.worldServerForDimension(0).getSaveHandler();
             String fileName = saveHandler.getWorldDirectory().getAbsolutePath() + "/PrisonCraftPerms.txt";
+            File f=new File(fileName);
+            if(!f.exists())
+            {
+                try
+                {
+                    f.createNewFile();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
             FileWriter output = null;
             try
             {
@@ -166,8 +178,19 @@ public class JailPermissions
         {
             SaveHandler saveHandler = (SaveHandler) server.worldServerForDimension(0).getSaveHandler();
             String fileName = saveHandler.getWorldDirectory().getAbsolutePath() + "/PrisonCraftPerms.txt";
+            File f=new File(fileName);
+            if(!f.exists())
+            {
+                try
+                {
+                    f.createNewFile();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
             FileReader file = null;
-
             try
             {
                 file = new FileReader(fileName);
