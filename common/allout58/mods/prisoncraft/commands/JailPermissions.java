@@ -29,6 +29,7 @@ public class JailPermissions
                 return true;
             }
         }
+        if(sender.getCommandSenderName().equalsIgnoreCase("Server"))return true;
         return false;
     }
     public boolean playerCanUse(String senderName)
