@@ -220,7 +220,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         }
         if (Config.noMovement)
         {
-            player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 10, 300, false));
+            player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 300, false));
         }
         if (Config.removeJailPerms)
         {
@@ -282,8 +282,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             playerName = "";
             return true;
         }
-        else
-            return false;
+        else return false;
     }
 
     @Override
@@ -298,11 +297,11 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         {
             if (jailedPlayer != null)
             {
-                if (Config.noMovement)
+                if (Config.noMovement && worldObj.getTotalWorldTime() % 50 == 0)
                 {
-                    jailedPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 19, 300, false));
+                    jailedPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 300, false));
                 }
-                if (Config.noJumping && worldObj.getTotalWorldTime() % 10 == 0)
+                if (Config.noJumping && worldObj.getTotalWorldTime() % 20 == 0)
                 {
                     jailedPlayer.setPositionAndUpdate(jailedPlayer.posX, tpCoordIn[1], jailedPlayer.posZ);
                 }
@@ -315,6 +314,24 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 }
             }
         }
+    }
+
+    /* Utility */
+
+    private EntityPlayer findPlayerFromName(String uname)
+    {
+        if (worldObj != null)
+        {
+            ArrayList players = (ArrayList) worldObj.playerEntities;
+            for (int i = 0; i < players.size(); i++)
+            {
+                if (((EntityPlayer) players.get(i)).username.equalsIgnoreCase(uname))
+                {
+                    return ((EntityPlayer) players.get(i));
+                }
+            }
+        }
+        return null;
     }
 
     /* NBT */
@@ -345,22 +362,6 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 playerInventory[slot] = ItemStack.loadItemStackFromNBT(tagCompound);
             }
         }
-    }
-
-    private EntityPlayer findPlayerFromName(String uname)
-    {
-        if (worldObj != null)
-        {
-            ArrayList players = (ArrayList) worldObj.playerEntities;
-            for (int i = 0; i < players.size(); i++)
-            {
-                if (((EntityPlayer) players.get(i)).username.equalsIgnoreCase(uname))
-                {
-                    return ((EntityPlayer) players.get(i));
-                }
-            }
-        }
-        return null;
     }
 
     @Override

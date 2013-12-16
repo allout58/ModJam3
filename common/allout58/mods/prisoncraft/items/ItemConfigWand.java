@@ -8,6 +8,7 @@ import allout58.mods.prisoncraft.CommonProxy;
 import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.blocks.BlockList;
 import allout58.mods.prisoncraft.blocks.BlockPrisonManager;
+import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.constants.TextureConstants;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
 import net.minecraft.client.gui.ChatLine;
@@ -28,7 +29,7 @@ public class ItemConfigWand extends Item
 
     public ItemConfigWand(int id)
     {
-        super(id);
+        super(id-ModConstants.ITEM_ID_DIFF);
         setUnlocalizedName("prisonConfigWand");
         setCreativeTab(PrisonCraft.creativeTab);
         setMaxStackSize(1);
