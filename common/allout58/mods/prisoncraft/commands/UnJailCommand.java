@@ -66,7 +66,7 @@ public class UnJailCommand implements ICommand
             PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(icommandsender.getEntityWorld());
             if (ws.getTesList().size() == 0)
             {
-                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No prison found in world"));//TODO Localize
+                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.nojails"));
             }
             else
             {
@@ -82,18 +82,18 @@ public class UnJailCommand implements ICommand
                             if(te.unjailPlayer())
                                 foundOpen = true;
                             else
-                                icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.playeroffline"));
+                                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.playeroffline"));
                         }
                         else
-                            icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.playeroffline"));
+                            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.playeroffline"));
                     }
                 }
                 if (foundOpen)
                     {
-                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName()).addKey("string.frees").addText(astring[0]).addKey("string.fromjail"));
-                    MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName()).addKey("string.frees").addText(astring[0]).addKey("string.fromjail"));
+                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addText(icommandsender.getCommandSenderName()).addKey("string.frees").addText(astring[0]).addKey("string.fromjail"));
+                    MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addText(icommandsender.getCommandSenderName()).addKey("string.frees").addText(astring[0]).addKey("string.fromjail"));
                     }
-                else icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.noplayerfound"));
+                else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.noplayerfound"));
             }
         }
     }

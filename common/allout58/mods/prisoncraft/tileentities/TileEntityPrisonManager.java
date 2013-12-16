@@ -227,7 +227,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             jailedPlayerPrevJailPerms = JailPermissions.getInstance().playerCanUse(player);
             JailPermissions.getInstance().removeUserPlayer(player);
         }
-        player.sendChatToPlayer(new ChatMessageComponent().addKey("string.jailed"));
+        player.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.jailed"));
     }
 
     public boolean unjailPlayer()
@@ -276,7 +276,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                     JailPermissions.getInstance().addUserPlayer(jailedPlayer);
                 }
             }
-            jailedPlayer.sendChatToPlayer(new ChatMessageComponent().addKey("string.unjailed"));
+            jailedPlayer.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.unjailed"));
             hasJailedPlayer = false;
             jailedPlayer = null;
             playerName = "";

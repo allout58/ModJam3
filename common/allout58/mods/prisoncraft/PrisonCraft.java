@@ -23,7 +23,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @Mod(modid = ModConstants.MODID, name = ModConstants.NAME, version = "0.0.1")
-@NetworkMod(clientSideRequired = true, serverSideRequired = false)
+@NetworkMod(clientSideRequired = false, serverSideRequired = false)//TODO AAAAAAA
 public class PrisonCraft
 {
     public static CreativeTabs creativeTab = new CreativeTabs("PrisonCraft")

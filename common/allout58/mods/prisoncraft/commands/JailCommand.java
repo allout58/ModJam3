@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import allout58.mods.prisoncraft.PrisonCraftWorldSave;
+import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
 
 import net.minecraft.command.ICommand;
@@ -59,7 +60,7 @@ public class JailCommand implements ICommand
             PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(icommandsender.getEntityWorld());
             if (ws.getTesList().size() == 0)
             {
-                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No prison found in world"));
+                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.nojail"));
             }
             else
             {
@@ -75,15 +76,15 @@ public class JailCommand implements ICommand
                             te.jailPlayer(player);
                             foundOpen = true;
                         }
-                        else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No player with that name found"));
+                        else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.noplayerfound"));
                     }
                 }
                 if (foundOpen)
                 {
-                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName()).addKey("string.sends").addText(astring[0]).addKey("string.tojail"));
-                    MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName()).addKey("string.sends").addText(astring[0]).addKey("string.tojail"));
+                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addText(icommandsender.getCommandSenderName()).addKey("string.sends").addText(astring[0]).addKey("string.tojail"));
+                    MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addText(icommandsender.getCommandSenderName()).addKey("string.sends").addText(astring[0]).addKey("string.tojail"));
                 }
-                else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No open jails. Build more!"));
+                else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.noopenjails"));
             }
         }
     }
