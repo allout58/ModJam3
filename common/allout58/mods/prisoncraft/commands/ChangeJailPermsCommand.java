@@ -39,7 +39,7 @@ public class ChangeJailPermsCommand implements ICommand
     @Override
     public String getCommandUsage(ICommandSender icommandsender)
     {
-        return "/prisonperms [add|remove] <playername>";
+        return "/prisonperms <add|remove|reload> <playername>";
     }
 
     @Override
@@ -56,6 +56,10 @@ public class ChangeJailPermsCommand implements ICommand
             if ("remove".toLowerCase().startsWith(ARG_LC))
             {
                 MATCHES.add("remove");
+            }
+            if("reload".toLowerCase().startsWith(ARG_LC))
+            {
+                MATCHES.add("reload");
             }
             return MATCHES.isEmpty() ? null : MATCHES;
         }
@@ -79,7 +83,7 @@ public class ChangeJailPermsCommand implements ICommand
     @Override
     public void processCommand(ICommandSender icommandsender, String[] astring)
     {
-        if (astring.length != 2)
+        if (astring.length != 1)
         {
             icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
         }
@@ -87,6 +91,10 @@ public class ChangeJailPermsCommand implements ICommand
         {
             if (astring[0].equalsIgnoreCase("add"))
             {
+                if (astring.length != 2)
+                {
+                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
+                }
                 EntityPlayer player=MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[1]);
                 if (player != null)
                 {
@@ -103,6 +111,10 @@ public class ChangeJailPermsCommand implements ICommand
             }
             else if (astring[0].equalsIgnoreCase("remove"))
             {
+                if (astring.length != 2)
+                {
+                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
+                }
                 EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[1]);
                 if (player != null)
                 {
@@ -117,6 +129,11 @@ public class ChangeJailPermsCommand implements ICommand
 
                     }
                 }
+            }
+            else if(astring[0].equalsIgnoreCase("reload"))
+            {
+                JailPermissions.getInstance().clear();
+                JailPermissions.getInstance().load();
             }
             else icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
         }

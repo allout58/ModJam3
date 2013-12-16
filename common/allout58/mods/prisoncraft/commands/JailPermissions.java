@@ -233,4 +233,9 @@ public class JailPermissions
             }
         }
     }
+    
+    public void clear()
+    {
+        canUse.clear();
+    }
 }

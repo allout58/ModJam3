@@ -4,4 +4,4 @@ Time to jail in jail command
 Reason in jail command
 Add text to signs inside jail coords
 Add some non-full blocks to unbreaking walls
-Reload perms command
+Chunkload jail and manager
