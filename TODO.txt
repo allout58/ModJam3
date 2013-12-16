@@ -1,5 +1,5 @@
-Make sure nothing relies on hasPlayer for jailedPlayer null check
-Different textures for init'ed jail and uninit'd jail.
-Remove unnecessary files.
+-Make sure nothing relies on hasPlayer for jailedPlayer null check
++Different textures for init'ed jail and uninit'd jail.
+-Remove unnecessary files.
 Localize what you can without over-complications.
 Clean and comment.
