@@ -1,0 +1,4 @@
+Make sure nothing relies on hasPlayer for jailedPlayer null check
+Clean and comment.
+Remove unnecessary files.
+Localize what you can without over-complications.
