@@ -26,7 +26,7 @@ import net.minecraftforge.common.ForgeDirection;
 
 public class BlockPrisonManager extends BlockContainer
 {
-    public Icon top, bottom, side;
+    public Icon top, bottom, side, side_uninit;
 
     public BlockPrisonManager(int par1, Material par2Material)
     {
@@ -48,8 +48,16 @@ public class BlockPrisonManager extends BlockContainer
 
     public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
     {
+        TileEntity te=world.getBlockTileEntity(x, y, z);
         if (side == ForgeDirection.DOWN.ordinal()) return this.bottom;
         if (side == ForgeDirection.UP.ordinal()) return this.top;
+        if(te instanceof TileEntityPrisonManager)
+        {
+            if(!((TileEntityPrisonManager)te).isInitialized())
+            {
+                return this.side_uninit;
+            }
+        }
         return this.side;
     }
 
@@ -58,6 +66,7 @@ public class BlockPrisonManager extends BlockContainer
     public void registerIcons(IconRegister ir)
     {
         this.side = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side");
+        this.side_uninit=ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side_uninit");
         this.bottom = this.top = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_top_bottom");
     }
 
