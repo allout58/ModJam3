@@ -45,15 +45,15 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     public int jailCoord1[] = new int[3];
     public int jailCoord2[] = new int[3];
     public int tpCoordIn[] = new int[3];
-    public int tpCoordOut[] = new int[3]; 
+    public int tpCoordOut[] = new int[3];
     public String playerName;
-    
-    private List signs=new ArrayList();
+
+    private List signs = new ArrayList();
 
     private EnumGameType jailedPlayerGM;
     private EntityPlayer jailedPlayer;
     private boolean jailedPlayerPrevJailPerms;
-    
+
     private int secsLeftJailTime;
 
     private boolean isDirty = false;
@@ -117,7 +117,11 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                         TileEntity te = worldObj.getBlockTileEntity(i, j, k);
                         if (te instanceof TileEntitySign)
                         {
-                            ((TileEntitySign) te).signText=
+                            int coord[] = new int[3];
+                            coord[0] = ((TileEntitySign) te).xCoord;
+                            coord[1] = ((TileEntitySign) te).yCoord;
+                            coord[2] = ((TileEntitySign) te).zCoord;
+                            signs.add(coord);
                         }
                     }
                 }
@@ -193,7 +197,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     public boolean isInitialized()
     {
-        return !(jailCoord1[0]==0&&jailCoord1[1]==0&&jailCoord1[2]==0);
+        return !(jailCoord1[0] == 0 && jailCoord1[1] == 0 && jailCoord1[2] == 0);
 
     }
 
@@ -202,7 +206,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         isDirty = true;
         jailedPlayer = player;
         playerName = player.username;
-        secsLeftJailTime=(int)(time*60);
+        secsLeftJailTime = (int) (time * 60);
         if (Config.changeGameMode)
         {
             if (player instanceof EntityPlayerMP)
@@ -245,6 +249,15 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             JailPermissions.getInstance().removeUserPlayer(player);
         }
         player.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.jailed"));
+        for(int i=0;i<signs.size();i++)
+        {
+            int coord[]=(int[]) signs.get(i);
+            TileEntity te=worldObj.getBlockTileEntity(coord[0], coord[1], coord[2]);
+            if(te instanceof TileEntitySign)
+            {
+                ((TileEntitySign)te).signText[0]=playerName;
+            }
+        }
     }
 
     public boolean unjailPlayer()
@@ -322,11 +335,11 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 {
                     jailedPlayer.setPositionAndUpdate(jailedPlayer.posX, tpCoordIn[1], jailedPlayer.posZ);
                 }
-                if(worldObj.getTotalWorldTime()%20==0&&secsLeftJailTime>0)
+                if (worldObj.getTotalWorldTime() % 20 == 0 && secsLeftJailTime > 0)
                 {
                     secsLeftJailTime--;
                 }
-                if(secsLeftJailTime==0)
+                if (secsLeftJailTime == 0)
                 {
                     this.unjailPlayer();
                 }
@@ -370,6 +383,12 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         tpCoordOut = tags.getIntArray("tpCoordOut");
         jailCoord1 = tags.getIntArray("jailCoord1");
         jailCoord2 = tags.getIntArray("jailCoord2");
+        NBTTagCompound signTags=tags.getCompoundTag("SignTags");
+        int numSize=tags.getInteger("numSigns");
+        for(int i=0;i<numSize;i++)
+        {
+            signs.add(signTags.getIntArray("Sign"+i));
+        }
         if (tags.hasKey("gameMode"))
         {
             jailedPlayerGM = EnumGameType.getByID(tags.getInteger("gameMode"));
@@ -398,14 +417,20 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         tags.setIntArray("tpCoordOut", tpCoordOut);
         tags.setIntArray("jailCoord1", jailCoord1);
         tags.setIntArray("jailCoord2", jailCoord2);
+        tags.setInteger("numSigns", signs.size());
+        NBTTagCompound signTags=new NBTTagCompound();
+        for(int i=0;i<signs.size();i++)
+        {
+            signTags.setIntArray("Sign"+i, (int [])signs.get(i));
+        }
+        tags.setCompoundTag("SignTags", signTags);
         if (jailedPlayerGM != null)
         {
             tags.setInteger("gameMode", jailedPlayerGM.getID());
         }
         if (hasJailedPlayer)
         {
-            tags.setString("PlayerUsername", playerName);// change to
-                                                         // playerName
+            tags.setString("PlayerUsername", playerName);
         }
         // Write the ItemStacks in the inventory to NBT
         NBTTagList tagList = new NBTTagList();
