@@ -16,14 +16,14 @@ import net.minecraft.util.ChatMessageComponent;
 public class ChangeJailPermsCommand implements ICommand
 {
     private List aliases;
-    
+
     public ChangeJailPermsCommand()
     {
         this.aliases = new ArrayList();
         this.aliases.add("prisonperms");
         this.aliases.add("pp");
     }
-    
+
     @Override
     public int compareTo(Object arg0)
     {
@@ -48,11 +48,10 @@ public class ChangeJailPermsCommand implements ICommand
         final List<String> MATCHES = new LinkedList<String>();
         final String ARG_LC = astring[1].toLowerCase();
         for (String un : MinecraftServer.getServer().getAllUsernames())
-                if(un.toLowerCase().startsWith(ARG_LC))
-                        MATCHES.add(un);
+            if (un.toLowerCase().startsWith(ARG_LC)) MATCHES.add(un);
         return MATCHES.isEmpty() ? null : MATCHES;
-    } 
-    
+    }
+
     @Override
     public List getCommandAliases()
     {
@@ -63,36 +62,25 @@ public class ChangeJailPermsCommand implements ICommand
     public void processCommand(ICommandSender icommandsender, String[] astring)
     {
         // TODO Auto-generated method stub
-        if (astring.length == 0)
+        if (astring.length != 2)
         {
             icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
         }
         else
         {
-            PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(icommandsender.getEntityWorld());
-            if (ws.getTesList().size() == 0)
+            if (astring[0].equalsIgnoreCase("add"))
             {
-                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No prison found in world"));
-            }
-            else
-            {
-                EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[0]);
-                boolean foundOpen = false;
-                for (int i = 0; i < ws.getTesList().size(); i++)
+                if (MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[1]) != null)
                 {
-                    TileEntityPrisonManager te = (TileEntityPrisonManager) ws.getTesList().get(i);
-                    if (!te.hasJailedPlayer)
-                    {
-                        if (player != null)
-                        {
-                            te.jailPlayer(player);
-                            foundOpen = true;
-                        }
-                        else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No player with that name found"));
-                    }
+                    JailPermissions.getInstance().addUserPlayer(astring[1]);
                 }
-                if (foundOpen) icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName() + " sends " + astring[0] + " to jail..."));
-                else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No open jails. Build more!"));
+            }
+            if(astring[0].equalsIgnoreCase("remove"))
+            {
+                if (MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[1]) != null)
+                {
+                    JailPermissions.getInstance().removeUserPlayer(astring[1]);
+                }   
             }
         }
     }

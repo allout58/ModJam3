@@ -50,7 +50,7 @@ public class JailCommand implements ICommand
     @Override
     public void processCommand(ICommandSender icommandsender, String[] astring)
     {
-        if (astring.length == 0)
+        if (astring.length != 1)
         {
             icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
         }
