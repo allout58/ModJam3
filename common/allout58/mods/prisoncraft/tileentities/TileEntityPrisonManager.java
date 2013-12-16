@@ -8,6 +8,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import allout58.mods.prisoncraft.Config;
 import allout58.mods.prisoncraft.blocks.BlockList;
 import allout58.mods.prisoncraft.commands.JailCommand;
+import allout58.mods.prisoncraft.commands.JailPermissions;
 import allout58.mods.prisoncraft.constants.ModConstants;
 
 import net.minecraft.block.Block;
@@ -44,11 +45,11 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     public int tpCoordOut[] = new int[3];
 
     private EnumGameType jailedPlayerGM;
-
     private EntityPlayer jailedPlayer;
     public String playerName;
+    private boolean jailedPlayerPrevJailPerms;
 
-    private Boolean isDirty = false;
+    private boolean isDirty = false;
 
     public TileEntityPrisonManager()
     {
@@ -156,7 +157,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         }
     }
 
-    private Boolean isValidID(int id)
+    private boolean isValidID(int id)
     {
         for (int i = 0; i < ModConstants.WHITELIST_WALL_IDS.length; i++)
         {
@@ -168,7 +169,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         return false;
     }
 
-    public Boolean isInitialized()
+    public boolean isInitialized()
     {
         return !(jailCoord1[0] == 0 && jailCoord1[1] == 0 && jailCoord1[2] == 0);
 
@@ -215,10 +216,11 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         {
             player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 10, 300, false));
         }
-        // if (Config.noJumping)
-        // {
-        // player.jumpMovementFactor = -1;
-        // }
+        if(Config.removeJailPerms)
+        {
+            jailedPlayerPrevJailPerms=JailPermissions.getInstance().playerCanUse(player);
+            JailPermissions.getInstance().removeUserPlayer(player);
+        }
     }
 
     public void unjailPlayer()
@@ -263,10 +265,13 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 System.out.println("Game mode could not be reverted. Jailed Player obj in not of type EntityPlayerMP.");
             }
         }
-        // if (Config.noJumping)
-        // {
-        // jailedPlayer.jumpMovementFactor = .02F;
-        // }
+        if(Config.removeJailPerms)
+        {
+            if(jailedPlayerPrevJailPerms)
+            {
+                JailPermissions.getInstance().addUserPlayer(jailedPlayer);
+            }
+        }
         hasJailedPlayer = false;
         jailedPlayer = null;
         playerName = "";

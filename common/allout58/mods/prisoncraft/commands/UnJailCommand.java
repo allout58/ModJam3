@@ -93,7 +93,8 @@ public class UnJailCommand implements ICommand
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender icommandsender)
     {
-        return JailPermissions.getInstance().playerCanUse(icommandsender);
+//        return JailPermissions.getInstance().playerCanUse(icommandsender);
+        return true;
     }
 
     @Override

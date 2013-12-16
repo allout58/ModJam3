@@ -43,11 +43,11 @@ public class JailPermissions
         return false;
     }
     
-    public void addUserPlayer(EntityPlayer player)
+    public void addUserPlayer(ICommandSender player)
     {
         if(!playerCanUse(player))
         {
-            canUse.add(player.username);
+            canUse.add(player.getCommandSenderName());
         }
     }
     public void addUserPlayer(String playerName)
@@ -58,11 +58,11 @@ public class JailPermissions
         }
     }
     
-    public void removeUserPlayer(EntityPlayer player)
+    public void removeUserPlayer(ICommandSender player)
     {
         if(playerCanUse(player))
         {
-            canUse.remove(player.username);
+            canUse.remove(player.getCommandSenderName());
         }
     }
     public void removeUserPlayer(String playerName)

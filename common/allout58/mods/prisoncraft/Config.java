@@ -14,6 +14,7 @@ public class Config
     public static boolean takeInventory;
     public static boolean noMovement;
     public static boolean noJumping;
+    public static boolean removeJailPerms;
     
     public static void init(Configuration config)
     {
@@ -28,6 +29,7 @@ public class Config
         takeInventory=config.get("JailOptions", "TakePlayerInventory", true).getBoolean(true);
         noMovement=config.get("JailOptions","AllowNoPlayerMovement",true).getBoolean(true);
         noJumping=config.get("JailOptions","AllowNoPlayerJumping",true).getBoolean(true);
+        removeJailPerms=config.get("JailOptions", "RemoveJailedPlayerJailPerms", true).getBoolean(true);
         
         config.save();
     }
