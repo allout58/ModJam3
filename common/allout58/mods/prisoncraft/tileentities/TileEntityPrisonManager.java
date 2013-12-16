@@ -49,6 +49,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     private EntityPlayer jailedPlayer;
     public String playerName;
     private boolean jailedPlayerPrevJailPerms;
+    private boolean isInit=false;
 
     private boolean isDirty = false;
 
@@ -61,11 +62,11 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     {
         if (!isInitialized())
         {
+            isInit=true;
             tpCoordIn = locs.getIntArray("tpIn");
             tpCoordOut = locs.getIntArray("tpOut");
             jailCoord1 = locs.getIntArray("jailCoord1");
             jailCoord2 = locs.getIntArray("jailCoord2");
-            isDirty = true;
             // give xyz names
             int x1 = jailCoord1[0];
             int y1 = jailCoord1[1];
@@ -112,14 +113,20 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                     }
                 }
             }
+            isDirty = true;
             return true;
         }
-        else return false;
+        else
+        {
+            isDirty = true;
+            return false;
+        }
     }
 
     public void revertBlocks()
     {
         isDirty = true;
+        isInit=false;
         // give xyz names
         int x1 = jailCoord1[0];
         int y1 = jailCoord1[1];
@@ -177,7 +184,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     public boolean isInitialized()
     {
-        return !(jailCoord1[0] == 0 && jailCoord1[1] == 0 && jailCoord1[2] == 0);
+        return isInit;
 
     }
 
@@ -227,7 +234,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             jailedPlayerPrevJailPerms = JailPermissions.getInstance().playerCanUse(player);
             JailPermissions.getInstance().removeUserPlayer(player);
         }
-        player.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.jailed"));
+        player.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.jailed"));
     }
 
     public boolean unjailPlayer()
@@ -276,7 +283,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                     JailPermissions.getInstance().addUserPlayer(jailedPlayer);
                 }
             }
-            jailedPlayer.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.unjailed"));
+            jailedPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.unjailed"));
             hasJailedPlayer = false;
             jailedPlayer = null;
             playerName = "";
@@ -345,6 +352,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         tpCoordOut = tags.getIntArray("tpCoordOut");
         jailCoord1 = tags.getIntArray("jailCoord1");
         jailCoord2 = tags.getIntArray("jailCoord2");
+        isInit=tags.getBoolean("isInit");
         if (tags.hasKey("gameMode"))
         {
             jailedPlayerGM = EnumGameType.getByID(tags.getInteger("gameMode"));
@@ -373,6 +381,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         tags.setIntArray("tpCoordOut", tpCoordOut);
         tags.setIntArray("jailCoord1", jailCoord1);
         tags.setIntArray("jailCoord2", jailCoord2);
+        tags.setBoolean("isInit", isInit);
         if (jailedPlayerGM != null)
         {
             tags.setInteger("gameMode", jailedPlayerGM.getID());

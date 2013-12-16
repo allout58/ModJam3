@@ -7,7 +7,7 @@ item.prisonConfigWandLocked.name=Prison Configuration Tool (Locked)
 itemGroup.PrisonCraft=PrisonCraft
 
 string.invalidArgument=Invalid Arguments
-string.playerInJail=Player currently in this jail is
+string.playerInJail=Player currently in this jail is 
 string.jailed=You have been sent to prison.
 string.unjailed=You have been released from prison. 
 string.noOne=no one

@@ -49,14 +49,18 @@ public class BlockPrisonManager extends BlockContainer
 
     public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
     {
-        TileEntity te=world.getBlockTileEntity(x, y, z);
+        TileEntity te = world.getBlockTileEntity(x, y, z);
         if (side == ForgeDirection.DOWN.ordinal()) return this.bottom;
         if (side == ForgeDirection.UP.ordinal()) return this.top;
-        if(te instanceof TileEntityPrisonManager)
+        if (te instanceof TileEntityPrisonManager)
         {
-            if(!((TileEntityPrisonManager)te).isInitialized())
+            if (!((TileEntityPrisonManager) te).isInitialized())
             {
                 return this.side_uninit;
+            }
+            else
+            {
+                return this.side;
             }
         }
         return this.side;
@@ -67,7 +71,7 @@ public class BlockPrisonManager extends BlockContainer
     public void registerIcons(IconRegister ir)
     {
         this.side = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side");
-        this.side_uninit=ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side_uninit");
+        this.side_uninit = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side_uninit");
         this.bottom = this.top = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_top_bottom");
     }
 
@@ -117,19 +121,19 @@ public class BlockPrisonManager extends BlockContainer
                             NBTTagCompound tags = entityPlayer.inventory.getCurrentItem().stackTagCompound;
                             if (tags.hasKey("jailCoord1") && tags.hasKey("jailCoord2") && tags.hasKey("tpIn") && tags.hasKey("tpOut"))
                             {
-                                if(((TileEntityPrisonManager) te).changeBlocks(entityPlayer.inventory.getCurrentItem().stackTagCompound))
+                                if (((TileEntityPrisonManager) te).changeBlocks(entityPlayer.inventory.getCurrentItem().stackTagCompound))
                                 {
-                                entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.blockprisonmanager.success"));
+                                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.blockprisonmanager.success"));
                                 }
                                 else
                                 {
-                                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.blockprisonmanager.failoverwrite"));
+                                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.blockprisonmanager.failoverwrite"));
                                 }
                                 return true;
                             }
                             else
                             {
-                                entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.blockprisonmanager.fail"));
+                                entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.blockprisonmanager.fail"));
                                 return true;
                             }
                         }
