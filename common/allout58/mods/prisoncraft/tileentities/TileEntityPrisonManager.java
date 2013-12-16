@@ -257,10 +257,6 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             {
                 jailedPlayer.removePotionEffect(Potion.moveSlowdown.id);
             }
-            if (Config.noJumping)
-            {
-                jailedPlayer.removePotionEffect(Potion.jump.id);
-            }
             jailedPlayer.setPositionAndUpdate(tpCoordOut[0] + .5, tpCoordOut[1], tpCoordOut[2] + .5);
             if (Config.changeGameMode)
             {

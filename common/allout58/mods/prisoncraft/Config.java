@@ -28,7 +28,7 @@ public class Config
         changeGameMode=config.get("JailOptions", "ChangePlayerGameMode", true).getBoolean(true);
         takeInventory=config.get("JailOptions", "TakePlayerInventory", true).getBoolean(true);
         noMovement=config.get("JailOptions","AllowNoPlayerMovement",true).getBoolean(true);
-        noJumping=config.get("JailOptions","AllowNoPlayerJumping",true).getBoolean(true);
+        noJumping=config.get("JailOptions","AllowNoPlayerJumping",false,"This feature is very buggy. Use at your own risk.").getBoolean(false);
         removeJailPerms=config.get("JailOptions", "RemoveJailedPlayerJailPerms", true).getBoolean(true);
         
         config.save();
