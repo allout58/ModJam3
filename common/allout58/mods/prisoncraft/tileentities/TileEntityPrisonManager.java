@@ -43,12 +43,14 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     public int jailCoord1[] = new int[3];
     public int jailCoord2[] = new int[3];
     public int tpCoordIn[] = new int[3];
-    public int tpCoordOut[] = new int[3];
+    public int tpCoordOut[] = new int[3]; 
+    public String playerName;
 
     private EnumGameType jailedPlayerGM;
     private EntityPlayer jailedPlayer;
-    public String playerName;
     private boolean jailedPlayerPrevJailPerms;
+    
+    private int secsLeftJailTime;
 
     private boolean isDirty = false;
 
@@ -186,11 +188,12 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     }
 
-    public void jailPlayer(EntityPlayer player)
+    public void jailPlayer(EntityPlayer player, double time)
     {
         isDirty = true;
         jailedPlayer = player;
         playerName = player.username;
+        secsLeftJailTime=(int)(time*60);
         if (Config.changeGameMode)
         {
             if (player instanceof EntityPlayerMP)
@@ -309,6 +312,14 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 if (Config.noJumping && worldObj.getTotalWorldTime() % 20 == 0)
                 {
                     jailedPlayer.setPositionAndUpdate(jailedPlayer.posX, tpCoordIn[1], jailedPlayer.posZ);
+                }
+                if(worldObj.getTotalWorldTime()%20==0&&secsLeftJailTime>0)
+                {
+                    secsLeftJailTime--;
+                }
+                if(secsLeftJailTime==0)
+                {
+                    this.unjailPlayer();
                 }
             }
             else

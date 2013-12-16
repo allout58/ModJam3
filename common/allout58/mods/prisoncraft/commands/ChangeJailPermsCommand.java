@@ -84,7 +84,7 @@ public class ChangeJailPermsCommand implements ICommand
     @Override
     public void processCommand(ICommandSender icommandsender, String[] astring)
     {
-        if (astring.length != 1)
+        if (astring.length < 1 || astring.length > 2)
         {
             icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
         }

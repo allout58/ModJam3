@@ -23,7 +23,7 @@ string.reloadperms=Permsissions reloaded.
 string.frees= frees 
 string.fromjail= from jail.
 string.sends= sends 
-string.tojail=to jail.
+string.tojail= to jail.
 string.nojails=No prisons found in this world.
 string.noopenjails=No open prisons. Build more!
 
