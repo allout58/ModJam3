@@ -49,7 +49,6 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     private EntityPlayer jailedPlayer;
     public String playerName;
     private boolean jailedPlayerPrevJailPerms;
-    private boolean isInit=false;
 
     private boolean isDirty = false;
 
@@ -62,7 +61,6 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     {
         if (!isInitialized())
         {
-            isInit=true;
             tpCoordIn = locs.getIntArray("tpIn");
             tpCoordOut = locs.getIntArray("tpOut");
             jailCoord1 = locs.getIntArray("jailCoord1");
@@ -113,6 +111,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                     }
                 }
             }
+            worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 1, 3);
             isDirty = true;
             return true;
         }
@@ -126,7 +125,6 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     public void revertBlocks()
     {
         isDirty = true;
-        isInit=false;
         // give xyz names
         int x1 = jailCoord1[0];
         int y1 = jailCoord1[1];
@@ -184,7 +182,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     public boolean isInitialized()
     {
-        return isInit;
+        return !(jailCoord1[0]==0&&jailCoord1[1]==0&&jailCoord1[2]==0);
 
     }
 
@@ -352,7 +350,6 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         tpCoordOut = tags.getIntArray("tpCoordOut");
         jailCoord1 = tags.getIntArray("jailCoord1");
         jailCoord2 = tags.getIntArray("jailCoord2");
-        isInit=tags.getBoolean("isInit");
         if (tags.hasKey("gameMode"))
         {
             jailedPlayerGM = EnumGameType.getByID(tags.getInteger("gameMode"));
@@ -381,7 +378,6 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         tags.setIntArray("tpCoordOut", tpCoordOut);
         tags.setIntArray("jailCoord1", jailCoord1);
         tags.setIntArray("jailCoord2", jailCoord2);
-        tags.setBoolean("isInit", isInit);
         if (jailedPlayerGM != null)
         {
             tags.setInteger("gameMode", jailedPlayerGM.getID());

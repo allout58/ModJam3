@@ -49,21 +49,18 @@ public class BlockPrisonManager extends BlockContainer
 
     public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
     {
-        TileEntity te = world.getBlockTileEntity(x, y, z);
+        int meta = world.getBlockMetadata(x, y, z);
         if (side == ForgeDirection.DOWN.ordinal()) return this.bottom;
         if (side == ForgeDirection.UP.ordinal()) return this.top;
-        if (te instanceof TileEntityPrisonManager)
+        if (meta == 0)
         {
-            if (!((TileEntityPrisonManager) te).isInitialized())
-            {
-                return this.side_uninit;
-            }
-            else
-            {
-                return this.side;
-            }
+            return this.side_uninit;
         }
-        return this.side;
+        else
+        {
+            return this.side;
+        }
+
     }
 
     @Override
