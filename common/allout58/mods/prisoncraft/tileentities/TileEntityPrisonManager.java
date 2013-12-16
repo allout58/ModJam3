@@ -280,10 +280,10 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 JailPermissions.getInstance().addUserPlayer(jailedPlayer);
             }
         }
+        jailedPlayer.sendChatToPlayer(new ChatMessageComponent().addKey("string.unjailed"));
         hasJailedPlayer = false;
         jailedPlayer = null;
         playerName = "";
-        jailedPlayer.sendChatToPlayer(new ChatMessageComponent().addKey("string.unjailed"));
     }
 
     @Override
@@ -367,7 +367,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         }
         if (hasJailedPlayer && jailedPlayer!=null)
         {
-            tags.setString("PlayerUsername", jailedPlayer.username);
+            tags.setString("PlayerUsername", jailedPlayer.username);//change to playerName
         }
         // Write the ItemStacks in the inventory to NBT
         NBTTagList tagList = new NBTTagList();

@@ -1,4 +1,5 @@
-Finished basically everything
+Finished most of the permissions system
 
-Need more testing (server client specifically) but basically done for ModJam I think
-AFK for an hour or so...
+Few small bugs MP.
+Mostly good to go!
+Perms file stored in world save folder. The only initial and forever perm is for Server.

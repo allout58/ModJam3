@@ -1,0 +1,4 @@
+Bugs:
+
+MP: placement kept but not slowness
+MP: jailed player not found
