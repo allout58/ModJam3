@@ -84,6 +84,8 @@ public class UnJailCommand implements ICommand
                             else
                                 icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.playeroffline"));
                         }
+                        else
+                            icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.playeroffline"));
                     }
                 }
                 if (foundOpen) icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName() + " frees " + astring[0] + " from jail..."));//TODO Localize
