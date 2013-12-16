@@ -4,6 +4,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.Configuration;
 import allout58.mods.prisoncraft.blocks.BlockList;
+import allout58.mods.prisoncraft.commands.ChangeJailPermsCommand;
 import allout58.mods.prisoncraft.commands.JailCommand;
 import allout58.mods.prisoncraft.commands.JailPermissions;
 import allout58.mods.prisoncraft.commands.UnJailCommand;
@@ -58,6 +59,7 @@ public class PrisonCraft
     {
       event.registerServerCommand(new JailCommand());
       event.registerServerCommand(new UnJailCommand());
+      event.registerServerCommand(new ChangeJailPermsCommand());
       JailPermissions.getInstance().load();
     }
     

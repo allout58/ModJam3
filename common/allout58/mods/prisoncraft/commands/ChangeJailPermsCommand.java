@@ -45,11 +45,29 @@ public class ChangeJailPermsCommand implements ICommand
     @Override
     public List addTabCompletionOptions(ICommandSender icommandsender, String[] astring)
     {
-        final List<String> MATCHES = new LinkedList<String>();
-        final String ARG_LC = astring[1].toLowerCase();
-        for (String un : MinecraftServer.getServer().getAllUsernames())
-            if (un.toLowerCase().startsWith(ARG_LC)) MATCHES.add(un);
-        return MATCHES.isEmpty() ? null : MATCHES;
+        if (astring.length == 1)
+        {
+            final List<String> MATCHES = new LinkedList<String>();
+            final String ARG_LC = astring[1].toLowerCase();
+            if ("add".toLowerCase().startsWith(ARG_LC))
+            {
+                MATCHES.add("add");
+            }
+            if ("remove".toLowerCase().startsWith(ARG_LC))
+            {
+                MATCHES.add("remove");
+            }
+            return MATCHES.isEmpty() ? null : MATCHES;
+        }
+        if (astring.length == 2)
+        {
+            final List<String> MATCHES = new LinkedList<String>();
+            final String ARG_LC = astring[1].toLowerCase();
+            for (String un : MinecraftServer.getServer().getAllUsernames())
+                if (un.toLowerCase().startsWith(ARG_LC)) MATCHES.add(un);
+            return MATCHES.isEmpty() ? null : MATCHES;
+        }
+        return null;
     }
 
     @Override
@@ -73,22 +91,26 @@ public class ChangeJailPermsCommand implements ICommand
                 if (MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[1]) != null)
                 {
                     JailPermissions.getInstance().addUserPlayer(astring[1]);
+                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(astring[1] + " ").addKey("string.was").addText(" ").addKey("string.added").addKey("string.jailperms"));
                 }
             }
-            if(astring[0].equalsIgnoreCase("remove"))
+            else if (astring[0].equalsIgnoreCase("remove"))
             {
                 if (MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[1]) != null)
                 {
                     JailPermissions.getInstance().removeUserPlayer(astring[1]);
-                }   
+                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(astring[1] + " ").addKey("string.was").addText(" ").addKey("string.removed").addKey("string.jailperms"));
+                }
             }
+            else icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
         }
     }
 
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender icommandsender)
     {
-        return JailPermissions.getInstance().playerCanUse(icommandsender);
+        // return JailPermissions.getInstance().playerCanUse(icommandsender);
+        return true;
     }
 
     @Override
