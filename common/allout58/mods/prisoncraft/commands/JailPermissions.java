@@ -101,7 +101,7 @@ public class JailPermissions
         else if (side == Side.CLIENT)
         {
             // We are on the client side.
-            server = Minecraft.getMinecraft().getIntegratedServer();
+//            server = Minecraft.getMinecraft().getIntegratedServer();
         }
         else
         {
@@ -110,7 +110,7 @@ public class JailPermissions
         if (server != null)
         {
             SaveHandler saveHandler = (SaveHandler) server.worldServerForDimension(0).getSaveHandler();
-            String fileName = saveHandler.getWorldDirectory().getAbsolutePath() + "PrisonCraftPerms.txt";
+            String fileName = saveHandler.getWorldDirectory().getAbsolutePath() + "/PrisonCraftPerms.txt";
             FileWriter output = null;
             try
             {
@@ -165,7 +165,7 @@ public class JailPermissions
         if (server != null)
         {
             SaveHandler saveHandler = (SaveHandler) server.worldServerForDimension(0).getSaveHandler();
-            String fileName = saveHandler.getWorldDirectory().getAbsolutePath() + "PrisonCraftPerms.txt";
+            String fileName = saveHandler.getWorldDirectory().getAbsolutePath() + "/PrisonCraftPerms.txt";
             FileReader file = null;
 
             try
