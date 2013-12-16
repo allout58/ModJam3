@@ -2,6 +2,9 @@ package allout58.mods.prisoncraft.blocks;
 
 import java.util.Random;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonUnbreakable;
 import net.minecraft.block.Block;
@@ -31,9 +34,14 @@ public class BlockPrisonUnbreakable extends BlockContainer
     @Override
     public TileEntity createNewTileEntity(World world)
     {
-        // return null;
-        // return new TileEntityPrisonUnbreakable();
         return new TileEntityPrisonUnbreakable();
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public Icon getIcon(int side, int meta)
+    {
+        return Block.bedrock.getIcon(side, meta);
     }
 
     @Override

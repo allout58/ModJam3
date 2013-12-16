@@ -113,7 +113,7 @@ public class BlockPrisonManager extends BlockContainer
                                 }
                                 else
                                 {
-                                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addKey("string.blockprisonmanager.fail"));
+                                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addKey("string.blockprisonmanager.failoverwrite"));
                                 }
                                 return true;
                             }

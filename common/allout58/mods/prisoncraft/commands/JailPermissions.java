@@ -73,4 +73,13 @@ public class JailPermissions
             canUse.remove(playerName);
         }
     }
+    
+    public void save()
+    {
+        
+    }
+    public void load()
+    {
+        
+    }
 }
