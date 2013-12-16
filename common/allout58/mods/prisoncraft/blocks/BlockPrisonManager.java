@@ -16,6 +16,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.Icon;
@@ -83,7 +84,7 @@ public class BlockPrisonManager extends BlockContainer
         if (logic instanceof TileEntityPrisonManager)
         {
             PrisonCraftWorldSave.forWorld(world).getTesList().remove((TileEntityPrisonManager) logic);
-            ((TileEntityPrisonManager)logic).revertBlocks();
+            ((TileEntityPrisonManager) logic).revertBlocks();
         }
         super.breakBlock(world, x, y, z, par5, par6);
     }
@@ -103,9 +104,18 @@ public class BlockPrisonManager extends BlockContainer
                     {
                         if (entityPlayer.inventory.getCurrentItem().stackTagCompound != null)
                         {
-                            ((TileEntityPrisonManager) te).changeBlocks(entityPlayer.inventory.getCurrentItem().stackTagCompound);
-                            entityPlayer.sendChatToPlayer(new ChatMessageComponent().addKey("string.blockprisonmanager.success"));
-                            return true;
+                            NBTTagCompound tags = entityPlayer.inventory.getCurrentItem().stackTagCompound;
+                            if (tags.hasKey("jailCoord1") && tags.hasKey("jailCoord2") && tags.hasKey("tpIn") && tags.hasKey("tpOut"))
+                            {
+                                ((TileEntityPrisonManager) te).changeBlocks(entityPlayer.inventory.getCurrentItem().stackTagCompound);
+                                entityPlayer.sendChatToPlayer(new ChatMessageComponent().addKey("string.blockprisonmanager.success"));
+                                return true;
+                            }
+                            else
+                            {
+                                entityPlayer.sendChatToPlayer(new ChatMessageComponent().addKey("string.blockprisonmanager.fail"));
+                                return true;
+                            }
                         }
                     }
                 }
