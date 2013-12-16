@@ -249,13 +249,14 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             JailPermissions.getInstance().removeUserPlayer(player);
         }
         player.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.jailed"));
-        for(int i=0;i<signs.size();i++)
+        for (int i = 0; i < signs.size(); i++)
         {
-            int coord[]=(int[]) signs.get(i);
-            TileEntity te=worldObj.getBlockTileEntity(coord[0], coord[1], coord[2]);
-            if(te instanceof TileEntitySign)
+            int coord[] = (int[]) signs.get(i);
+            TileEntity te = worldObj.getBlockTileEntity(coord[0], coord[1], coord[2]);
+            if (te instanceof TileEntitySign)
             {
-                ((TileEntitySign)te).signText[0]=playerName;
+                ((TileEntitySign) te).signText[0] = playerName;
+                worldObj.markBlockForRenderUpdate(coord[0], coord[1], coord[2]);
             }
         }
     }
@@ -307,6 +308,16 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 }
             }
             jailedPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.unjailed"));
+            for (int i = 0; i < signs.size(); i++)
+            {
+                int coord[] = (int[]) signs.get(i);
+                TileEntity te = worldObj.getBlockTileEntity(coord[0], coord[1], coord[2]);
+                if (te instanceof TileEntitySign)
+                {
+                    ((TileEntitySign) te).signText[0] = "";
+                    worldObj.markBlockForRenderUpdate(coord[0], coord[1], coord[2]);
+                }
+            }
             hasJailedPlayer = false;
             jailedPlayer = null;
             playerName = "";
@@ -335,11 +346,11 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 {
                     jailedPlayer.setPositionAndUpdate(jailedPlayer.posX, tpCoordIn[1], jailedPlayer.posZ);
                 }
-                if (worldObj.getTotalWorldTime() % 20 == 0 && secsLeftJailTime > 0)
+                if (worldObj.getTotalWorldTime() % 20 == 0 && secsLeftJailTime > -1)
                 {
                     secsLeftJailTime--;
                 }
-                if (secsLeftJailTime == 0)
+                if (secsLeftJailTime == -1)
                 {
                     this.unjailPlayer();
                 }
@@ -379,15 +390,17 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     {
         super.readFromNBT(tags);
         hasJailedPlayer = tags.getBoolean("HasJailedPlayer");
+        jailedPlayerPrevJailPerms = tags.getBoolean("JailPlayerPreviousPerms");
         tpCoordIn = tags.getIntArray("tpCoordIn");
         tpCoordOut = tags.getIntArray("tpCoordOut");
         jailCoord1 = tags.getIntArray("jailCoord1");
         jailCoord2 = tags.getIntArray("jailCoord2");
-        NBTTagCompound signTags=tags.getCompoundTag("SignTags");
-        int numSize=tags.getInteger("numSigns");
-        for(int i=0;i<numSize;i++)
+        secsLeftJailTime=tags.getInteger("secsLeftJailTime");
+        NBTTagCompound signTags = tags.getCompoundTag("SignTags");
+        int numSize = tags.getInteger("numSigns");
+        for (int i = 0; i < numSize; i++)
         {
-            signs.add(signTags.getIntArray("Sign"+i));
+            signs.add(signTags.getIntArray("Sign" + i));
         }
         if (tags.hasKey("gameMode"))
         {
@@ -417,11 +430,13 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         tags.setIntArray("tpCoordOut", tpCoordOut);
         tags.setIntArray("jailCoord1", jailCoord1);
         tags.setIntArray("jailCoord2", jailCoord2);
+        tags.setBoolean("JailPlayerPreviousPerms", jailedPlayerPrevJailPerms);
         tags.setInteger("numSigns", signs.size());
-        NBTTagCompound signTags=new NBTTagCompound();
-        for(int i=0;i<signs.size();i++)
+        tags.setInteger("secLeftJailTime", secsLeftJailTime);
+        NBTTagCompound signTags = new NBTTagCompound();
+        for (int i = 0; i < signs.size(); i++)
         {
-            signTags.setIntArray("Sign"+i, (int [])signs.get(i));
+            signTags.setIntArray("Sign" + i, (int[]) signs.get(i));
         }
         tags.setCompoundTag("SignTags", signTags);
         if (jailedPlayerGM != null)
