@@ -57,36 +57,48 @@ public class JailPermissions
         return false;
     }
 
-    public void addUserPlayer(ICommandSender player)
+    public boolean addUserPlayer(ICommandSender player)
     {
         if (!playerCanUse(player))
         {
             canUse.add(player.getCommandSenderName());
+            this.save();
+            return true;
         }
+        return false;
     }
 
-    public void addUserPlayer(String playerName)
+    public boolean addUserPlayer(String playerName)
     {
         if (!playerCanUse(playerName))
         {
             canUse.add(playerName);
+            this.save();
+            return true;
         }
+        return false;
     }
 
-    public void removeUserPlayer(ICommandSender player)
+    public boolean removeUserPlayer(ICommandSender player)
     {
         if (playerCanUse(player))
         {
             canUse.remove(player.getCommandSenderName());
+            this.save();
+            return true;
         }
+        return false;
     }
 
-    public void removeUserPlayer(String playerName)
+    public boolean removeUserPlayer(String playerName)
     {
         if (playerCanUse(playerName))
         {
             canUse.remove(playerName);
+            this.save();
+            return true;
         }
+        return false;
     }
 
     public void save()

@@ -89,16 +89,29 @@ public class ChangeJailPermsCommand implements ICommand
             {
                 if (MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[1]) != null)
                 {
-                    JailPermissions.getInstance().addUserPlayer(astring[1]);
-                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(astring[1] + " ").addKey("string.was").addText(" ").addKey("string.added").addKey("string.jailperms"));
+                    if(JailPermissions.getInstance().addUserPlayer(astring[1]))
+                    {
+                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(astring[1] + " ").addKey("string.was").addText(" ").addKey("string.added").addText(" ").addKey("string.jailperms"));
+                    }
+                    else
+                    {
+                        icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(astring[1] + " ").addKey("string.alreadyperms").addText(" ").addKey("string.added").addText(" ").addKey("string.jailperms"));                        
+                    }
                 }
             }
             else if (astring[0].equalsIgnoreCase("remove"))
             {
                 if (MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[1]) != null)
                 {
-                    JailPermissions.getInstance().removeUserPlayer(astring[1]);
-                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(astring[1] + " ").addKey("string.was").addText(" ").addKey("string.removed").addKey("string.jailperms"));
+                    if(JailPermissions.getInstance().removeUserPlayer(astring[1]))
+                    {
+                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(astring[1] + " ").addKey("string.was").addText(" ").addKey("string.removed").addText(" ").addKey("string.jailperms"));
+                    }
+                    else
+                    {
+                        icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(astring[1] + " ").addKey("string.alreadyperms").addText(" ").addKey("string.removed").addText(" ").addKey("string.jailperms"));
+
+                    }
                 }
             }
             else icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
