@@ -78,7 +78,10 @@ public class ItemConfigWand extends Item
         {
             if (player.isSneaking())
             {
-                stack.setItemDamage((stack.getItemDamage() == 0) ? 1 : 0);
+                int dam=stack.getItemDamage();
+                if(dam==0)dam=1;
+                else if(dam==1)dam=0;
+                stack.setItemDamage(dam);
             }
         }
         return stack;
@@ -89,18 +92,12 @@ public class ItemConfigWand extends Item
     {
         if (!world.isRemote)
         {
-            if (player.isSneaking())
-            {
-                stack.setItemDamage((stack.getItemDamage() == 0) ? 1 : 0);
-                return true;
-            }
             if (stack.stackTagCompound == null)
             {
                 stack.stackTagCompound = new NBTTagCompound();
             }
             if (stack.getItemDamage() == 0)
             {
-
                 if (world.getBlockId(x, y, z) == BlockList.prisonMan.blockID) return false;
 
                 if (!stack.stackTagCompound.hasKey("jailCoord1"))
@@ -141,7 +138,7 @@ public class ItemConfigWand extends Item
                 }
                 return true;
             }
-            return false;
+            else return false;
         }
         else return false;
     }
