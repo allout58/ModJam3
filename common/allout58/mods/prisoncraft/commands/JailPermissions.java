@@ -118,7 +118,7 @@ public class JailPermissions
                 BufferedWriter writer = new BufferedWriter(output);
                 for (int i = 0; i < canUse.size(); i++)
                 {
-                    writer.write(((String) canUse.get(i)));
+                    writer.write(((String) canUse.get(i))+"\n");
                 }
                 writer.close();
             }
@@ -175,7 +175,7 @@ public class JailPermissions
                 String line = "";
                 while ((line = reader.readLine()) != null)
                 {
-                    canUse.add(line);
+                    addUserPlayer(line);
                 }
                 reader.close();
             }
