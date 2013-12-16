@@ -1,0 +1,20 @@
+[
+{
+  "modid": "prisoncraft",
+  "name" : "PrisonCraft",
+  "description" : "Jail players - WITH FORGE!",
+  "version": "0.0.1b",
+  "url": "www.github.com/allout58/ModJam3/",
+  "updateUrl": "",
+  "authorList": [
+    "allout58"
+  ],
+  "credits": "allout58",
+  "logoFile": "assets/prisoncraft/textures/blocks/prisonManager_side.png",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]

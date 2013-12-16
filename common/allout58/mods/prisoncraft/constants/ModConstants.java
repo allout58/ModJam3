@@ -3,7 +3,7 @@ package allout58.mods.prisoncraft.constants;
 public class ModConstants
 {
     public static final String MODID="prisoncraft";
-    public static final String NAME="Prison Craft";
+    public static final String NAME="PrisonCraft";
     public static final String PACKETCHANNEL="PrisonCraft";
     
     public static final int ITEM_ID_DIFF=256;
