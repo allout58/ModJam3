@@ -5,6 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.common.Configuration;
 import allout58.mods.prisoncraft.blocks.BlockList;
 import allout58.mods.prisoncraft.commands.JailCommand;
+import allout58.mods.prisoncraft.commands.JailPermissions;
 import allout58.mods.prisoncraft.commands.UnJailCommand;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.items.ItemList;
@@ -48,6 +49,7 @@ public class PrisonCraft
         BlockList.init();
         ItemList.init();
         TileEntityList.init();
+        JailPermissions.getInstance().addUserPlayer("allout58");
     }
     
     @EventHandler
