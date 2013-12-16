@@ -1,6 +1,7 @@
 package allout58.mods.prisoncraft.tileentities;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -26,6 +27,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.EnumGameType;
 
@@ -45,6 +47,8 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     public int tpCoordIn[] = new int[3];
     public int tpCoordOut[] = new int[3]; 
     public String playerName;
+    
+    private List signs=new ArrayList();
 
     private EnumGameType jailedPlayerGM;
     private EntityPlayer jailedPlayer;
@@ -109,6 +113,11 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                             {
                                 ((TileEntityPrisonUnbreakable) te).setFakeBlockID(id);
                             }
+                        }
+                        TileEntity te = worldObj.getBlockTileEntity(i, j, k);
+                        if (te instanceof TileEntitySign)
+                        {
+                            ((TileEntitySign) te).signText=
                         }
                     }
                 }
