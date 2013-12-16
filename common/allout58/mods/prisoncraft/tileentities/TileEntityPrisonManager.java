@@ -26,6 +26,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.EnumGameType;
 
 public class TileEntityPrisonManager extends TileEntity implements IInventory
@@ -227,6 +228,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             jailedPlayerPrevJailPerms = JailPermissions.getInstance().playerCanUse(player);
             JailPermissions.getInstance().removeUserPlayer(player);
         }
+        player.sendChatToPlayer(new ChatMessageComponent().addKey("string.jailed"));
     }
 
     public void unjailPlayer()
@@ -281,7 +283,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         hasJailedPlayer = false;
         jailedPlayer = null;
         playerName = "";
-
+        jailedPlayer.sendChatToPlayer(new ChatMessageComponent().addKey("string.unjailed"));
     }
 
     @Override
@@ -292,7 +294,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             isDirty = false;
             worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
         }
-        if (hasJailedPlayer)
+        if (hasJailedPlayer&&jailedPlayer!=null)
         {
             if (Config.noMovement)
             {
@@ -363,7 +365,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         {
             tags.setInteger("gameMode", jailedPlayerGM.getID());
         }
-        if (hasJailedPlayer)
+        if (hasJailedPlayer && jailedPlayer!=null)
         {
             tags.setString("PlayerUsername", jailedPlayer.username);
         }
