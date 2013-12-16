@@ -2,6 +2,7 @@ package allout58.mods.prisoncraft.blocks;
 
 import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.PrisonCraftWorldSave;
+import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.constants.TextureConstants;
 import allout58.mods.prisoncraft.items.ItemList;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
@@ -118,17 +119,17 @@ public class BlockPrisonManager extends BlockContainer
                             {
                                 if(((TileEntityPrisonManager) te).changeBlocks(entityPlayer.inventory.getCurrentItem().stackTagCompound))
                                 {
-                                entityPlayer.sendChatToPlayer(new ChatMessageComponent().addKey("string.blockprisonmanager.success"));
+                                entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.blockprisonmanager.success"));
                                 }
                                 else
                                 {
-                                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addKey("string.blockprisonmanager.failoverwrite"));
+                                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.blockprisonmanager.failoverwrite"));
                                 }
                                 return true;
                             }
                             else
                             {
-                                entityPlayer.sendChatToPlayer(new ChatMessageComponent().addKey("string.blockprisonmanager.fail"));
+                                entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.blockprisonmanager.fail"));
                                 return true;
                             }
                         }

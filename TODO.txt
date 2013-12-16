@@ -1,5 +1,6 @@
 -Make sure nothing relies on hasPlayer for jailedPlayer null check
 +Different textures for init'ed jail and uninit'd jail.
 -Remove unnecessary files.
+Add "["ModConstants.NAME"]" to each chat msg...
 Localize what you can without over-complications.
 Clean and comment.

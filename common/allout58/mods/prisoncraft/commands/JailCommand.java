@@ -78,7 +78,11 @@ public class JailCommand implements ICommand
                         else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No player with that name found"));
                     }
                 }
-                if (foundOpen) icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName() + " sends " + astring[0] + " to jail..."));
+                if (foundOpen)
+                {
+                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName()).addKey("string.sends").addText(astring[0]).addKey("string.tojail"));
+                    MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName()).addKey("string.sends").addText(astring[0]).addKey("string.tojail"));
+                }
                 else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("No open jails. Build more!"));
             }
         }
@@ -88,7 +92,7 @@ public class JailCommand implements ICommand
     public boolean canCommandSenderUseCommand(ICommandSender icommandsender)
     {
         return JailPermissions.getInstance().playerCanUse(icommandsender);
-//        return true;
+        // return true;
     }
 
     @Override
@@ -97,8 +101,7 @@ public class JailCommand implements ICommand
         final List<String> MATCHES = new LinkedList<String>();
         final String ARG_LC = astring[0].toLowerCase();
         for (String un : MinecraftServer.getServer().getAllUsernames())
-                if(un.toLowerCase().startsWith(ARG_LC))
-                        MATCHES.add(un);
+            if (un.toLowerCase().startsWith(ARG_LC)) MATCHES.add(un);
         return MATCHES.isEmpty() ? null : MATCHES;
     }
 

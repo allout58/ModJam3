@@ -19,6 +19,11 @@ string.removed=removed from
 string.added=added to
 string.playeroffline=That player is currently offline.
 string.noplayerfound=No player with that name found.
+string.reloadperms=Permsissions reloaded.
+string.frees= frees 
+string.fromjail= from jail.
+string.sends= sends 
+string.tojail=to jail.
 
 string.configwand.nextpt=Now click the other corner of the cell.
 string.configwand.tpin=Now click where you want the jailed player to be teleported to.

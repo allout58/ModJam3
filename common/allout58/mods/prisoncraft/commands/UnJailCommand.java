@@ -88,7 +88,11 @@ public class UnJailCommand implements ICommand
                             icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.playeroffline"));
                     }
                 }
-                if (foundOpen) icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName() + " frees " + astring[0] + " from jail..."));//TODO Localize
+                if (foundOpen)
+                    {
+                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName()).addKey("string.frees").addText(astring[0]).addKey("string.fromjail"));
+                    MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText(icommandsender.getCommandSenderName()).addKey("string.frees").addText(astring[0]).addKey("string.fromjail"));
+                    }
                 else icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.noplayerfound"));
             }
         }
