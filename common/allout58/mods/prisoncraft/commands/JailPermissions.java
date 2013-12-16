@@ -180,7 +180,6 @@ public class JailPermissions
         else if (side == Side.CLIENT)
         {
             // We are on the client side.
-            server = Minecraft.getMinecraft().getIntegratedServer();
         }
         else
         {

@@ -121,8 +121,8 @@ public class ChangeJailPermsCommand implements ICommand
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender icommandsender)
     {
-        // return JailPermissions.getInstance().playerCanUse(icommandsender);
-        return true;
+         return JailPermissions.getInstance().playerCanUse(icommandsender);
+//        return true;
     }
 
     @Override
