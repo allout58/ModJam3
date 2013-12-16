@@ -15,3 +15,4 @@ string.configwand.tpout=Now click where you want the released player to be telep
 string.configwand.done=All done! Now click the manager block for this cell to initialize it.
 string.blockprisonmanager.success=Jail creation successful!
 string.blockprisonmanager.fail=Jail creation failed. Rerun configuration tool and check for all points before creating.
+string.blockprisonmanager.failoverwrite=Jail creation failed because this manager already has a linked cell.

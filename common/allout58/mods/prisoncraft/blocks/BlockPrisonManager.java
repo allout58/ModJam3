@@ -107,8 +107,14 @@ public class BlockPrisonManager extends BlockContainer
                             NBTTagCompound tags = entityPlayer.inventory.getCurrentItem().stackTagCompound;
                             if (tags.hasKey("jailCoord1") && tags.hasKey("jailCoord2") && tags.hasKey("tpIn") && tags.hasKey("tpOut"))
                             {
-                                ((TileEntityPrisonManager) te).changeBlocks(entityPlayer.inventory.getCurrentItem().stackTagCompound);
+                                if(((TileEntityPrisonManager) te).changeBlocks(entityPlayer.inventory.getCurrentItem().stackTagCompound))
+                                {
                                 entityPlayer.sendChatToPlayer(new ChatMessageComponent().addKey("string.blockprisonmanager.success"));
+                                }
+                                else
+                                {
+                                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addKey("string.blockprisonmanager.fail"));
+                                }
                                 return true;
                             }
                             else

@@ -56,59 +56,65 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         playerInventory = new ItemStack[INVENTORY_SIZE];
     }
 
-    public void changeBlocks(NBTTagCompound locs)
+    public boolean changeBlocks(NBTTagCompound locs)
     {
-        tpCoordIn = locs.getIntArray("tpIn");
-        tpCoordOut = locs.getIntArray("tpOut");
-        jailCoord1 = locs.getIntArray("jailCoord1");
-        jailCoord2 = locs.getIntArray("jailCoord2");
-        isDirty = true;
-        // give xyz names
-        int x1 = jailCoord1[0];
-        int y1 = jailCoord1[1];
-        int z1 = jailCoord1[2];
-        int x2 = jailCoord2[0];
-        int y2 = jailCoord2[1];
-        int z2 = jailCoord2[2];
-        // force ..1 to be lower than ..2
-        if (x1 > x2)
+        if (!isInitialized())
         {
-            x1 += x2;
-            x2 = x1 - x2;
-            x1 -= x2;
-        }
-        if (y1 > y2)
-        {
-            y1 += y2;
-            y2 = y1 - y2;
-            y1 -= y2;
-        }
-        if (z1 > z2)
-        {
-            z1 += z2;
-            z2 = z1 - z2;
-            z1 -= z2;
-        }
-        // loop through each block
-        for (int i = x1; i <= x2; i++)
-        {
-            for (int j = y1; j <= y2; j++)
+            tpCoordIn = locs.getIntArray("tpIn");
+            tpCoordOut = locs.getIntArray("tpOut");
+            jailCoord1 = locs.getIntArray("jailCoord1");
+            jailCoord2 = locs.getIntArray("jailCoord2");
+            isDirty = true;
+            // give xyz names
+            int x1 = jailCoord1[0];
+            int y1 = jailCoord1[1];
+            int z1 = jailCoord1[2];
+            int x2 = jailCoord2[0];
+            int y2 = jailCoord2[1];
+            int z2 = jailCoord2[2];
+            // force ..1 to be lower than ..2
+            if (x1 > x2)
             {
-                for (int k = z1; k <= z2; k++)
+                x1 += x2;
+                x2 = x1 - x2;
+                x1 -= x2;
+            }
+            if (y1 > y2)
+            {
+                y1 += y2;
+                y2 = y1 - y2;
+                y1 -= y2;
+            }
+            if (z1 > z2)
+            {
+                z1 += z2;
+                z2 = z1 - z2;
+                z1 -= z2;
+            }
+            // loop through each block
+            for (int i = x1; i <= x2; i++)
+            {
+                for (int j = y1; j <= y2; j++)
                 {
-                    int id = worldObj.getBlockId(i, j, k);
-                    if (isValidID(id))
+                    for (int k = z1; k <= z2; k++)
                     {
-                        worldObj.setBlock(i, j, k, BlockList.prisonUnbreak.blockID, 0, 3);
-                        TileEntity te = worldObj.getBlockTileEntity(i, j, k);
-                        if (te instanceof TileEntityPrisonUnbreakable)
+                        int id = worldObj.getBlockId(i, j, k);
+                        if (isValidID(id))
                         {
-                            ((TileEntityPrisonUnbreakable) te).setFakeBlockID(id);
+                            worldObj.setBlock(i, j, k, BlockList.prisonUnbreak.blockID, 0, 3);
+                            TileEntity te = worldObj.getBlockTileEntity(i, j, k);
+                            if (te instanceof TileEntityPrisonUnbreakable)
+                            {
+                                ((TileEntityPrisonUnbreakable) te).setFakeBlockID(id);
+                            }
                         }
                     }
                 }
             }
+            return true;
         }
+        else
+            return false;
     }
 
     public void revertBlocks()
@@ -216,9 +222,9 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         {
             player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 10, 300, false));
         }
-        if(Config.removeJailPerms)
+        if (Config.removeJailPerms)
         {
-            jailedPlayerPrevJailPerms=JailPermissions.getInstance().playerCanUse(player);
+            jailedPlayerPrevJailPerms = JailPermissions.getInstance().playerCanUse(player);
             JailPermissions.getInstance().removeUserPlayer(player);
         }
     }
@@ -265,9 +271,9 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 System.out.println("Game mode could not be reverted. Jailed Player obj in not of type EntityPlayerMP.");
             }
         }
-        if(Config.removeJailPerms)
+        if (Config.removeJailPerms)
         {
-            if(jailedPlayerPrevJailPerms)
+            if (jailedPlayerPrevJailPerms)
             {
                 JailPermissions.getInstance().addUserPlayer(jailedPlayer);
             }
@@ -308,6 +314,8 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         hasJailedPlayer = tags.getBoolean("HasJailedPlayer");
         tpCoordIn = tags.getIntArray("tpCoordIn");
         tpCoordOut = tags.getIntArray("tpCoordOut");
+        jailCoord1 = tags.getIntArray("jailCoord1");
+        jailCoord2 = tags.getIntArray("jailCoord2");
         if (tags.hasKey("gameMode"))
         {
             jailedPlayerGM = EnumGameType.getByID(tags.getInteger("gameMode"));
@@ -349,6 +357,8 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         tags.setBoolean("HasJailedPlayer", hasJailedPlayer);
         tags.setIntArray("tpCoordIn", tpCoordIn);
         tags.setIntArray("tpCoordOut", tpCoordOut);
+        tags.setIntArray("jailCoord1", jailCoord1);
+        tags.setIntArray("jailCoord2", jailCoord2);
         if (jailedPlayerGM != null)
         {
             tags.setInteger("gameMode", jailedPlayerGM.getID());
