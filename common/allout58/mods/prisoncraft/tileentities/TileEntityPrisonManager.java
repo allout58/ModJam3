@@ -355,6 +355,16 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 if (worldObj.getTotalWorldTime() % 20 == 0 && secsLeftJailTime > -1)
                 {
                     secsLeftJailTime--;
+                    for (int i = 0; i < signs.size(); i++)
+                    {
+                        int coord[] = (int[]) signs.get(i);
+                        TileEntity te = worldObj.getBlockTileEntity(coord[0], coord[1], coord[2]);
+                        if (te instanceof TileEntitySign)
+                        {
+                            ((TileEntitySign) te).signText[2] = String.valueOf(secsLeftJailTime);
+                            PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 100, this.worldObj.provider.dimensionId, new Packet130UpdateSign(te.xCoord, te.yCoord, te.zCoord, ((TileEntitySign) te).signText));
+                        }
+                    }
                 }
             }
             else
@@ -397,7 +407,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         tpCoordOut = tags.getIntArray("tpCoordOut");
         jailCoord1 = tags.getIntArray("jailCoord1");
         jailCoord2 = tags.getIntArray("jailCoord2");
-        secsLeftJailTime = tags.getInteger("secsLeftJailTime");
+        secsLeftJailTime = tags.getInteger("secLeftJailTime");
         NBTTagCompound signTags = tags.getCompoundTag("SignTags");
         int numSize = tags.getInteger("numSigns");
         for (int i = 0; i < numSize; i++)
