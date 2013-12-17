@@ -40,7 +40,7 @@ public class ChangeJailPermsCommand implements ICommand
     @Override
     public String getCommandUsage(ICommandSender icommandsender)
     {
-        return "/prisonperms <add|remove|reload> <playername>";
+        return "/prisonperms <add|remove|reload|save> <playername>";
     }
 
     @Override
@@ -61,6 +61,10 @@ public class ChangeJailPermsCommand implements ICommand
             if("reload".toLowerCase().startsWith(ARG_LC))
             {
                 MATCHES.add("reload");
+            }
+            if("save".toLowerCase().startsWith(ARG_LC))
+            {
+                MATCHES.add("save");
             }
             return MATCHES.isEmpty() ? null : MATCHES;
         }
@@ -141,6 +145,12 @@ public class ChangeJailPermsCommand implements ICommand
                 icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.reloadperms"));
                 server.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.reloadperms"));
             }
+            else if(astring[0].equalsIgnoreCase("save"))
+            {
+                JailPermissions.getInstance().save();
+                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.saveperms"));
+                server.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.saveperms"));
+            }
             else icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
         }
     }
@@ -148,7 +158,8 @@ public class ChangeJailPermsCommand implements ICommand
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender icommandsender)
     {
-        return JailPermissions.getInstance().playerCanUse(icommandsender);
+        //In my perms list and OP or server
+        return JailPermissions.getInstance().playerCanUse(icommandsender)&&(MinecraftServer.getServer().getConfigurationManager().getOps().contains(icommandsender.getCommandSenderName().toLowerCase()) || icommandsender.getCommandSenderName().equalsIgnoreCase("Server"));
         // return true;
     }
 
