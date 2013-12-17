@@ -402,7 +402,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 if (worldObj.getTotalWorldTime() % 60 == 0)
                 {
                     jailedPlayer = findPlayerFromName(playerName);
-                    System.out.println("Trying to find player...");
+                    System.out.println("Trying to find player "+playerName+"...");
                 }
             }
         }
