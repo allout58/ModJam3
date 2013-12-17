@@ -96,6 +96,7 @@ public class BlockPrisonManager extends BlockContainer
         {
             PrisonCraftWorldSave.forWorld(world).getTesList().remove((TileEntityPrisonManager) logic);
             ((TileEntityPrisonManager) logic).revertBlocks();
+            ((TileEntityPrisonManager)logic).unjailPlayer();
         }
         super.breakBlock(world, x, y, z, par5, par6);
     }
