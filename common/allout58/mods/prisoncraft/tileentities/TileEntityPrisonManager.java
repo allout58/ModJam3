@@ -22,6 +22,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet130UpdateSign;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -256,7 +257,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             if (te instanceof TileEntitySign)
             {
                 ((TileEntitySign) te).signText[0] = playerName;
-                worldObj.markBlockForRenderUpdate(coord[0], coord[1], coord[2]);
+                PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 100, this.worldObj.provider.dimensionId, new Packet130UpdateSign(te.xCoord, te.yCoord, te.zCoord, ((TileEntitySign)te).signText));
             }
         }
     }
@@ -315,7 +316,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 if (te instanceof TileEntitySign)
                 {
                     ((TileEntitySign) te).signText[0] = "";
-                    worldObj.markBlockForRenderUpdate(coord[0], coord[1], coord[2]);
+                    PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 100, this.worldObj.provider.dimensionId, new Packet130UpdateSign(te.xCoord, te.yCoord, te.zCoord, ((TileEntitySign)te).signText));
                 }
             }
             hasJailedPlayer = false;
