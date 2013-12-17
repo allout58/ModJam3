@@ -271,13 +271,13 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     public boolean playerIsJailed(String username)
     {
-        List tesList=PrisonCraftWorldSave.forWorld(worldObj).getTesList();
-        for(int i=0;i<tesList.size();i++)
+        List tesList = PrisonCraftWorldSave.forWorld(worldObj).getTesList();
+        for (int i = 0; i < tesList.size(); i++)
         {
-            TileEntityPrisonManager te=(TileEntityPrisonManager)tesList.get(i);
-            if(te!=null)
+            TileEntityPrisonManager te = (TileEntityPrisonManager) tesList.get(i);
+            if (te != null)
             {
-                if(te.playerName!=null&&te.playerName.equalsIgnoreCase(username))return true;
+                if (te.playerName != null && te.playerName.equalsIgnoreCase(username)) return true;
             }
         }
         return false;
@@ -359,6 +359,10 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         }
         if (hasJailedPlayer)
         {
+            if (jailedPlayer != null && jailedPlayer.isDead)
+            {
+                jailedPlayer = null;
+            }
             if (jailedPlayer != null)
             {
                 if (Config.noMovement && worldObj.getTotalWorldTime() % 50 == 0)
@@ -402,7 +406,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 if (worldObj.getTotalWorldTime() % 60 == 0)
                 {
                     jailedPlayer = findPlayerFromName(playerName);
-                    System.out.println("Trying to find player "+playerName+"...");
+                    System.out.println("Trying to find player " + playerName + "...");
                 }
             }
         }
