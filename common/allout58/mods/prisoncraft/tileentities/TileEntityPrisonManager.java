@@ -348,21 +348,24 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 {
                     jailedPlayer.setPositionAndUpdate(jailedPlayer.posX, tpCoordIn[1], jailedPlayer.posZ);
                 }
-                if (secsLeftJailTime == -1)
+                if (!worldObj.isRemote)
                 {
-                    this.unjailPlayer();
-                }
-                if (worldObj.getTotalWorldTime() % 20 == 0 && secsLeftJailTime > -1)
-                {
-                    secsLeftJailTime--;
-                    for (int i = 0; i < signs.size(); i++)
+                    if (secsLeftJailTime == -1)
                     {
-                        int coord[] = (int[]) signs.get(i);
-                        TileEntity te = worldObj.getBlockTileEntity(coord[0], coord[1], coord[2]);
-                        if (te instanceof TileEntitySign)
+                        this.unjailPlayer();
+                    }
+                    if (worldObj.getTotalWorldTime() % 20 == 0 && secsLeftJailTime > -1)
+                    {
+                        secsLeftJailTime--;
+                        for (int i = 0; i < signs.size(); i++)
                         {
-                            ((TileEntitySign) te).signText[2] = String.valueOf(secsLeftJailTime);
-                            PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 100, this.worldObj.provider.dimensionId, new Packet130UpdateSign(te.xCoord, te.yCoord, te.zCoord, ((TileEntitySign) te).signText));
+                            int coord[] = (int[]) signs.get(i);
+                            TileEntity te = worldObj.getBlockTileEntity(coord[0], coord[1], coord[2]);
+                            if (te instanceof TileEntitySign)
+                            {
+                                ((TileEntitySign) te).signText[2] = String.valueOf(secsLeftJailTime);
+                                PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 100, this.worldObj.provider.dimensionId, new Packet130UpdateSign(te.xCoord, te.yCoord, te.zCoord, ((TileEntitySign) te).signText));
+                            }
                         }
                     }
                 }
