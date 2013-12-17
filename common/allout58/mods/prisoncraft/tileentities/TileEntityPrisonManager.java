@@ -7,6 +7,7 @@ import java.util.Vector;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 import allout58.mods.prisoncraft.Config;
+import allout58.mods.prisoncraft.PrisonCraftWorldSave;
 import allout58.mods.prisoncraft.blocks.BlockList;
 import allout58.mods.prisoncraft.commands.JailCommand;
 import allout58.mods.prisoncraft.commands.JailPermissions;
@@ -205,7 +206,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     // public void jailPlayer(EntityPlayer player, double time)
     public boolean jailPlayer(EntityPlayer player)
     {
-        if (true)
+        if (!playerIsJailed(player.username))
         {
             isDirty = true;
             jailedPlayer = player;
@@ -266,6 +267,16 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             return true;
         }
         else return false;
+    }
+
+    public boolean playerIsJailed(String username)
+    {
+        List tesList=PrisonCraftWorldSave.forWorld(worldObj).getTesList();
+        for(int i=0;i<tesList.size();i++)
+        {
+            if(((TileEntityPrisonManager)tesList.get(i)).playerName.equalsIgnoreCase(username))return true;
+        }
+        return false;
     }
 
     public boolean unjailPlayer()

@@ -78,13 +78,18 @@ public class JailCommand implements ICommand
                             if (astring.length == 1)
                             {
 //                                te.jailPlayer(player, -1);
-                                te.jailPlayer(player);
+                                if(te.jailPlayer(player))foundOpen = true;
+                                else 
+                                {
+                                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.playeralreadyjailed"));
+                                    return;
+                                }
                             }
 //                            if (astring.length == 2)
 //                            {
 //                                te.jailPlayer(player, Double.parseDouble(astring[1]));
 //                            }
-                            foundOpen = true;
+                            
                         }
                         else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.noplayerfound"));
                     }
