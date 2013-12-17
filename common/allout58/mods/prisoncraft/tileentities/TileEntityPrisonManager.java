@@ -274,7 +274,11 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         List tesList=PrisonCraftWorldSave.forWorld(worldObj).getTesList();
         for(int i=0;i<tesList.size();i++)
         {
-            if(((TileEntityPrisonManager)tesList.get(i)).playerName.equalsIgnoreCase(username))return true;
+            TileEntityPrisonManager te=(TileEntityPrisonManager)tesList.get(i);
+            if(te!=null)
+            {
+                if(te.playerName!=null&&te.playerName.equalsIgnoreCase(username))return true;
+            }
         }
         return false;
     }
@@ -464,6 +468,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     public void writeToNBT(NBTTagCompound tags)
     {
         super.writeToNBT(tags);
+        System.out.println("WriteNBT called");
         tags.setBoolean("HasJailedPlayer", hasJailedPlayer);
         tags.setIntArray("tpCoordIn", tpCoordIn);
         tags.setIntArray("tpCoordOut", tpCoordOut);
