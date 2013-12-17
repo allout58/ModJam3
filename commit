@@ -1,1 +1,4 @@
-Finished for ModJam!
+Official Release v0.0.1
+
+/prisonperms now requires the player to be an OP as well as on the perms list
+Can now save perms with /prisonperms save

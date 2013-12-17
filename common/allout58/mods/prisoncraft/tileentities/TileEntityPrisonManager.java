@@ -406,7 +406,6 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 if (worldObj.getTotalWorldTime() % 60 == 0)
                 {
                     jailedPlayer = findPlayerFromName(playerName);
-                    System.out.println("Trying to find player " + playerName + "...");
                 }
             }
         }
@@ -472,7 +471,6 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     public void writeToNBT(NBTTagCompound tags)
     {
         super.writeToNBT(tags);
-        System.out.println("WriteNBT called");
         tags.setBoolean("HasJailedPlayer", hasJailedPlayer);
         tags.setIntArray("tpCoordIn", tpCoordIn);
         tags.setIntArray("tpCoordOut", tpCoordOut);

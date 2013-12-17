@@ -31,6 +31,7 @@ string.tojail= to jail.
 string.nojails=No prisons found in this world.
 string.noopenjails=No open prisons. Build more!
 string.playeralreadyjailed=That player is already jailed.
+string.saveperms=Permissions saved to file.
 
 #Config wand strings
 string.configwand.nextpt=Now click the other corner of the cell.
