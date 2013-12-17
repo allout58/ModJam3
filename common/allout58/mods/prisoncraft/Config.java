@@ -1,5 +1,6 @@
 package allout58.mods.prisoncraft;
 
+import allout58.mods.prisoncraft.constants.ModConstants;
 import net.minecraftforge.common.Configuration;
 
 public class Config
@@ -15,6 +16,7 @@ public class Config
     public static boolean noMovement;
     public static boolean noJumping;
     public static boolean removeJailPerms;
+    public static int[] unbreakIDWhitelist;
     
     public static void init(Configuration config)
     {
@@ -30,6 +32,8 @@ public class Config
         noMovement=config.get("JailOptions","AllowNoPlayerMovement",true).getBoolean(true);
         noJumping=config.get("JailOptions","AllowNoPlayerJumping",false,"This feature is very buggy. Use at your own risk.").getBoolean(false);
         removeJailPerms=config.get("JailOptions", "RemoveJailedPlayerJailPerms", true).getBoolean(true);
+        
+        unbreakIDWhitelist=config.get("WallWhitelist", "BlockIDS", ModConstants.WHITELIST_WALL_IDS,"Currently, non-full blocks will render incorrectly. You have been warned.").getIntList();
         
         config.save();
     }

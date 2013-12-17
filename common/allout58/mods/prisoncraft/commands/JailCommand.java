@@ -39,7 +39,8 @@ public class JailCommand implements ICommand
     @Override
     public String getCommandUsage(ICommandSender icommandsender)
     {
-        return "/jail <playername> [time]";
+//        return "/jail <playername> [time]";
+        return "/jail <playername>";
     }
 
     @Override
@@ -51,7 +52,8 @@ public class JailCommand implements ICommand
     @Override
     public void processCommand(ICommandSender icommandsender, String[] astring)
     {
-        if (astring.length < 1 || astring.length > 2)
+//        if (astring.length < 1 || astring.length > 2)
+        if(astring.length!=1)
         {
             icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
         }
@@ -75,12 +77,13 @@ public class JailCommand implements ICommand
                         {
                             if (astring.length == 1)
                             {
-                                te.jailPlayer(player, -1);
+//                                te.jailPlayer(player, -1);
+                                te.jailPlayer(player);
                             }
-                            if (astring.length == 2)
-                            {
-                                te.jailPlayer(player, Double.parseDouble(astring[1]));
-                            }
+//                            if (astring.length == 2)
+//                            {
+//                                te.jailPlayer(player, Double.parseDouble(astring[1]));
+//                            }
                             foundOpen = true;
                         }
                         else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.noplayerfound"));

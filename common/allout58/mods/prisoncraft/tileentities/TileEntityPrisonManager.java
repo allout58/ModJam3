@@ -55,7 +55,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     private EntityPlayer jailedPlayer;
     private boolean jailedPlayerPrevJailPerms;
 
-    private int secsLeftJailTime;
+//    private int secsLeftJailTime;
 
     private boolean isDirty = false;
 
@@ -186,9 +186,9 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     private boolean isValidID(int id)
     {
-        for (int i = 0; i < ModConstants.WHITELIST_WALL_IDS.length; i++)
+        for (int i = 0; i < Config.unbreakIDWhitelist.length; i++)
         {
-            if (id == ModConstants.WHITELIST_WALL_IDS[i])
+            if (id == Config.unbreakIDWhitelist[i])
             {
                 return true;
             }
@@ -202,12 +202,13 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     }
 
-    public void jailPlayer(EntityPlayer player, double time)
+//    public void jailPlayer(EntityPlayer player, double time)
+    public void jailPlayer(EntityPlayer player)
     {
         isDirty = true;
         jailedPlayer = player;
         playerName = player.username;
-        secsLeftJailTime = (int) (time * 60);
+//        secsLeftJailTime = (int) (time * 60);
         if (Config.changeGameMode)
         {
             if (player instanceof EntityPlayerMP)
@@ -348,27 +349,27 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 {
                     jailedPlayer.setPositionAndUpdate(jailedPlayer.posX, tpCoordIn[1], jailedPlayer.posZ);
                 }
-                if (!worldObj.isRemote)
-                {
-                    if (secsLeftJailTime == -1)
-                    {
-                        this.unjailPlayer();
-                    }
-                    if (worldObj.getTotalWorldTime() % 20 == 0 && secsLeftJailTime > -1)
-                    {
-                        secsLeftJailTime--;
-                        for (int i = 0; i < signs.size(); i++)
-                        {
-                            int coord[] = (int[]) signs.get(i);
-                            TileEntity te = worldObj.getBlockTileEntity(coord[0], coord[1], coord[2]);
-                            if (te instanceof TileEntitySign)
-                            {
-                                ((TileEntitySign) te).signText[2] = String.valueOf(secsLeftJailTime);
-                                PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 100, this.worldObj.provider.dimensionId, new Packet130UpdateSign(te.xCoord, te.yCoord, te.zCoord, ((TileEntitySign) te).signText));
-                            }
-                        }
-                    }
-                }
+//                if (!worldObj.isRemote)
+//                {
+//                    if (secsLeftJailTime == -1)
+//                    {
+//                        this.unjailPlayer();
+//                    }
+//                    if (worldObj.getTotalWorldTime() % 20 == 0 && secsLeftJailTime > -1)
+//                    {
+//                        secsLeftJailTime--;
+//                        for (int i = 0; i < signs.size(); i++)
+//                        {
+//                            int coord[] = (int[]) signs.get(i);
+//                            TileEntity te = worldObj.getBlockTileEntity(coord[0], coord[1], coord[2]);
+//                            if (te instanceof TileEntitySign)
+//                            {
+//                                ((TileEntitySign) te).signText[2] = String.valueOf(secsLeftJailTime);
+//                                PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 100, this.worldObj.provider.dimensionId, new Packet130UpdateSign(te.xCoord, te.yCoord, te.zCoord, ((TileEntitySign) te).signText));
+//                            }
+//                        }
+//                    }
+//                }
             }
             else
             {
@@ -410,7 +411,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         tpCoordOut = tags.getIntArray("tpCoordOut");
         jailCoord1 = tags.getIntArray("jailCoord1");
         jailCoord2 = tags.getIntArray("jailCoord2");
-        secsLeftJailTime = tags.getInteger("secLeftJailTime");
+//        secsLeftJailTime = tags.getInteger("secLeftJailTime");
         NBTTagCompound signTags = tags.getCompoundTag("SignTags");
         int numSize = tags.getInteger("numSigns");
         for (int i = 0; i < numSize; i++)
@@ -447,7 +448,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         tags.setIntArray("jailCoord2", jailCoord2);
         tags.setBoolean("JailPlayerPreviousPerms", jailedPlayerPrevJailPerms);
         tags.setInteger("numSigns", signs.size());
-        tags.setInteger("secLeftJailTime", secsLeftJailTime);
+//        tags.setInteger("secLeftJailTime", secsLeftJailTime);
         NBTTagCompound signTags = new NBTTagCompound();
         for (int i = 0; i < signs.size(); i++)
         {
@@ -554,14 +555,12 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     @Override
     public String getInvName()
     {
-        // TODO Possibly add custom names
         return "container.PlayerHeldInventory";
     }
 
     @Override
     public boolean isInvNameLocalized()
     {
-        // TODO This needs to change w/ custom names
         return false;
     }
 
@@ -590,7 +589,6 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack itemstack)
     {
-        // TODO Actually set this up to only let in appropriate parts
         return true;
     }
 }
