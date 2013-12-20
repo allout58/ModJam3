@@ -8,5 +8,5 @@ public class ModConstants
     
     public static final int ITEM_ID_DIFF=256;
     
-    public static final int[] WHITELIST_WALL_IDS={1,4,7,24,41,42,45,48,49,57,98,112,133};
+    public static final int[] WHITELIST_WALL_IDS={1,4,7,20,24,41,42,45,48,49,57,98,112,133};
 }

@@ -22,6 +22,7 @@ public class BlockPrisonUnbreakable extends BlockContainer
         super(par1, par2Material);
         setBlockUnbreakable();
         setResistance(6000000.0F);
+        setLightValue(.2F);
         setUnlocalizedName("prisonUnbreakable");
     }
 
@@ -47,7 +48,7 @@ public class BlockPrisonUnbreakable extends BlockContainer
     @Override
     public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
     {
-        int id = 100;
+        int id = 7;//Bedrock if you somehow can't get the id to fake
         TileEntity logic = world.getBlockTileEntity(x, y, z);
         if (logic instanceof TileEntityPrisonUnbreakable)
         {
@@ -58,20 +59,20 @@ public class BlockPrisonUnbreakable extends BlockContainer
     }
 
     @Override
-    public void breakBlock(World world, int x, int y, int z, int par5, int par6)
+    public void breakBlock(World world, int x, int y, int z, int oldID, int oldMeta)
     {
         TileEntity logic = world.getBlockTileEntity(x, y, z);
         if (logic instanceof TileEntityPrisonUnbreakable)
         {
             if (((TileEntityPrisonUnbreakable) logic).canDestroy())
             {
-                super.breakBlock(world, x, y, z, par5, par6);
+                super.breakBlock(world, x, y, z, oldID, oldMeta);
             }
             else
             {
                 int fakeID=((TileEntityPrisonUnbreakable)logic).getFakeBlockID();
-                super.breakBlock(world, x, y, z, par5, par6);
-                world.setBlock(x, y, z, BlockList.prisonUnbreak.blockID, 0, 3);
+                super.breakBlock(world, x, y, z, oldID, oldMeta);
+                world.setBlock(x, y, z, oldID, oldMeta, 3);
                 TileEntity te = world.getBlockTileEntity(x, y, z);
                 if(te instanceof TileEntityPrisonUnbreakable)
                 {

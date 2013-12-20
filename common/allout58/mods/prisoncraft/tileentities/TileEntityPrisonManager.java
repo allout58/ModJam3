@@ -10,10 +10,13 @@ import allout58.mods.prisoncraft.Config;
 import allout58.mods.prisoncraft.PrisonCraftWorldSave;
 import allout58.mods.prisoncraft.blocks.BlockList;
 import allout58.mods.prisoncraft.commands.JailCommand;
-import allout58.mods.prisoncraft.commands.JailPermissions;
+import allout58.mods.prisoncraft.commands.permissions.JailPermissions;
+import allout58.mods.prisoncraft.commands.permissions.PermissionLevel;
 import allout58.mods.prisoncraft.constants.ModConstants;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFurnace;
+import net.minecraft.block.BlockGlass;
 import net.minecraft.command.CommandBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -54,7 +57,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     private EnumGameType jailedPlayerGM;
     private EntityPlayer jailedPlayer;
-    private boolean jailedPlayerPrevJailPerms;
+    private PermissionLevel jailedPlayerPrevJailPerms;
 
     // private int secsLeftJailTime;
 
@@ -109,7 +112,20 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                         int id = worldObj.getBlockId(i, j, k);
                         if (isValidID(id))
                         {
-                            worldObj.setBlock(i, j, k, BlockList.prisonUnbreak.blockID, 0, 3);
+                            if (Block.blocksList[id] instanceof BlockGlass)
+                            {
+                                worldObj.setBlock(i, j, k, BlockList.prisonUnbreakGlass.blockID, 0, 3);
+                            }
+                            // else if (id==Block.fenceIron.blockID ||
+                            // id==Block.thinGlass.blockID)
+                            // {
+                            // worldObj.setBlock(i, j, k,
+                            // BlockList.prisonUnbreakPane.blockID, 0, 3);
+                            // }
+                            else
+                            {
+                                worldObj.setBlock(i, j, k, BlockList.prisonUnbreak.blockID, 0, 3);
+                            }
                             TileEntity te = worldObj.getBlockTileEntity(i, j, k);
                             if (te instanceof TileEntityPrisonUnbreakable)
                             {
@@ -250,7 +266,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             }
             if (Config.removeJailPerms)
             {
-                jailedPlayerPrevJailPerms = JailPermissions.getInstance().playerCanUse(player);
+                jailedPlayerPrevJailPerms = JailPermissions.getInstance().getPlayerPermissionLevel(player);
                 JailPermissions.getInstance().removeUserPlayer(player);
             }
             player.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.jailed"));
@@ -324,9 +340,9 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             }
             if (Config.removeJailPerms)
             {
-                if (jailedPlayerPrevJailPerms)
+                if (jailedPlayerPrevJailPerms != PermissionLevel.Default)
                 {
-                    JailPermissions.getInstance().addUserPlayer(jailedPlayer);
+                    JailPermissions.getInstance().addUserPlayer(jailedPlayer, jailedPlayerPrevJailPerms);
                 }
             }
             jailedPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.unjailed"));
@@ -436,7 +452,10 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     {
         super.readFromNBT(tags);
         hasJailedPlayer = tags.getBoolean("HasJailedPlayer");
-        jailedPlayerPrevJailPerms = tags.getBoolean("JailPlayerPreviousPerms");
+        if (tags.hasKey("JailPlayerPreviousPerms"))
+        {
+            jailedPlayerPrevJailPerms = PermissionLevel.fromInt(tags.getInteger("JailPlayerPreviousPerms"));
+        }
         tpCoordIn = tags.getIntArray("tpCoordIn");
         tpCoordOut = tags.getIntArray("tpCoordOut");
         jailCoord1 = tags.getIntArray("jailCoord1");
@@ -476,7 +495,10 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         tags.setIntArray("tpCoordOut", tpCoordOut);
         tags.setIntArray("jailCoord1", jailCoord1);
         tags.setIntArray("jailCoord2", jailCoord2);
-        tags.setBoolean("JailPlayerPreviousPerms", jailedPlayerPrevJailPerms);
+        if (jailedPlayerPrevJailPerms != null)
+        {
+            tags.setInteger("JailPlayerPreviousPerms", jailedPlayerPrevJailPerms.getValue());
+        }
         tags.setInteger("numSigns", signs.size());
         // tags.setInteger("secLeftJailTime", secsLeftJailTime);
         NBTTagCompound signTags = new NBTTagCompound();

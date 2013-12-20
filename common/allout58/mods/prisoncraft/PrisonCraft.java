@@ -1,16 +1,19 @@
 package allout58.mods.prisoncraft;
 
+import java.util.logging.Logger;
+
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.Configuration;
 import allout58.mods.prisoncraft.blocks.BlockList;
 import allout58.mods.prisoncraft.commands.ChangeJailPermsCommand;
 import allout58.mods.prisoncraft.commands.JailCommand;
-import allout58.mods.prisoncraft.commands.JailPermissions;
 import allout58.mods.prisoncraft.commands.UnJailCommand;
+import allout58.mods.prisoncraft.commands.permissions.JailPermissions;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.items.ItemList;
 import allout58.mods.prisoncraft.tileentities.TileEntityList;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -42,9 +45,14 @@ public class PrisonCraft
     @SidedProxy(clientSide = "allout58.mods.prisoncraft.client.ClientProxy", serverSide = "allout58.mods.prisoncraft.CommonProxy")
     public static CommonProxy proxy;
     
+    public static Logger logger;
+    
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+        logger=Logger.getLogger(ModConstants.MODID);
+        logger.setParent(FMLLog.getLogger());
+        
         Config.init(new Configuration(event.getSuggestedConfigurationFile()));
         
         BlockList.init();

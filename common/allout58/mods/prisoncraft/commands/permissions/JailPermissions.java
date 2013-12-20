@@ -1,4 +1,4 @@
-package allout58.mods.prisoncraft.commands;
+package allout58.mods.prisoncraft.commands.permissions;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -8,8 +8,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.lang.*;
+
+import allout58.mods.prisoncraft.PrisonCraft;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 
 import net.minecraft.client.Minecraft;
@@ -32,47 +37,40 @@ public class JailPermissions
         return instance;
     }
 
-    public boolean playerCanUse(ICommandSender sender)
+    public boolean playerCanUse(ICommandSender sender, PermissionLevel level)
     {
-        for (int i = 0; i < canUse.size(); i++)
+        return playerCanUse(sender.getCommandSenderName(), level);
+    }
+
+    public boolean playerCanUse(String senderName, PermissionLevel level)
+    {
+        PlayerPermsision pp = getPermsFromName(senderName);
+        if (pp != null)
         {
-            if (((String) canUse.get(i)).equalsIgnoreCase(sender.getCommandSenderName()))
+            // Player perm level >= required perm
+            if (pp.Level.getValue() >= level.getValue())
             {
                 return true;
             }
         }
-        if (sender.getCommandSenderName().equalsIgnoreCase("Server")) return true;
+        // Always allow server or Rcon
+        if (senderName.equalsIgnoreCase("Server") || senderName.equalsIgnoreCase("RCON")) return true;
         return false;
     }
 
-    public boolean playerCanUse(String senderName)
+    public boolean addUserPlayer(ICommandSender player, PermissionLevel level)
     {
-        for (int i = 0; i < canUse.size(); i++)
-        {
-            if (((String) canUse.get(i)).equalsIgnoreCase(senderName))
-            {
-                return true;
-            }
-        }
-        return false;
+        return addUserPlayer(player.getCommandSenderName(), level);
     }
 
-    public boolean addUserPlayer(ICommandSender player)
+    public boolean addUserPlayer(String playerName, PermissionLevel level)
     {
-        if (!playerCanUse(player))
+        if (!playerCanUse(playerName, PermissionLevel.Default))
         {
-            canUse.add(player.getCommandSenderName());
-            this.save();
-            return true;
-        }
-        return false;
-    }
-
-    public boolean addUserPlayer(String playerName)
-    {
-        if (!playerCanUse(playerName))
-        {
-            canUse.add(playerName);
+            PlayerPermsision perm = new PlayerPermsision();
+            perm.UserName = playerName;
+            perm.Level = level;
+            canUse.add(perm);
             this.save();
             return true;
         }
@@ -81,24 +79,31 @@ public class JailPermissions
 
     public boolean removeUserPlayer(ICommandSender player)
     {
-        if (playerCanUse(player))
+        return removeUserPlayer(player.getCommandSenderName());
+    }
+
+    public boolean removeUserPlayer(String playerName)
+    {
+        PlayerPermsision pp = getPermsFromName(playerName);
+        if (pp != null)
         {
-            canUse.remove(player.getCommandSenderName());
+            canUse.remove(pp);
             this.save();
             return true;
         }
         return false;
     }
 
-    public boolean removeUserPlayer(String playerName)
+    public PermissionLevel getPlayerPermissionLevel(ICommandSender player)
     {
-        if (playerCanUse(playerName))
-        {
-            canUse.remove(playerName);
-            this.save();
-            return true;
-        }
-        return false;
+        return getPlayerPermissionLevel(player.getCommandSenderName());
+    }
+
+    public PermissionLevel getPlayerPermissionLevel(String playerName)
+    {
+        PlayerPermsision pp = getPermsFromName(playerName);
+        if (pp != null) return pp.Level;
+        return PermissionLevel.Default;
     }
 
     public void save()
@@ -113,7 +118,6 @@ public class JailPermissions
         else if (side == Side.CLIENT)
         {
             // We are on the client side.
-//            server = Minecraft.getMinecraft().getIntegratedServer();
         }
         else
         {
@@ -123,8 +127,8 @@ public class JailPermissions
         {
             SaveHandler saveHandler = (SaveHandler) server.worldServerForDimension(0).getSaveHandler();
             String fileName = saveHandler.getWorldDirectory().getAbsolutePath() + "/PrisonCraftPerms.txt";
-            File f=new File(fileName);
-            if(!f.exists())
+            File f = new File(fileName);
+            if (!f.exists())
             {
                 try
                 {
@@ -142,7 +146,11 @@ public class JailPermissions
                 BufferedWriter writer = new BufferedWriter(output);
                 for (int i = 0; i < canUse.size(); i++)
                 {
-                    writer.write(((String) canUse.get(i))+"\n");
+                    if (canUse.get(i) instanceof PlayerPermsision)
+                    {
+                        PlayerPermsision pp = (PlayerPermsision) canUse.get(i);
+                        writer.write(pp.UserName + "-" + pp.Level.getValue() + "\n");
+                    }
                 }
                 writer.close();
             }
@@ -189,8 +197,8 @@ public class JailPermissions
         {
             SaveHandler saveHandler = (SaveHandler) server.worldServerForDimension(0).getSaveHandler();
             String fileName = saveHandler.getWorldDirectory().getAbsolutePath() + "/PrisonCraftPerms.txt";
-            File f=new File(fileName);
-            if(!f.exists())
+            File f = new File(fileName);
+            if (!f.exists())
             {
                 try
                 {
@@ -207,9 +215,30 @@ public class JailPermissions
                 file = new FileReader(fileName);
                 BufferedReader reader = new BufferedReader(file);
                 String line = "";
+                int num = 0;
                 while ((line = reader.readLine()) != null)
                 {
-                    addUserPlayer(line);
+                    num++;
+                    int dashIndex = line.indexOf("-");
+                    if (dashIndex > 0)
+                    {
+                        // Reassemble the player perms
+                        String name = line.substring(0, dashIndex);
+                        int pLev = Integer.parseInt(line.substring(dashIndex + 1));
+                        try
+                        {
+                            PermissionLevel pl = PermissionLevel.fromInt(pLev);
+                            addUserPlayer(name, pl);
+                        }
+                        catch (IndexOutOfBoundsException e)
+                        {
+                            PrisonCraft.logger.log(Level.SEVERE, "Could not parse line " + num + " in perms file: Invalid perm level");
+                        }
+                    }
+                    else
+                    {
+                        PrisonCraft.logger.log(Level.SEVERE, "Could not parse line " + num + " in perms file: No '-'");
+                    }
                 }
                 reader.close();
             }
@@ -233,9 +262,27 @@ public class JailPermissions
             }
         }
     }
-    
+
     public void clear()
     {
         canUse.clear();
+    }
+
+    // Private functions
+    private PlayerPermsision getPermsFromName(String username)
+    {
+        for (int i = 0; i < canUse.size(); i++)
+        {
+            if (canUse.get(i) instanceof PlayerPermsision)
+            {
+                PlayerPermsision pp = (PlayerPermsision) canUse.get(i);
+                if (pp.UserName.equalsIgnoreCase(username))
+                ;
+                {
+                    return pp;
+                }
+            }
+        }
+        return null;
     }
 }

@@ -8,6 +8,8 @@ public class Config
     //Blocks
     public static int prisonManager;
     public static int prisonUnbreak;
+    public static int prisonUnbreakGlass;
+    public static int prisonUnbreakPane;
     //Items
     public static int configWand;
     //Config options
@@ -16,6 +18,7 @@ public class Config
     public static boolean noMovement;
     public static boolean noJumping;
     public static boolean removeJailPerms;
+    
     public static int[] unbreakIDWhitelist;
     
     public static void init(Configuration config)
@@ -24,6 +27,8 @@ public class Config
         
         prisonManager=config.getBlock("prisonManager", 4000).getInt();
         prisonUnbreak=config.getBlock("prisonUnbreak", 4001).getInt();
+        prisonUnbreakGlass=config.getBlock("prisonUnbreakGlass", 4002).getInt();
+        prisonUnbreakPane=config.getBlock("prisonUnbreakPane", 4003).getInt();
         
         configWand=config.getItem("configWand", 8000).getInt();
         

@@ -1,4 +1,4 @@
-Official Release v0.0.1
+Permissions Update
 
-/prisonperms now requires the player to be an OP as well as on the perms list
-Can now save perms with /prisonperms save
+Updated permissions system to have multiple levels.
+Added unbreakable glass.

@@ -10,6 +10,8 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
 import allout58.mods.prisoncraft.PrisonCraftWorldSave;
+import allout58.mods.prisoncraft.commands.permissions.JailPermissions;
+import allout58.mods.prisoncraft.commands.permissions.PermissionLevel;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
 
@@ -101,7 +103,7 @@ public class UnJailCommand implements ICommand
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender icommandsender)
     {
-        return JailPermissions.getInstance().playerCanUse(icommandsender);
+        return JailPermissions.getInstance().playerCanUse(icommandsender,PermissionLevel.Jailer);
 //        return true;
     }
 
