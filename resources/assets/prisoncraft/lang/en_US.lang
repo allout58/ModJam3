@@ -1,5 +1,7 @@
 #Blocks
 tile.prisonUnbreakable.name=Unbreakable Prison Wall
+tile.prisonUnbreakableGlass.name=Unbreakable Prison Wall
+tile.prisonUnbreakablePane.name=Unbreakable Prison Wall
 tile.prisonManager.name=Prison Manager
 
 #Items

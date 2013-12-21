@@ -15,7 +15,7 @@ public class PrisonCraftWorldSave extends WorldSavedData
     
     public static World worldObj;
 
-    private List tesList = new ArrayList();
+    private List tesList = new ArrayList(); //int[] only!
 
     public PrisonCraftWorldSave()
     {
@@ -57,10 +57,9 @@ public class PrisonCraftWorldSave extends WorldSavedData
             for(int i=0;i<size;i++)
             {
                 NBTTagCompound t=tags.getCompoundTag(i+"");
-                int x=t.getInteger("x");
-                int y=t.getInteger("y");
-                int z=t.getInteger("z");
-                tesList.add(worldObj.getBlockTileEntity(x, y, z));
+                int coord[]=t.getIntArray("coord");
+                
+                tesList.add(coord);
             }
         }
     }
@@ -72,9 +71,7 @@ public class PrisonCraftWorldSave extends WorldSavedData
         for (int i = 0; i < tesList.size(); i++)
         {
             NBTTagCompound t = new NBTTagCompound();
-            t.setInteger("x", ((TileEntity) tesList.get(i)).xCoord);
-            t.setInteger("y", ((TileEntity) tesList.get(i)).yCoord);
-            t.setInteger("z", ((TileEntity) tesList.get(i)).zCoord);
+            t.setIntArray("coord", (int[]) tesList.get(i));
             tags.setCompoundTag(i + "", t);// HACKY! :D
         }
     }

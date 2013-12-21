@@ -20,6 +20,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 
 public class UnJailCommand implements ICommand
@@ -68,7 +69,7 @@ public class UnJailCommand implements ICommand
             PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(icommandsender.getEntityWorld());
             if (ws.getTesList().size() == 0)
             {
-                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.nojails"));
+                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.nojails"));
             }
             else
             {
@@ -76,26 +77,27 @@ public class UnJailCommand implements ICommand
                 boolean foundOpen = false;
                 for (int i = 0; i < ws.getTesList().size(); i++)
                 {
-                    TileEntityPrisonManager te = (TileEntityPrisonManager) ws.getTesList().get(i);
-                    if (te.hasJailedPlayer)
+                    int coord[] = (int[]) ws.getTesList().get(i);
+                    TileEntity te = icommandsender.getEntityWorld().getBlockTileEntity(coord[0], coord[1], coord[2]);
+                    if (te instanceof TileEntityPrisonManager)
                     {
-                        if (player != null && te.playerName.equalsIgnoreCase(astring[0]))
+                        if (((TileEntityPrisonManager)te).hasJailedPlayer)
                         {
-                            if(te.unjailPlayer())
-                                foundOpen = true;
-                            else
-                                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.playeroffline"));
+                            if (player != null && ((TileEntityPrisonManager)te).playerName.equalsIgnoreCase(astring[0]))
+                            {
+                                if (((TileEntityPrisonManager)te).unjailPlayer()) foundOpen = true;
+                                else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.playeroffline"));
+                            }
+                            else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.playeroffline"));
                         }
-                        else
-                            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.playeroffline"));
                     }
-                }
-                if (foundOpen)
+                    if (foundOpen)
                     {
-                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addText(icommandsender.getCommandSenderName()).addKey("string.frees").addText(astring[0]).addKey("string.fromjail"));
-                    MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addText(icommandsender.getCommandSenderName()).addKey("string.frees").addText(astring[0]).addKey("string.fromjail"));
+                        icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addText(icommandsender.getCommandSenderName()).addKey("string.frees").addText(astring[0]).addKey("string.fromjail"));
+                        MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addText(icommandsender.getCommandSenderName()).addKey("string.frees").addText(astring[0]).addKey("string.fromjail"));
                     }
-                else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("["+ModConstants.NAME+"]").addKey("string.noplayerfound"));
+                    else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.noplayerfound"));
+                }
             }
         }
     }
@@ -103,8 +105,8 @@ public class UnJailCommand implements ICommand
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender icommandsender)
     {
-        return JailPermissions.getInstance().playerCanUse(icommandsender,PermissionLevel.Jailer);
-//        return true;
+        return JailPermissions.getInstance().playerCanUse(icommandsender, PermissionLevel.Jailer);
+        // return true;
     }
 
     @Override

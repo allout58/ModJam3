@@ -14,6 +14,7 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 
 public class JailCommand implements ICommand
@@ -72,41 +73,45 @@ public class JailCommand implements ICommand
                 boolean foundOpen = false;
                 for (int i = 0; i < ws.getTesList().size(); i++)
                 {
-                    TileEntityPrisonManager te = (TileEntityPrisonManager) ws.getTesList().get(i);
-                    if (!te.hasJailedPlayer)
+                    int coord[] = (int[]) ws.getTesList().get(i);
+                    TileEntity te = icommandsender.getEntityWorld().getBlockTileEntity(coord[0], coord[1], coord[2]);
+                    if (te instanceof TileEntityPrisonManager)
                     {
-                        if (player != null)
+                        if (!((TileEntityPrisonManager)te).hasJailedPlayer)
                         {
-                            if (astring.length == 1)
+                            if (player != null)
                             {
-                                // te.jailPlayer(player, -1);
-                                if (te.jailPlayer(player))
+                                if (astring.length == 1)
                                 {
-                                    foundOpen = true;
-                                    break;
+                                    // te.jailPlayer(player, -1);
+                                    if (((TileEntityPrisonManager)te).jailPlayer(player))
+                                    {
+                                        foundOpen = true;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.playeralreadyjailed"));
+                                        return;
+                                    }
                                 }
-                                else
-                                {
-                                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.playeralreadyjailed"));
-                                    return;
-                                }
-                            }
-                            // if (astring.length == 2)
-                            // {
-                            // te.jailPlayer(player,
-                            // Double.parseDouble(astring[1]));
-                            // }
+                                // if (astring.length == 2)
+                                // {
+                                // te.jailPlayer(player,
+                                // Double.parseDouble(astring[1]));
+                                // }
 
+                            }
+                            else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.noplayerfound"));
                         }
-                        else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.noplayerfound"));
                     }
+                    if (foundOpen)
+                    {
+                        icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addText(icommandsender.getCommandSenderName()).addKey("string.sends").addText(astring[0]).addKey("string.tojail"));
+                        MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addText(icommandsender.getCommandSenderName()).addKey("string.sends").addText(astring[0]).addKey("string.tojail"));
+                    }
+                    else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.noopenjails"));
                 }
-                if (foundOpen)
-                {
-                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addText(icommandsender.getCommandSenderName()).addKey("string.sends").addText(astring[0]).addKey("string.tojail"));
-                    MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addText(icommandsender.getCommandSenderName()).addKey("string.sends").addText(astring[0]).addKey("string.tojail"));
-                }
-                else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.noopenjails"));
             }
         }
     }
@@ -114,7 +119,7 @@ public class JailCommand implements ICommand
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender icommandsender)
     {
-        return JailPermissions.getInstance().playerCanUse(icommandsender,PermissionLevel.Jailer);
+        return JailPermissions.getInstance().playerCanUse(icommandsender, PermissionLevel.Jailer);
         // return true;
     }
 

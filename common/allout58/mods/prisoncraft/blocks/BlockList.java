@@ -10,18 +10,21 @@ public class BlockList
     public static Block prisonMan;
     public static Block prisonUnbreak;
     public static Block prisonUnbreakGlass;
-    public static Block prisonUnbreakPane;
-    
+    public static Block prisonUnbreakPaneGlass;
+    public static Block prisonUnbreakPaneIron;
+
     public static void init()
     {
-        prisonMan=new BlockPrisonManager(Config.prisonManager, Material.rock);
-        prisonUnbreak=new BlockPrisonUnbreakable(Config.prisonUnbreak, Material.rock);
-        prisonUnbreakGlass=new BlockPrisonUnbreakableGlass(Config.prisonUnbreakGlass, Material.glass);
-        prisonUnbreakPane=new BlockPrisonUnbreakablePane(Config.prisonUnbreakPane, Material.rock);
-        
-        GameRegistry.registerBlock(prisonMan,"prisonMan");
-        GameRegistry.registerBlock(prisonUnbreak,"prisonUnbreak");
+        prisonMan = new BlockPrisonManager(Config.prisonManager, Material.rock);
+        prisonUnbreak = new BlockPrisonUnbreakable(Config.prisonUnbreak, Material.rock);
+        prisonUnbreakGlass = new BlockPrisonUnbreakableGlass(Config.prisonUnbreakGlass, Material.glass);
+        prisonUnbreakPaneGlass = new BlockPrisonUnbreakablePane(Config.prisonUnbreakPaneGlass, "glass", "glass_pane_top", Material.rock);
+        prisonUnbreakPaneIron = new BlockPrisonUnbreakablePane(Config.prisonUnbreakPaneIron, "iron_bars", "iron_bars", Material.rock);
+
+        GameRegistry.registerBlock(prisonMan, "prisonMan");
+        GameRegistry.registerBlock(prisonUnbreak, "prisonUnbreak");
         GameRegistry.registerBlock(prisonUnbreakGlass, "prisonUnbreakGlass");
-        GameRegistry.registerBlock(prisonUnbreakPane, "prisonUnbreakPane");
+        GameRegistry.registerBlock(prisonUnbreakPaneGlass, "prisonUnbreakPaneGlass");
+        GameRegistry.registerBlock(prisonUnbreakPaneIron, "prisonUnbreakPanIron");
     }
 }

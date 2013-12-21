@@ -1,4 +1,7 @@
-Permissions Update
+Pane and healing
 
-Updated permissions system to have multiple levels.
-Added unbreakable glass.
+Added Glass Panes and Iron Bars as options for unbreakable blocks.
+	They connect to their vanilla counterpart, however, vanilla doesn't connnect to them.
+BUGFIX: The whole not actually saving the tile entity on worldsave thing is fixed... Dang reference variables...
+Prison Manager Tile Entity NBT changed. Remove old ones and replace to ensure safe upgrade
+Just saying, that title is funny...

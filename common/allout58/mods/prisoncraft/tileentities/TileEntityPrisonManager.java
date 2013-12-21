@@ -72,6 +72,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     {
         if (!isInitialized())
         {
+            playerInventory[0] = new ItemStack(Block.stone);
             tpCoordIn = locs.getIntArray("tpIn");
             tpCoordOut = locs.getIntArray("tpOut");
             jailCoord1 = locs.getIntArray("jailCoord1");
@@ -116,12 +117,14 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                             {
                                 worldObj.setBlock(i, j, k, BlockList.prisonUnbreakGlass.blockID, 0, 3);
                             }
-                            // else if (id==Block.fenceIron.blockID ||
-                            // id==Block.thinGlass.blockID)
-                            // {
-                            // worldObj.setBlock(i, j, k,
-                            // BlockList.prisonUnbreakPane.blockID, 0, 3);
-                            // }
+                            else if (id == Block.fenceIron.blockID)
+                            {
+                                worldObj.setBlock(i, j, k, BlockList.prisonUnbreakPaneIron.blockID, 0, 3);
+                            }
+                            else if (id == Block.thinGlass.blockID)
+                            {
+                                worldObj.setBlock(i, j, k, BlockList.prisonUnbreakPaneGlass.blockID, 0, 3);
+                            }
                             else
                             {
                                 worldObj.setBlock(i, j, k, BlockList.prisonUnbreak.blockID, 0, 3);
@@ -290,10 +293,14 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         List tesList = PrisonCraftWorldSave.forWorld(worldObj).getTesList();
         for (int i = 0; i < tesList.size(); i++)
         {
-            TileEntityPrisonManager te = (TileEntityPrisonManager) tesList.get(i);
-            if (te != null)
+            int coord[] = (int[]) tesList.get(i);
+            TileEntity te = worldObj.getBlockTileEntity(coord[0], coord[1], coord[2]);
+            if (te instanceof TileEntityPrisonManager)
             {
-                if (te.playerName != null && te.playerName.equalsIgnoreCase(username)) return true;
+                if (te != null)
+                {
+                    if (((TileEntityPrisonManager)te).playerName != null && ((TileEntityPrisonManager)te).playerName.equalsIgnoreCase(username)) return true;
+                }
             }
         }
         return false;

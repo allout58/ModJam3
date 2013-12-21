@@ -78,7 +78,11 @@ public class BlockPrisonManager extends BlockContainer
         TileEntity te = world.getBlockTileEntity(x, y, z);
         if (te instanceof TileEntityPrisonManager)
         {
-            PrisonCraftWorldSave.forWorld(world).getTesList().add((TileEntityPrisonManager) te);
+            int coord[]=new int[3];
+            coord[0]=te.xCoord;
+            coord[1]=te.yCoord;
+            coord[2]=te.zCoord;
+            PrisonCraftWorldSave.forWorld(world).getTesList().add(coord);
         }
     }
 
@@ -94,7 +98,11 @@ public class BlockPrisonManager extends BlockContainer
         TileEntity logic = world.getBlockTileEntity(x, y, z);
         if (logic instanceof TileEntityPrisonManager)
         {
-            PrisonCraftWorldSave.forWorld(world).getTesList().remove((TileEntityPrisonManager) logic);
+            int coord[]=new int[3];
+            coord[0]=logic.xCoord;
+            coord[1]=logic.yCoord;
+            coord[2]=logic.zCoord;
+            PrisonCraftWorldSave.forWorld(world).getTesList().remove(coord);
             ((TileEntityPrisonManager) logic).revertBlocks();
             ((TileEntityPrisonManager)logic).unjailPlayer();
         }
