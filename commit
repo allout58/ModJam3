@@ -1,7 +1,4 @@
-Pane and healing
+Bugfix and timed jailing
 
-Added Glass Panes and Iron Bars as options for unbreakable blocks.
-	They connect to their vanilla counterpart, however, vanilla doesn't connnect to them.
-BUGFIX: The whole not actually saving the tile entity on worldsave thing is fixed... Dang reference variables...
-Prison Manager Tile Entity NBT changed. Remove old ones and replace to ensure safe upgrade
-Just saying, that title is funny...
+Fixed Managers not removing themselves from the list properly.
+Re-added timed jailing: The bug was not with the timing code, but with the whole not saving thing...

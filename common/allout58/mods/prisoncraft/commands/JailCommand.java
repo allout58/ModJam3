@@ -42,8 +42,8 @@ public class JailCommand implements ICommand
     @Override
     public String getCommandUsage(ICommandSender icommandsender)
     {
-        // return "/jail <playername> [time]";
-        return "/jail <playername>";
+        return "/jail <playername> [time]";
+        // return "/jail <playername>";
     }
 
     @Override
@@ -55,8 +55,8 @@ public class JailCommand implements ICommand
     @Override
     public void processCommand(ICommandSender icommandsender, String[] astring)
     {
-        // if (astring.length < 1 || astring.length > 2)
-        if (astring.length != 1)
+        if (astring.length < 1 || astring.length > 2)
+        // if (astring.length != 1)
         {
             icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
         }
@@ -77,14 +77,13 @@ public class JailCommand implements ICommand
                     TileEntity te = icommandsender.getEntityWorld().getBlockTileEntity(coord[0], coord[1], coord[2]);
                     if (te instanceof TileEntityPrisonManager)
                     {
-                        if (!((TileEntityPrisonManager)te).hasJailedPlayer)
+                        if (!((TileEntityPrisonManager) te).hasJailedPlayer)
                         {
                             if (player != null)
                             {
                                 if (astring.length == 1)
                                 {
-                                    // te.jailPlayer(player, -1);
-                                    if (((TileEntityPrisonManager)te).jailPlayer(player))
+                                    if (((TileEntityPrisonManager) te).jailPlayer(player, -1))
                                     {
                                         foundOpen = true;
                                         break;
@@ -95,11 +94,19 @@ public class JailCommand implements ICommand
                                         return;
                                     }
                                 }
-                                // if (astring.length == 2)
-                                // {
-                                // te.jailPlayer(player,
-                                // Double.parseDouble(astring[1]));
-                                // }
+                                if (astring.length == 2)
+                                {
+                                    if(((TileEntityPrisonManager) te).jailPlayer(player, Double.parseDouble(astring[1])))
+                                    {
+                                        foundOpen = true;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.playeralreadyjailed"));
+                                        return;
+                                    }
+                                }
 
                             }
                             else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.noplayerfound"));
