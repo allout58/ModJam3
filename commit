@@ -1,4 +1,3 @@
-Bugfix and timed jailing
+Allow retention of metadata
 
-Fixed Managers not removing themselves from the list properly.
-Re-added timed jailing: The bug was not with the timing code, but with the whole not saving thing...
+-Especially useful for mod blocks 

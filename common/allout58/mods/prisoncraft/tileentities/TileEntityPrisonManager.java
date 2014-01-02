@@ -111,19 +111,20 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                     for (int k = z1; k <= z2; k++)
                     {
                         int id = worldObj.getBlockId(i, j, k);
+                        int meta=worldObj.getBlockMetadata(i, j, k);
                         if (isValidID(id))
                         {
-                            if (Block.blocksList[id] instanceof BlockGlass)
-                            {
-                                worldObj.setBlock(i, j, k, BlockList.prisonUnbreakGlass.blockID, 0, 3);
-                            }
-                            else if (id == Block.fenceIron.blockID)
+                            if (id == Block.fenceIron.blockID)
                             {
                                 worldObj.setBlock(i, j, k, BlockList.prisonUnbreakPaneIron.blockID, 0, 3);
                             }
                             else if (id == Block.thinGlass.blockID)
                             {
                                 worldObj.setBlock(i, j, k, BlockList.prisonUnbreakPaneGlass.blockID, 0, 3);
+                            }
+                            else if (!Block.blocksList[id].isOpaqueCube())
+                            {
+                                worldObj.setBlock(i, j, k, BlockList.prisonUnbreakGlass.blockID, 0, 3);
                             }
                             else
                             {
@@ -133,6 +134,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                             if (te instanceof TileEntityPrisonUnbreakable)
                             {
                                 ((TileEntityPrisonUnbreakable) te).setFakeBlockID(id);
+                                ((TileEntityPrisonUnbreakable) te).setFakeBlockMeta(meta);
                             }
                         }
                         TileEntity te = worldObj.getBlockTileEntity(i, j, k);

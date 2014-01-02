@@ -10,6 +10,7 @@ import net.minecraft.tileentity.TileEntity;
 public class TileEntityPrisonUnbreakable extends TileEntity
 {
     private int fakeBlockID=1;
+    private int fakeBlockMeta=0;
     private boolean isReverting=false;
    
     private Boolean isDirty=false;
@@ -25,10 +26,21 @@ public class TileEntityPrisonUnbreakable extends TileEntity
         isDirty=true;
     }
     
+    public int getFakeBlockMeta()
+    {
+        return fakeBlockMeta;
+    }
+    
+    public void setFakeBlockMeta(int meta)
+    {
+        fakeBlockMeta=meta;
+        isDirty=true;
+    }
+    
     public void revert()
     {
         isReverting=true;
-        worldObj.setBlock(xCoord, yCoord, zCoord, fakeBlockID, 0, 3);
+        worldObj.setBlock(xCoord, yCoord, zCoord, fakeBlockID, fakeBlockMeta, 3);
     }
     
     public boolean canDestroy()
@@ -51,6 +63,7 @@ public class TileEntityPrisonUnbreakable extends TileEntity
     {
         super.readFromNBT(tags);
         fakeBlockID=tags.getInteger("fakeBlockID");
+        fakeBlockMeta=tags.getInteger("fakeBlockMeta");
     }
     
     @Override
@@ -58,6 +71,7 @@ public class TileEntityPrisonUnbreakable extends TileEntity
     {
         super.writeToNBT(tags);
         tags.setInteger("fakeBlockID",fakeBlockID);
+        tags.setInteger("fakeBlockMeta", fakeBlockMeta);
     }
     
     /* Packets */
