@@ -1,17 +1,25 @@
 package allout58.mods.prisoncraft;
 
+import java.io.File;
 import java.util.logging.Logger;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.server.integrated.IntegratedServer;
+import net.minecraft.world.storage.SaveHandler;
 import net.minecraftforge.common.Configuration;
 import allout58.mods.prisoncraft.blocks.BlockList;
+import allout58.mods.prisoncraft.commands.ChangableIdConfigCommand;
 import allout58.mods.prisoncraft.commands.ChangeJailPermsCommand;
 import allout58.mods.prisoncraft.commands.JailCommand;
+import allout58.mods.prisoncraft.commands.PermLevelCommand;
 import allout58.mods.prisoncraft.commands.UnJailCommand;
-import allout58.mods.prisoncraft.commands.permissions.JailPermissions;
+import allout58.mods.prisoncraft.config.Config;
+import allout58.mods.prisoncraft.config.ConfigChangableIDs;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.items.ItemList;
+import allout58.mods.prisoncraft.permissions.JailPermissions;
+import allout58.mods.prisoncraft.permissions.PermissionLevel;
 import allout58.mods.prisoncraft.tileentities.TileEntityList;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
@@ -38,41 +46,52 @@ public class PrisonCraft
             return Item.plateChain;
         }
     };
-    
+
     @Instance(ModConstants.MODID)
     public static PrisonCraft instance;
-    
+
     @SidedProxy(clientSide = "allout58.mods.prisoncraft.client.ClientProxy", serverSide = "allout58.mods.prisoncraft.CommonProxy")
     public static CommonProxy proxy;
-    
+
     public static Logger logger;
-    
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        logger=Logger.getLogger(ModConstants.MODID);
+        logger = Logger.getLogger(ModConstants.MODID);
         logger.setParent(FMLLog.getLogger());
-        
+
         Config.init(new Configuration(event.getSuggestedConfigurationFile()));
-        
+
         BlockList.init();
         ItemList.init();
         TileEntityList.init();
-//        JailPermissions.getInstance().addUserPlayer("allout58");
     }
-    
+
     @EventHandler
     public void serverLoad(FMLServerStartingEvent event)
     {
-      event.registerServerCommand(new JailCommand());
-      event.registerServerCommand(new UnJailCommand());
-      event.registerServerCommand(new ChangeJailPermsCommand());
-      JailPermissions.getInstance().load();
+        event.registerServerCommand(new JailCommand());
+        event.registerServerCommand(new UnJailCommand());
+        event.registerServerCommand(new ChangeJailPermsCommand());
+        event.registerServerCommand(new ChangableIdConfigCommand());
+        event.registerServerCommand(new PermLevelCommand());
+        SaveHandler saveHandler = (SaveHandler) event.getServer().worldServerForDimension(0).getSaveHandler();
+        String fileName = saveHandler.getWorldDirectory().getAbsolutePath() + "/PCUnbreakableIDs.txt";
+        File f = new File(fileName);
+        ConfigChangableIDs.getInstance().load(f);
+        JailPermissions.getInstance().load();
+        //Grant full jail perms on singleplayer
+        if(event.getServer().isSinglePlayer())
+        {
+            JailPermissions.getInstance().addUserPlayer(event.getServer().getServerOwner(),PermissionLevel.FinalWord);
+        }
     }
-    
+
     @EventHandler
     public void serverUnload(FMLServerStoppingEvent event)
     {
+        ConfigChangableIDs.getInstance().save();
         JailPermissions.getInstance().save();
     }
 }

@@ -5,9 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import allout58.mods.prisoncraft.PrisonCraftWorldSave;
-import allout58.mods.prisoncraft.commands.permissions.JailPermissions;
-import allout58.mods.prisoncraft.commands.permissions.PermissionLevel;
 import allout58.mods.prisoncraft.constants.ModConstants;
+import allout58.mods.prisoncraft.jail.JailMan;
+import allout58.mods.prisoncraft.permissions.JailPermissions;
+import allout58.mods.prisoncraft.permissions.PermissionLevel;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
 
 import net.minecraft.command.ICommand;
@@ -43,7 +44,6 @@ public class JailCommand implements ICommand
     public String getCommandUsage(ICommandSender icommandsender)
     {
         return "/jail <playername> [time]";
-        // return "/jail <playername>";
     }
 
     @Override
@@ -56,68 +56,25 @@ public class JailCommand implements ICommand
     public void processCommand(ICommandSender icommandsender, String[] astring)
     {
         if (astring.length < 1 || astring.length > 2)
-        // if (astring.length != 1)
         {
             icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
         }
         else
         {
-            PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(icommandsender.getEntityWorld());
-            if (ws.getTesList().size() == 0)
+            if (astring.length == 1)
             {
-                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.nojail"));
+                JailMan.TryJailPlayer(astring[0], icommandsender, -1);
             }
-            else
+            if (astring.length == 2)
             {
-                EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[0]);
-                boolean foundOpen = false;
-                for (int i = 0; i < ws.getTesList().size(); i++)
+                try
                 {
-                    int coord[] = (int[]) ws.getTesList().get(i);
-                    TileEntity te = icommandsender.getEntityWorld().getBlockTileEntity(coord[0], coord[1], coord[2]);
-                    if (te instanceof TileEntityPrisonManager)
-                    {
-                        if (!((TileEntityPrisonManager) te).hasJailedPlayer)
-                        {
-                            if (player != null)
-                            {
-                                if (astring.length == 1)
-                                {
-                                    if (((TileEntityPrisonManager) te).jailPlayer(player, -1))
-                                    {
-                                        foundOpen = true;
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.playeralreadyjailed"));
-                                        return;
-                                    }
-                                }
-                                if (astring.length == 2)
-                                {
-                                    if(((TileEntityPrisonManager) te).jailPlayer(player, Double.parseDouble(astring[1])))
-                                    {
-                                        foundOpen = true;
-                                        break;
-                                    }
-                                    else
-                                    {
-                                        icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.playeralreadyjailed"));
-                                        return;
-                                    }
-                                }
-
-                            }
-                            else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.noplayerfound"));
-                        }
-                    }
-                    if (foundOpen)
-                    {
-                        icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addText(icommandsender.getCommandSenderName()).addKey("string.sends").addText(astring[0]).addKey("string.tojail"));
-                        MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addText(icommandsender.getCommandSenderName()).addKey("string.sends").addText(astring[0]).addKey("string.tojail"));
-                    }
-                    else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.noopenjails"));
+                    double t = Double.parseDouble(astring[1]);
+                    JailMan.TryJailPlayer(astring[0], icommandsender, t);
+                }
+                catch (NumberFormatException e)
+                {
+                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.nan"));
                 }
             }
         }
@@ -127,7 +84,6 @@ public class JailCommand implements ICommand
     public boolean canCommandSenderUseCommand(ICommandSender icommandsender)
     {
         return JailPermissions.getInstance().playerCanUse(icommandsender, PermissionLevel.Jailer);
-        // return true;
     }
 
     @Override

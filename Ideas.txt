@@ -1,6 +1,6 @@
 Ideas:
 
 Reason in jail command
-Add text to signs inside jail coords
-Add some non-full blocks to unbreaking walls
+Banhammer and olive branch - in-game items for banning and pardoning
+Config tool shows highlights
 Chunkload jail and manager

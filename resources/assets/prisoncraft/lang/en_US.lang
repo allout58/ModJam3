@@ -34,6 +34,14 @@ string.nojails=No prisons found in this world.
 string.noopenjails=No open prisons. Build more!
 string.playeralreadyjailed=That player is already jailed.
 string.saveperms=Permissions saved to file.
+string.nan=Argument is not a valid number.
+string.savedconfig=Configuration saved.
+string.loadedconfig=Configuration reloaded from file.
+string.idadded=ID added to configs.
+string.idremoved=ID removed from configs.
+string.idremoved.fail=ID not found. Not removing.
+string.invalidperms=Not enough permissions to run this command.
+string.permlevel=Permission level: 
 
 #Config wand strings
 string.configwand.nextpt=Now click the other corner of the cell.

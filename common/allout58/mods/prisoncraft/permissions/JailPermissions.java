@@ -1,4 +1,4 @@
-package allout58.mods.prisoncraft.commands.permissions;
+package allout58.mods.prisoncraft.permissions;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -53,8 +53,6 @@ public class JailPermissions
                 return true;
             }
         }
-        // Always allow server or Rcon
-        if (senderName.equalsIgnoreCase("Server") || senderName.equalsIgnoreCase("RCON")) return true;
         return false;
     }
 
@@ -149,6 +147,8 @@ public class JailPermissions
                     if (canUse.get(i) instanceof PlayerPermsision)
                     {
                         PlayerPermsision pp = (PlayerPermsision) canUse.get(i);
+                        //Ignore server and rcon when writing to list
+                        if(pp.UserName.equalsIgnoreCase("server")||pp.UserName.equalsIgnoreCase("rcon")) continue;
                         writer.write(pp.UserName + "-" + pp.Level.getValue() + "\n");
                     }
                 }
@@ -178,6 +178,9 @@ public class JailPermissions
 
     public void load()
     {
+        PrisonCraft.logger.info("Adding server and rcon with highest permissions");
+        addUserPlayer("server",PermissionLevel.FinalWord);
+        addUserPlayer("rcon", PermissionLevel.FinalWord);
         MinecraftServer server = null;
         Side side = FMLCommonHandler.instance().getEffectiveSide();
         if (side == Side.SERVER)
@@ -277,7 +280,6 @@ public class JailPermissions
             {
                 PlayerPermsision pp = (PlayerPermsision) canUse.get(i);
                 if (pp.UserName.equalsIgnoreCase(username))
-                ;
                 {
                     return pp;
                 }

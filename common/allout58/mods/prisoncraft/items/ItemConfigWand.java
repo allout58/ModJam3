@@ -29,7 +29,7 @@ public class ItemConfigWand extends Item
 
     public ItemConfigWand(int id)
     {
-        super(id-ModConstants.ITEM_ID_DIFF);
+        super(id - ModConstants.ITEM_ID_DIFF);
         setUnlocalizedName("prisonConfigWand");
         setCreativeTab(PrisonCraft.creativeTab);
         setMaxStackSize(1);
@@ -54,16 +54,16 @@ public class ItemConfigWand extends Item
     public Icon getIcon(ItemStack stack, int renderPass)
     {
         // If locked
-        if (stack.getItemDamage() == 1)
-        {
-            if (renderPass != 1) return lock;
-            else return main;
-        }
+        // if (stack.getItemDamage() == 1)
+        // {
+        // if (renderPass != 1) return lock;
+        // else return main;
+        // }
         // Else, unlocked
-        else
-        {
-            return main;
-        }
+        // else
+        // {
+        return main;
+        // }
     }
 
     @Override
@@ -79,10 +79,12 @@ public class ItemConfigWand extends Item
         {
             if (player.isSneaking())
             {
-                int dam=stack.getItemDamage();
-                if(dam==0)dam=1;
-                else if(dam==1)dam=0;
-                stack.setItemDamage(dam);
+                // clear all points
+                stack.stackTagCompound = null;
+                // int dam=stack.getItemDamage();
+                // if(dam==0)dam=1;
+                // else if(dam==1)dam=0;
+                // stack.setItemDamage(dam);
             }
         }
         return stack;
@@ -150,24 +152,39 @@ public class ItemConfigWand extends Item
     public void addInformation(ItemStack stack, EntityPlayer entityPlayer, List infoList, boolean par4)
     {
         // TODO See if this can be localized
-        infoList.add("Right-click on two blocks to set");
-        infoList.add("the bounds of the jail.");
         if (CommonProxy.shouldAddAdditionalInfo())
         {
-            infoList.add((stack.getItemDamage() == 1) ? "Locked" : "Unlocked");
+            // infoList.add((stack.getItemDamage() == 1) ? "Locked" :
+            // "Unlocked");
             if (stack.stackTagCompound != null)
             {
-
                 if (stack.stackTagCompound.hasKey("jailCoord1"))
                 {
                     int coord[] = stack.stackTagCompound.getIntArray("jailCoord1");
-                    infoList.add(String.format("Block 1 {X: %d, Y: %d, Z: %d}", coord[0], coord[1], coord[2]));
+                    infoList.add(String.format("Corner 1 {X: %d, Y: %d, Z: %d}", coord[0], coord[1], coord[2]));
                 }
                 if (stack.stackTagCompound.hasKey("jailCoord2"))
                 {
                     int coord2[] = stack.stackTagCompound.getIntArray("jailCoord2");
-                    infoList.add(String.format("Block 2 {X: %d, Y: %d, Z: %d}", coord2[0], coord2[1], coord2[2]));
+                    infoList.add(String.format("Corner 2 {X: %d, Y: %d, Z: %d}", coord2[0], coord2[1], coord2[2]));
                 }
+                if (stack.stackTagCompound.hasKey("tpIn"))
+                {
+                    int coord2[] = stack.stackTagCompound.getIntArray("tpIn");
+                    infoList.add(String.format("TP In {X: %d, Y: %d, Z: %d}", coord2[0], coord2[1], coord2[2]));
+                }
+                if (stack.stackTagCompound.hasKey("tpOut"))
+                {
+                    int coord2[] = stack.stackTagCompound.getIntArray("tpOut");
+                    infoList.add(String.format("TP Out {X: %d, Y: %d, Z: %d}", coord2[0], coord2[1], coord2[2]));
+                }
+                infoList.add("");
+                infoList.add("Shift right-click to clear all points stored.");
+            }
+            else
+            {
+                infoList.add("Start configuration by right-clicking");
+                infoList.add("on one corner of the jail cell.");
             }
         }
         else

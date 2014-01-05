@@ -1,4 +1,4 @@
-package allout58.mods.prisoncraft.commands.permissions;
+package allout58.mods.prisoncraft.permissions;
 
 public class PlayerPermsision
 {

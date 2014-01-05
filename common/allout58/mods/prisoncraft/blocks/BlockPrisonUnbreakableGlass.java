@@ -11,7 +11,7 @@ public class BlockPrisonUnbreakableGlass extends BlockPrisonUnbreakable
     {
         super(par1, par2Material);
     }
-    
+
     @SideOnly(Side.CLIENT)
     /**
      * Returns which pass should this block be rendered on. 0 for solids and 1 for alpha
@@ -22,8 +22,9 @@ public class BlockPrisonUnbreakableGlass extends BlockPrisonUnbreakable
     }
 
     /**
-     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
-     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     * Is this block (a) opaque and (b) a full 1m cube? This determines whether
+     * or not to render the shared face of two adjacent blocks and also whether
+     * the player can attach torches, redstone wire, etc to this block.
      */
     public boolean isOpaqueCube()
     {
@@ -31,7 +32,8 @@ public class BlockPrisonUnbreakableGlass extends BlockPrisonUnbreakable
     }
 
     /**
-     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
+     * If this block doesn't render as an ordinary block it will return False
+     * (examples: signs, buttons, stairs, etc)
      */
     public boolean renderAsNormalBlock()
     {

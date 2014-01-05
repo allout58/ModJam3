@@ -32,31 +32,31 @@ public class BlockPrisonUnbreakablePane extends BlockPane implements ITileEntity
         setLightValue(.2F);
         setUnlocalizedName("prisonUnbreakablePane");
     }
-  
+
     @Override
     public boolean canPaneConnectTo(IBlockAccess access, int x, int y, int z, ForgeDirection dir)
     {
-        TileEntity te=access.getBlockTileEntity(x, y, z);
-        int bId=-1;
-        if(te instanceof TileEntityPrisonUnbreakable)
+        TileEntity te = access.getBlockTileEntity(x, y, z);
+        int bId = -1;
+        if (te instanceof TileEntityPrisonUnbreakable)
         {
-            bId=((TileEntityPrisonUnbreakable)te).getFakeBlockID();
+            bId = ((TileEntityPrisonUnbreakable) te).getFakeBlockID();
         }
-        return super.canPaneConnectTo(access, x, y, z, dir) || access.getBlockId(x+dir.offsetX, y+dir.offsetY, z+dir.offsetZ)==bId;
+        return super.canPaneConnectTo(access, x, y, z, dir) || access.getBlockId(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ) == bId;
     }
-        
+
     @Override
     public int quantityDropped(Random rand)
     {
         return 0;
     }
-    
+
     @Override
     protected boolean canSilkHarvest()
     {
         return false;
     }
-    
+
     @Override
     public void breakBlock(World world, int x, int y, int z, int oldID, int oldMeta)
     {
@@ -69,18 +69,18 @@ public class BlockPrisonUnbreakablePane extends BlockPane implements ITileEntity
             }
             else
             {
-                int fakeID=((TileEntityPrisonUnbreakable)logic).getFakeBlockID();
+                int fakeID = ((TileEntityPrisonUnbreakable) logic).getFakeBlockID();
                 super.breakBlock(world, x, y, z, oldID, oldMeta);
                 world.setBlock(x, y, z, oldID, oldMeta, 3);
                 TileEntity te = world.getBlockTileEntity(x, y, z);
-                if(te instanceof TileEntityPrisonUnbreakable)
+                if (te instanceof TileEntityPrisonUnbreakable)
                 {
-                    ((TileEntityPrisonUnbreakable)te).setFakeBlockID(fakeID);
+                    ((TileEntityPrisonUnbreakable) te).setFakeBlockID(fakeID);
                 }
             }
         }
     }
-    
+
     @Override
     public TileEntity createNewTileEntity(World world)
     {

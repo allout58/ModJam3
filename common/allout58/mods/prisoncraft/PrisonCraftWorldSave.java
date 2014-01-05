@@ -12,21 +12,21 @@ import net.minecraft.world.storage.MapStorage;
 public class PrisonCraftWorldSave extends WorldSavedData
 {
     public static final String key = "prisoncraft";
-    
+
     public static World worldObj;
 
-    private List tesList = new ArrayList(); //int[] only!
+    private List tesList = new ArrayList(); // int[] only!
 
     public PrisonCraftWorldSave()
     {
         super(key);
     }
-    
+
     public PrisonCraftWorldSave(String keyIn)
     {
         super(PrisonCraftWorldSave.key);
     }
-    
+
     public List getTesList()
     {
         this.markDirty();
@@ -35,8 +35,9 @@ public class PrisonCraftWorldSave extends WorldSavedData
 
     public static PrisonCraftWorldSave forWorld(World world)
     {
-        worldObj=world;
-        // Retrieves the PrisonCraftWorldSave instance for the given world, creating it
+        worldObj = world;
+        // Retrieves the PrisonCraftWorldSave instance for the given world,
+        // creating it
         // if necessary
         MapStorage storage = world.perWorldStorage;
         PrisonCraftWorldSave result = (PrisonCraftWorldSave) storage.loadData(PrisonCraftWorldSave.class, key);
@@ -54,11 +55,11 @@ public class PrisonCraftWorldSave extends WorldSavedData
         if (tags.hasKey("NumTEs"))
         {
             int size = tags.getInteger("NumTEs");
-            for(int i=0;i<size;i++)
+            for (int i = 0; i < size; i++)
             {
-                NBTTagCompound t=tags.getCompoundTag(i+"");
-                int coord[]=t.getIntArray("coord");
-                
+                NBTTagCompound t = tags.getCompoundTag(i + "");
+                int coord[] = t.getIntArray("coord");
+
                 tesList.add(coord);
             }
         }

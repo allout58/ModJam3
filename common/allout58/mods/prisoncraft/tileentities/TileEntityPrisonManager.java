@@ -6,13 +6,15 @@ import java.util.Vector;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-import allout58.mods.prisoncraft.Config;
+import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.PrisonCraftWorldSave;
 import allout58.mods.prisoncraft.blocks.BlockList;
 import allout58.mods.prisoncraft.commands.JailCommand;
-import allout58.mods.prisoncraft.commands.permissions.JailPermissions;
-import allout58.mods.prisoncraft.commands.permissions.PermissionLevel;
+import allout58.mods.prisoncraft.config.Config;
+import allout58.mods.prisoncraft.config.ConfigChangableIDs;
 import allout58.mods.prisoncraft.constants.ModConstants;
+import allout58.mods.prisoncraft.permissions.JailPermissions;
+import allout58.mods.prisoncraft.permissions.PermissionLevel;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFurnace;
@@ -111,7 +113,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                     for (int k = z1; k <= z2; k++)
                     {
                         int id = worldObj.getBlockId(i, j, k);
-                        int meta=worldObj.getBlockMetadata(i, j, k);
+                        int meta = worldObj.getBlockMetadata(i, j, k);
                         if (isValidID(id))
                         {
                             if (id == Block.fenceIron.blockID)
@@ -208,9 +210,9 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     private boolean isValidID(int id)
     {
-        for (int i = 0; i < Config.unbreakIDWhitelist.length; i++)
+        for (int i = 0; i < ConfigChangableIDs.getInstance().getIDs().length; i++)
         {
-            if (id == Config.unbreakIDWhitelist[i])
+            if (id == ConfigChangableIDs.getInstance().getIDs()[i])
             {
                 return true;
             }
@@ -221,11 +223,9 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     public boolean isInitialized()
     {
         return !(jailCoord1[0] == 0 && jailCoord1[1] == 0 && jailCoord1[2] == 0);
-
     }
 
     public boolean jailPlayer(EntityPlayer player, double time)
-    // public boolean jailPlayer(EntityPlayer player)
     {
         if (!playerIsJailed(player.username))
         {
@@ -291,24 +291,6 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         else return false;
     }
 
-    public boolean playerIsJailed(String username)
-    {
-        List tesList = PrisonCraftWorldSave.forWorld(worldObj).getTesList();
-        for (int i = 0; i < tesList.size(); i++)
-        {
-            int coord[] = (int[]) tesList.get(i);
-            TileEntity te = worldObj.getBlockTileEntity(coord[0], coord[1], coord[2]);
-            if (te instanceof TileEntityPrisonManager)
-            {
-                if (te != null)
-                {
-                    if (((TileEntityPrisonManager) te).playerName != null && ((TileEntityPrisonManager) te).playerName.equalsIgnoreCase(username)) return true;
-                }
-            }
-        }
-        return false;
-    }
-
     public boolean unjailPlayer()
     {
         if (jailedPlayer != null && hasJailedPlayer)
@@ -345,7 +327,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 }
                 else
                 {
-                    System.out.println("Game mode could not be reverted. Jailed Player obj in not of type EntityPlayerMP.");
+                    PrisonCraft.logger.severe("Game mode could not be reverted. Jailed Player obj in not of type EntityPlayerMP.");
                 }
             }
             if (Config.removeJailPerms)
@@ -448,6 +430,24 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
             }
         }
         return null;
+    }
+
+    public boolean playerIsJailed(String username)
+    {
+        List tesList = PrisonCraftWorldSave.forWorld(worldObj).getTesList();
+        for (int i = 0; i < tesList.size(); i++)
+        {
+            int coord[] = (int[]) tesList.get(i);
+            TileEntity te = worldObj.getBlockTileEntity(coord[0], coord[1], coord[2]);
+            if (te instanceof TileEntityPrisonManager)
+            {
+                if (te != null)
+                {
+                    if (((TileEntityPrisonManager) te).playerName != null && ((TileEntityPrisonManager) te).playerName.equalsIgnoreCase(username)) return true;
+                }
+            }
+        }
+        return false;
     }
 
     /* NBT */

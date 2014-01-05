@@ -1,37 +1,27 @@
 package allout58.mods.prisoncraft.commands;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.network.PacketDispatcher;
-
-import allout58.mods.prisoncraft.PrisonCraftWorldSave;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.jail.JailMan;
 import allout58.mods.prisoncraft.permissions.JailPermissions;
 import allout58.mods.prisoncraft.permissions.PermissionLevel;
-import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
 
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 
-public class UnJailCommand implements ICommand
+public class PermLevelCommand implements ICommand
 {
     private List aliases;
 
-    public UnJailCommand()
+    public PermLevelCommand()
     {
-        this.aliases = new ArrayList();
-        this.aliases.add("unjail");
+        aliases = new ArrayList();
+        aliases.add("pcpermlevel");
     }
 
     @Override
@@ -43,13 +33,13 @@ public class UnJailCommand implements ICommand
     @Override
     public String getCommandName()
     {
-        return "unjail";
+        return "prisoncraftpermlevel";
     }
 
     @Override
     public String getCommandUsage(ICommandSender icommandsender)
     {
-        return "/unjail <playername>";
+        return "/pcpermlevel [user]";
     }
 
     @Override
@@ -61,20 +51,29 @@ public class UnJailCommand implements ICommand
     @Override
     public void processCommand(ICommandSender icommandsender, String[] astring)
     {
-        if (astring.length != 1)
+        if (astring.length > 1)
         {
             icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
         }
         else
         {
-            JailMan.TryUnailPlayer(astring[0], icommandsender);
+            PermissionLevel pl=PermissionLevel.Default;
+            if (astring.length == 0)
+            {
+                pl = JailPermissions.getInstance().getPlayerPermissionLevel(icommandsender);
+            }
+            if (astring.length == 1)
+            {
+                pl = JailPermissions.getInstance().getPlayerPermissionLevel(astring[0]);
+            }
+            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.permlevel").addText(pl.toString()));
         }
     }
 
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender icommandsender)
     {
-        return JailPermissions.getInstance().playerCanUse(icommandsender, PermissionLevel.Jailer);
+        return true;
     }
 
     @Override
@@ -90,6 +89,7 @@ public class UnJailCommand implements ICommand
     @Override
     public boolean isUsernameIndex(String[] astring, int i)
     {
-        return i == 0;
+        return true;
     }
+
 }
