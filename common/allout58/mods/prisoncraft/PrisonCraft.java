@@ -18,6 +18,7 @@ import allout58.mods.prisoncraft.config.Config;
 import allout58.mods.prisoncraft.config.ConfigChangableIDs;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.items.ItemList;
+import allout58.mods.prisoncraft.jail.JailMan;
 import allout58.mods.prisoncraft.permissions.JailPermissions;
 import allout58.mods.prisoncraft.permissions.PermissionLevel;
 import allout58.mods.prisoncraft.tileentities.TileEntityList;
@@ -77,14 +78,18 @@ public class PrisonCraft
         event.registerServerCommand(new ChangableIdConfigCommand());
         event.registerServerCommand(new PermLevelCommand());
         SaveHandler saveHandler = (SaveHandler) event.getServer().worldServerForDimension(0).getSaveHandler();
-        String fileName = saveHandler.getWorldDirectory().getAbsolutePath() + "/PCUnbreakableIDs.txt";
-        File f = new File(fileName);
-        ConfigChangableIDs.getInstance().load(f);
-        JailPermissions.getInstance().load();
-        //Grant full jail perms on singleplayer
-        if(event.getServer().isSinglePlayer())
+        File configFile = new File(saveHandler.getWorldDirectory().getAbsolutePath() + "/PCUnbreakableIDs.txt");
+        ConfigChangableIDs.getInstance().load(configFile);
+        if (Config.logJailing)
         {
-            JailPermissions.getInstance().addUserPlayer(event.getServer().getServerOwner(),PermissionLevel.FinalWord);
+            File jailRecordFile = new File(saveHandler.getWorldDirectory().getAbsolutePath() + "/JailingRecord.csv");
+            JailMan.getInstance().initializeRecorder(jailRecordFile);
+        }
+        JailPermissions.getInstance().load();
+        // Grant full jail perms on singleplayer
+        if (event.getServer().isSinglePlayer())
+        {
+            JailPermissions.getInstance().addUserPlayer(event.getServer().getServerOwner(), PermissionLevel.FinalWord);
         }
     }
 

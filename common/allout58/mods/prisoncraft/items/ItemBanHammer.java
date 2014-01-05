@@ -6,6 +6,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import allout58.mods.prisoncraft.CommonProxy;
 import allout58.mods.prisoncraft.PrisonCraft;
+import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.constants.TextureConstants;
 import allout58.mods.prisoncraft.jail.JailMan;
 import net.minecraft.entity.effect.EntityLightningBolt;
@@ -22,7 +23,7 @@ public class ItemBanHammer extends Item
 {
     public ItemBanHammer(int id)
     {
-        super(id);
+        super(id-ModConstants.ITEM_ID_DIFF);
         setUnlocalizedName("banhammer");
         setCreativeTab(PrisonCraft.creativeTab);
         setMaxStackSize(1);
@@ -61,7 +62,7 @@ public class ItemBanHammer extends Item
                 if (movingobjectposition.entityHit instanceof EntityPlayer)
                 {
                     player.swingItem();
-                    JailMan.TryJailPlayer((EntityPlayer) movingobjectposition.entityHit, player, .25);
+                    JailMan.getInstance().TryJailPlayer((EntityPlayer) movingobjectposition.entityHit, player, .25);
                 }
             }
         }

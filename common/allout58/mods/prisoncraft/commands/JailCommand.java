@@ -63,14 +63,14 @@ public class JailCommand implements ICommand
         {
             if (astring.length == 1)
             {
-                JailMan.TryJailPlayer(astring[0], icommandsender, -1);
+                JailMan.getInstance().TryJailPlayer(astring[0], icommandsender, -1);
             }
             if (astring.length == 2)
             {
                 try
                 {
                     double t = Double.parseDouble(astring[1]);
-                    JailMan.TryJailPlayer(astring[0], icommandsender, t);
+                    JailMan.getInstance().TryJailPlayer(astring[0], icommandsender, t);
                 }
                 catch (NumberFormatException e)
                 {

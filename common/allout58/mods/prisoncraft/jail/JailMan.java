@@ -1,6 +1,17 @@
 package allout58.mods.prisoncraft.jail;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Timer;
+import java.util.logging.Logger;
+
+import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.PrisonCraftWorldSave;
+import allout58.mods.prisoncraft.config.Config;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
 import net.minecraft.command.ICommandSender;
@@ -11,7 +22,56 @@ import net.minecraft.util.ChatMessageComponent;
 
 public class JailMan
 {
-    public static boolean TryJailPlayer(EntityPlayer player, ICommandSender jailer, double time)
+    private boolean initialized = false;
+    private File logFile;
+    private static JailMan instance;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    public static JailMan getInstance()
+    {
+        if (instance == null)
+        {
+            instance = new JailMan();
+        }
+        return instance;
+    }
+
+    public void initializeRecorder(File f)
+    {
+        logFile = f;
+        if (!logFile.exists())
+        {
+            try
+            {
+                logFile.createNewFile();
+                FileWriter w = new FileWriter(logFile);
+                w.write("DateTime,Jailed,Jailer,Length\n");
+                w.close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+
+        }
+        initialized = true;
+    }
+
+    private void addEntry(String playerName, String jailerName, double time) throws IOException
+    {
+        if (initialized)
+        {
+            FileWriter writer = new FileWriter(logFile, true);
+            writer.write(this.dateFormat.format(Long.valueOf(new Date().getTime())) + "," + playerName + "," + jailerName + "," + String.valueOf(time) + "\n");
+            writer.close();
+        }
+        else
+        {
+            PrisonCraft.logger.severe("JailMan Record keeper not initialized before use.");
+        }
+    }
+
+    public boolean TryJailPlayer(EntityPlayer player, ICommandSender jailer, double time)
     {
         PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(jailer.getEntityWorld());
         if (ws.getTesList().size() == 0)
@@ -51,6 +111,17 @@ public class JailMan
             }
             if (foundOpen)
             {
+                if (Config.logJailing)
+                {
+                    try
+                    {
+                        this.addEntry(player.username, jailer.getCommandSenderName(), time);
+                    }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
                 jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addText(jailer.getCommandSenderName()).addKey("string.sends").addText(player.username).addKey("string.tojail"));
                 if (!jailer.getCommandSenderName().equalsIgnoreCase(MinecraftServer.getServer().getCommandSenderName()))
                 {
@@ -63,12 +134,12 @@ public class JailMan
         }
     }
 
-    public static boolean TryJailPlayer(String playerName, ICommandSender jailer, double time)
+    public boolean TryJailPlayer(String playerName, ICommandSender jailer, double time)
     {
-        return JailMan.TryJailPlayer(MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playerName), jailer, time);
+        return TryJailPlayer(MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playerName), jailer, time);
     }
 
-    public static boolean TryUnjailPlayer(EntityPlayer player, ICommandSender jailer)
+    public boolean TryUnjailPlayer(EntityPlayer player, ICommandSender jailer)
     {
         PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(jailer.getEntityWorld());
         if (ws.getTesList().size() == 0)
@@ -110,8 +181,8 @@ public class JailMan
         }
     }
 
-    public static boolean TryUnailPlayer(String playerName, ICommandSender jailer)
+    public boolean TryUnailPlayer(String playerName, ICommandSender jailer)
     {
-        return JailMan.TryUnjailPlayer(MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playerName), jailer);
+        return TryUnjailPlayer(MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playerName), jailer);
     }
 }

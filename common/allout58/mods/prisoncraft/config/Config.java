@@ -21,6 +21,8 @@ public class Config
     public static boolean noMovement;
     public static boolean noJumping;
     public static boolean removeJailPerms;
+    //Loggin options
+    public static boolean logJailing;
 
     public static int[] unbreakIDWhitelistDefault;
 
@@ -46,6 +48,8 @@ public class Config
         noMovement = config.get("JailOptions", "AllowNoPlayerMovement", true).getBoolean(true);
         noJumping = config.get("JailOptions", "AllowNoPlayerJumping", false, "This feature is very buggy. Use at your own risk.").getBoolean(false);
         removeJailPerms = config.get("JailOptions", "RemoveJailedPlayerJailPerms", true).getBoolean(true);
+        
+        logJailing=config.get("LoggingOptions","LogJailing",true,"Log when players are jailed").getBoolean(true);
         
         unbreakIDWhitelistDefault = config.get("WallWhitelistDefault", "DefaultBlockIDS", ModConstants.WHITELIST_WALL_IDS, "Currently, most non-full blocks will render incorrectly. You have been warned.").getIntList();
         config.addCustomCategoryComment("WallWhiteListDefault", "This is the default for each world. As of version 0.0.3, this is configurable in game on a per world basis");

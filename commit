@@ -1,11 +1,3 @@
-Better config & perms, More commands, General cleanup
+Jailing logged (optionally)
 
-Adding/removing permissions now takes into account command sender's perms
-Single player worlds automatically give player FinalWord perm level.
-Added new command to get the perm level of a player
-Seperated block id whitelist config, making it changable in-game and per-world
-Abstracted jailing and unjailing from the commands in prep for banhammer and olive branch items
-Removed locking from config tool. Shift right-click now clears it.
-
-Fix: Confusing tooltip for Config tool
-Fix: Commands sent from server showing messages twice
+JailMan now getInstance rather than static
