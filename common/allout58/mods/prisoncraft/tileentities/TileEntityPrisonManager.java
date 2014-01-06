@@ -38,7 +38,7 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.world.EnumGameType;
 
-public class TileEntityPrisonManager extends TileEntity implements IInventory
+public class TileEntityPrisonManager extends TileEntity// implements IInventory
 {
     private ItemStack[] playerInventory;
     public static final int INVENTORY_SIZE = 40;
@@ -49,6 +49,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
 
     public boolean hasJailedPlayer = false;
 
+    public int dimension = 0;
     public int jailCoord1[] = new int[3];
     public int jailCoord2[] = new int[3];
     public int tpCoordIn[] = new int[3];
@@ -75,6 +76,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         if (!isInitialized())
         {
             // playerInventory[0] = new ItemStack(Block.stone);
+            dimension = locs.getInteger("jailDim");
             tpCoordIn = locs.getIntArray("tpIn");
             tpCoordOut = locs.getIntArray("tpOut");
             jailCoord1 = locs.getIntArray("jailCoord1");
@@ -243,11 +245,19 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
                 }
                 else
                 {
-                    System.out.println("Gamemode not set. Player obj not of type EntityPlayerMP.");
+                    PrisonCraft.logger.severe("Gamemode not set. Player obj not of type EntityPlayerMP.");
                 }
             }
             hasJailedPlayer = true;
             player.mountEntity(null);
+            if (player instanceof EntityPlayerMP && player.dimension!=dimension)
+            {
+                ((EntityPlayerMP) player).travelToDimension(dimension);
+            }
+            else
+            {
+                PrisonCraft.logger.severe("Gamemode not set. Player obj not of type EntityPlayerMP.");
+            }
             player.setPositionAndUpdate(tpCoordIn[0] + .5, tpCoordIn[1], tpCoordIn[2] + .5);
             if (Config.takeInventory)
             {
@@ -461,6 +471,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         {
             jailedPlayerPrevJailPerms = PermissionLevel.fromInt(tags.getInteger("JailPlayerPreviousPerms"));
         }
+        dimension = tags.getInteger("jailDim");
         tpCoordIn = tags.getIntArray("tpCoordIn");
         tpCoordOut = tags.getIntArray("tpCoordOut");
         jailCoord1 = tags.getIntArray("jailCoord1");
@@ -479,7 +490,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
         playerName = tags.getString("PlayerUsername");
         jailedPlayer = findPlayerFromName(tags.getString("PlayerUsername"));
         NBTTagList tagList = tags.getTagList("Items");
-        playerInventory = new ItemStack[this.getSizeInventory()];
+        playerInventory = new ItemStack[INVENTORY_SIZE];
         for (int i = 0; i < tagList.tagCount(); ++i)
         {
             NBTTagCompound tagCompound = (NBTTagCompound) tagList.tagAt(i);
@@ -496,6 +507,7 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     {
         super.writeToNBT(tags);
         tags.setBoolean("HasJailedPlayer", hasJailedPlayer);
+        tags.setInteger("jailDim", dimension);
         tags.setIntArray("tpCoordIn", tpCoordIn);
         tags.setIntArray("tpCoordOut", tpCoordOut);
         tags.setIntArray("jailCoord1", jailCoord1);
@@ -553,99 +565,45 @@ public class TileEntityPrisonManager extends TileEntity implements IInventory
     }
 
     /* Inventory */
-    @Override
-    public int getSizeInventory()
-    {
-        return playerInventory.length;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int i)
-    {
-        return playerInventory[i];
-    }
-
-    @Override
-    public ItemStack decrStackSize(int slot, int amount)
-    {
-        ItemStack itemStack = getStackInSlot(slot);
-        if (itemStack != null)
-        {
-            if (itemStack.stackSize <= amount)
-            {
-                setInventorySlotContents(slot, null);
-            }
-            else
-            {
-                itemStack = itemStack.splitStack(amount);
-                if (itemStack.stackSize == 0)
-                {
-                    setInventorySlotContents(slot, null);
-                }
-            }
-        }
-
-        return itemStack;
-    }
-
-    @Override
-    public ItemStack getStackInSlotOnClosing(int slot)
-    {
-        ItemStack itemStack = getStackInSlot(slot);
-        if (itemStack != null)
-        {
-            setInventorySlotContents(slot, null);
-        }
-        return itemStack;
-    }
-
-    @Override
-    public void setInventorySlotContents(int slot, ItemStack itemStack)
-    {
-        playerInventory[slot] = itemStack;
-        if (itemStack != null && itemStack.stackSize > getInventoryStackLimit())
-        {
-            itemStack.stackSize = getInventoryStackLimit();
-        }
-    }
-
-    @Override
-    public String getInvName()
-    {
-        return "container.PlayerHeldInventory";
-    }
-
-    @Override
-    public boolean isInvNameLocalized()
-    {
-        return false;
-    }
-
-    @Override
-    public int getInventoryStackLimit()
-    {
-        return 1;
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer entityplayer)
-    {
-        return true;
-    }
-
-    @Override
-    public void openChest()
-    {
-    }
-
-    @Override
-    public void closeChest()
-    {
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int slot, ItemStack itemstack)
-    {
-        return true;
-    }
+    /*
+     * @Override public int getSizeInventory() { return playerInventory.length;
+     * }
+     * 
+     * @Override public ItemStack getStackInSlot(int i) { return
+     * playerInventory[i]; }
+     * 
+     * @Override public ItemStack decrStackSize(int slot, int amount) {
+     * ItemStack itemStack = getStackInSlot(slot); if (itemStack != null) { if
+     * (itemStack.stackSize <= amount) { setInventorySlotContents(slot, null); }
+     * else { itemStack = itemStack.splitStack(amount); if (itemStack.stackSize
+     * == 0) { setInventorySlotContents(slot, null); } } }
+     * 
+     * return itemStack; }
+     * 
+     * @Override public ItemStack getStackInSlotOnClosing(int slot) { ItemStack
+     * itemStack = getStackInSlot(slot); if (itemStack != null) {
+     * setInventorySlotContents(slot, null); } return itemStack; }
+     * 
+     * @Override public void setInventorySlotContents(int slot, ItemStack
+     * itemStack) { playerInventory[slot] = itemStack; if (itemStack != null &&
+     * itemStack.stackSize > getInventoryStackLimit()) { itemStack.stackSize =
+     * getInventoryStackLimit(); } }
+     * 
+     * @Override public String getInvName() { return
+     * "container.PlayerHeldInventory"; }
+     * 
+     * @Override public boolean isInvNameLocalized() { return false; }
+     * 
+     * @Override public int getInventoryStackLimit() { return 1; }
+     * 
+     * @Override public boolean isUseableByPlayer(EntityPlayer entityplayer) {
+     * return true; }
+     * 
+     * @Override public void openChest() { }
+     * 
+     * @Override public void closeChest() { }
+     * 
+     * @Override public boolean isItemValidForSlot(int slot, ItemStack
+     * itemstack) { return true; }
+     */
 }

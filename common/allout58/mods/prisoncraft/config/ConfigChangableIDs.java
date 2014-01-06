@@ -20,7 +20,7 @@ public class ConfigChangableIDs
 {
     private static ConfigChangableIDs instance;
 
-    private List unbreakIDWhitelist = new ArrayList();
+    private List<Integer> unbreakIDWhitelist = new ArrayList<Integer>();
     private File propFile;
 
     public static ConfigChangableIDs getInstance()
@@ -34,7 +34,7 @@ public class ConfigChangableIDs
 
     public void load(File f)
     {
-        unbreakIDWhitelist = new ArrayList();
+        unbreakIDWhitelist.clear();
         propFile = f;
         if (!f.exists())
         {
@@ -100,7 +100,7 @@ public class ConfigChangableIDs
         int[] ret = new int[unbreakIDWhitelist.size()];
         for (int i = 0; i < unbreakIDWhitelist.size(); i++)
         {
-            ret[i] = (int) unbreakIDWhitelist.get(i);
+            ret[i] = unbreakIDWhitelist.get(i).intValue();
         }
         return ret;
     }

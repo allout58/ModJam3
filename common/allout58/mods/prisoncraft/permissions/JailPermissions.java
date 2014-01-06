@@ -178,9 +178,6 @@ public class JailPermissions
 
     public void load()
     {
-        PrisonCraft.logger.info("Adding server and rcon with highest permissions");
-        addUserPlayer("server",PermissionLevel.FinalWord);
-        addUserPlayer("rcon", PermissionLevel.FinalWord);
         MinecraftServer server = null;
         Side side = FMLCommonHandler.instance().getEffectiveSide();
         if (side == Side.SERVER)
@@ -264,6 +261,9 @@ public class JailPermissions
                 }
             }
         }
+        PrisonCraft.logger.info("Adding server and rcon with highest permissions");
+        addUserPlayer("server",PermissionLevel.FinalWord);
+        addUserPlayer("rcon", PermissionLevel.FinalWord);
     }
 
     public void clear()

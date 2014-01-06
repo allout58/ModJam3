@@ -105,6 +105,7 @@ public class ItemConfigWand extends Item
 
                 if (!stack.stackTagCompound.hasKey("jailCoord1"))
                 {
+                    stack.stackTagCompound.setInteger("jailDim", player.dimension);
                     int coord[] = new int[3];
                     coord[0] = x;
                     coord[1] = y;
