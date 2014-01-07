@@ -15,14 +15,14 @@ public class ItemList
     {
         configWand = new ItemConfigWand(Config.configWand);
         banhammer = new ItemBanHammer(Config.banhammer);
+        oliveBranch = new ItemOliveBranch(Config.oliveBranch);
 
         GameRegistry.registerItem(configWand, "prisonConfigWand");
         GameRegistry.registerItem(banhammer, "banhammer");
+        GameRegistry.registerItem(oliveBranch, "olivebranch");
     }
 
     public static void registerRecipies()
     {
-        // GameRegistry.addShapelessRecipe(new ItemStack(configWand), "W", new
-        // ItemStack(configWand));
     }
 }

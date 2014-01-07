@@ -7,6 +7,8 @@ tile.prisonManager.name=Prison Manager
 #Items
 item.prisonConfigWand.name=Prison Configuration Tool
 item.prisonConfigWandLocked.name=Prison Configuration Tool (Locked)
+item.banhammer.name=Banhammer
+item.olivebranch.name=Olive Branch
 
 #Creative Tab
 itemGroup.PrisonCraft=PrisonCraft

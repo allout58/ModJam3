@@ -138,6 +138,14 @@ public class JailMan
     {
         return TryJailPlayer(MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playerName), jailer, time);
     }
+    
+    /**
+     * playerJailerName must be of a player, not Server or other
+     */
+    public boolean TryJailPlayer(String playerName, String playerJailerName, double time)
+    {
+        return TryJailPlayer(playerName, MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playerJailerName), time);
+    }
 
     public boolean TryUnjailPlayer(EntityPlayer player, ICommandSender jailer)
     {
@@ -181,8 +189,16 @@ public class JailMan
         }
     }
 
-    public boolean TryUnailPlayer(String playerName, ICommandSender jailer)
+    public boolean TryUnjailPlayer(String playerName, ICommandSender jailer)
     {
         return TryUnjailPlayer(MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playerName), jailer);
+    }
+
+    /**
+     * playerJailerName must be of a player, not Server or other
+     */
+    public boolean TryUnjailPlayer(String playerName, String jailerName)
+    {
+          return TryUnjailPlayer(playerName, MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(jailerName));      
     }
 }

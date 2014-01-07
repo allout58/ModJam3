@@ -22,6 +22,7 @@ import allout58.mods.prisoncraft.jail.JailMan;
 import allout58.mods.prisoncraft.permissions.JailPermissions;
 import allout58.mods.prisoncraft.permissions.PermissionLevel;
 import allout58.mods.prisoncraft.tileentities.TileEntityList;
+import allout58.mods.prisoncraft.network.PacketHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.SidedProxy;
@@ -35,7 +36,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @Mod(modid = ModConstants.MODID, name = ModConstants.NAME, version = "0.0.2b")
-@NetworkMod(clientSideRequired = true, serverSideRequired = false)
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels={ModConstants.JAILPACKETCHANNEL,ModConstants.UNJAILPACKETCHANNEL}, packetHandler = PacketHandler.class)
 public class PrisonCraft
 {
     public static CreativeTabs creativeTab = new CreativeTabs("PrisonCraft")

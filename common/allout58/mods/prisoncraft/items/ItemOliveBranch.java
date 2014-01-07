@@ -4,31 +4,26 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.util.List;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.world.World;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import allout58.mods.prisoncraft.CommonProxy;
-import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.constants.TextureConstants;
 import allout58.mods.prisoncraft.jail.JailMan;
-import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.util.EnumMovingObjectType;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
+import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
 
-public class ItemBanHammer extends ItemEntityTargetTool
+public class ItemOliveBranch extends ItemEntityTargetTool
 {
-    public ItemBanHammer(int id)
+
+    public ItemOliveBranch(int id)
     {
         super(id);
-        setUnlocalizedName("banhammer");
+        setUnlocalizedName("olivebranch");
         setTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + getUnlocalizedName().substring(5));
     }
 
@@ -39,7 +34,6 @@ public class ItemBanHammer extends ItemEntityTargetTool
 
         if (stack.hasTagCompound() && stack.stackTagCompound.hasKey("userHit"))
         {
-//            System.out.printf("%s: User-> %s%s", world.isRemote ? "Client" : "Server", stack.stackTagCompound.getString("userHit"), System.lineSeparator());
             // Build packet
             ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
             DataOutputStream outputStream = new DataOutputStream(bos);
@@ -54,8 +48,9 @@ public class ItemBanHammer extends ItemEntityTargetTool
                 ex.printStackTrace();
             }
 
+            //Send packet
             Packet250CustomPayload packet = new Packet250CustomPayload();
-            packet.channel = ModConstants.JAILPACKETCHANNEL;
+            packet.channel = ModConstants.UNJAILPACKETCHANNEL;
             packet.data = bos.toByteArray();
             packet.length = bos.size();
             PacketDispatcher.sendPacketToServer(packet);
@@ -63,6 +58,24 @@ public class ItemBanHammer extends ItemEntityTargetTool
         }
 
         return stack;
+    }
+    
+    @Override
+    public boolean onItemUseFirst(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ)
+    {
+        if (!world.isRemote)
+        {
+            if(world.getBlockTileEntity(x, y, z) instanceof TileEntityPrisonManager)
+            {
+                TileEntityPrisonManager te=(TileEntityPrisonManager)world.getBlockTileEntity(x, y, z);
+                if (te.hasJailedPlayer)
+                {
+                    JailMan.getInstance().TryUnjailPlayer(te.playerName, player);
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -73,7 +86,8 @@ public class ItemBanHammer extends ItemEntityTargetTool
         // TODO See if this can be localized
         if (CommonProxy.shouldAddAdditionalInfo())
         {
-            infoList.add("Use this tool to send the player you are looking at to jail!");
+            infoList.add("Use this tool to release the player you are looking at from jail!");
+            infoList.add("Can also be used on a prison manager to release its player.");
         }
         else
         {

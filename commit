@@ -1,1 +1,4 @@
-Added dimension support, fix configurable whitelist
+Added banhammer and olive branch
+
+Required adding packet handler
+Moved some stuff around for future gradle

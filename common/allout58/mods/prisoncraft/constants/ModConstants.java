@@ -4,7 +4,9 @@ public class ModConstants
 {
     public static final String MODID = "prisoncraft";
     public static final String NAME = "PrisonCraft";
-    public static final String PACKETCHANNEL = "PrisonCraft";
+//    public static final String PACKETCHANNEL = "PrisonCraft";
+    public static final String JAILPACKETCHANNEL = "PCJail";
+    public static final String UNJAILPACKETCHANNEL = "PCUnjail";    
 
     public static final int ITEM_ID_DIFF = 256;
 
