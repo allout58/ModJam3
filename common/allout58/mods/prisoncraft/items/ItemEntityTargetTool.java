@@ -2,12 +2,15 @@ package allout58.mods.prisoncraft.items;
 
 import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.constants.ModConstants;
+import allout58.mods.prisoncraft.permissions.JailPermissions;
+import allout58.mods.prisoncraft.permissions.PermissionLevel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.world.World;
 
@@ -43,6 +46,7 @@ public class ItemEntityTargetTool extends Item
                 }
             }
         }
+
         return stack;
 
     }

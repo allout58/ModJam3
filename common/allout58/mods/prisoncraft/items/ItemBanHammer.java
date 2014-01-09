@@ -12,11 +12,14 @@ import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.constants.TextureConstants;
 import allout58.mods.prisoncraft.jail.JailMan;
+import allout58.mods.prisoncraft.permissions.JailPermissions;
+import allout58.mods.prisoncraft.permissions.PermissionLevel;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
@@ -39,7 +42,10 @@ public class ItemBanHammer extends ItemEntityTargetTool
 
         if (stack.hasTagCompound() && stack.stackTagCompound.hasKey("userHit"))
         {
-//            System.out.printf("%s: User-> %s%s", world.isRemote ? "Client" : "Server", stack.stackTagCompound.getString("userHit"), System.lineSeparator());
+            // System.out.printf("%s: User-> %s%s", world.isRemote ?
+            // "Client" : "Server",
+            // stack.stackTagCompound.getString("userHit"),
+            // System.lineSeparator());
             // Build packet
             ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
             DataOutputStream outputStream = new DataOutputStream(bos);
@@ -59,7 +65,7 @@ public class ItemBanHammer extends ItemEntityTargetTool
             packet.data = bos.toByteArray();
             packet.length = bos.size();
             PacketDispatcher.sendPacketToServer(packet);
-            stack.stackTagCompound=null;
+            stack.stackTagCompound = null;
         }
 
         return stack;

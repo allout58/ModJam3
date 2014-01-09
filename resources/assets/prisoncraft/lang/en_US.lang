@@ -44,6 +44,7 @@ string.idremoved=ID removed from configs.
 string.idremoved.fail=ID not found. Not removing.
 string.invalidperms=Not enough permissions to run this command.
 string.permlevel=Permission level: 
+string.invalidperms.tool=Not enough permissions to use this tool.
 
 #Config wand strings
 string.configwand.nextpt=Now click the other corner of the cell.
