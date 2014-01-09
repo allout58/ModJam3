@@ -37,6 +37,7 @@ public class ItemEntityTargetTool extends Item
             {
                 if (mc.objectMouseOver.entityHit instanceof EntityPlayer)
                 {
+                    player.swingItem();
                     if (!stack.hasTagCompound()) stack.stackTagCompound = new NBTTagCompound();
                     stack.stackTagCompound.setString("userHit", ((EntityPlayer) mc.objectMouseOver.entityHit).username);
                 }

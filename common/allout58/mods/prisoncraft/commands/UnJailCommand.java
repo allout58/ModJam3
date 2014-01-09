@@ -67,7 +67,7 @@ public class UnJailCommand implements ICommand
         }
         else
         {
-            JailMan.getInstance().TryUnailPlayer(astring[0], icommandsender);
+            JailMan.getInstance().TryUnjailPlayer(astring[0], icommandsender);
         }
     }
 
