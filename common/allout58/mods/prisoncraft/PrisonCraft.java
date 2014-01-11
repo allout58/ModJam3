@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.world.storage.SaveHandler;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.MinecraftForge;
 import allout58.mods.prisoncraft.blocks.BlockList;
 import allout58.mods.prisoncraft.commands.ChangableIdConfigCommand;
 import allout58.mods.prisoncraft.commands.ChangeJailPermsCommand;
@@ -17,6 +18,7 @@ import allout58.mods.prisoncraft.commands.UnJailCommand;
 import allout58.mods.prisoncraft.config.Config;
 import allout58.mods.prisoncraft.config.ConfigChangableIDs;
 import allout58.mods.prisoncraft.constants.ModConstants;
+import allout58.mods.prisoncraft.handler.ConfigToolHighlightHandler;
 import allout58.mods.prisoncraft.items.ItemList;
 import allout58.mods.prisoncraft.jail.JailMan;
 import allout58.mods.prisoncraft.permissions.JailPermissions;
@@ -64,6 +66,8 @@ public class PrisonCraft
         logger.setParent(FMLLog.getLogger());
 
         Config.init(new Configuration(event.getSuggestedConfigurationFile()));
+        
+        MinecraftForge.EVENT_BUS.register(new ConfigToolHighlightHandler());
 
         BlockList.init();
         ItemList.init();
