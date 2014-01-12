@@ -28,7 +28,7 @@ public class CommonProxy
 
     public static Object additionalInfoInstructions()
     {
-        String message = "§oPress §b<SHIFT>§7§o for more information.";
+        String message = "\u00A7oPress \u00A7b<SHIFT>\u00A77\u00A7o for more information.";
         return message;
     }
 }
