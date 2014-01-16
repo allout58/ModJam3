@@ -5,4 +5,14 @@
 *.war
 *.ear
 
-fmlbranding.properties
+includeCP/fmlbranding.properties
+eclipse/*
+build/*
+.gradle/*
+.settings/*
+.project
+.classpath
+*-fml.txt
+MinecraftForge-*.txt
+forge-*-changelog.txt
+gradle-app.setting

@@ -1,7 +1,3 @@
-Chat message niceties
+Gradle!
 
-Made Chat messages look nicer
-Updated all chat formatting to use MC's built-in enum.
-Began collection of several commands into one.
-
-Fixed bug: Permissions - not being able to grant same level as yourself (< became <=, derp)
+We will see how this goes, still have old arrangement locally.
