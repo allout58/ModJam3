@@ -1,5 +1,7 @@
 package allout58.mods.prisoncraft;
 
+import net.minecraft.util.EnumChatFormatting;
+
 import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -28,7 +30,6 @@ public class CommonProxy
 
     public static Object additionalInfoInstructions()
     {
-        String message = "\u00A7oPress \u00A7b<SHIFT>\u00A77\u00A7o for more information.";
-        return message;
+        return EnumChatFormatting.ITALIC.toString() + "Press " + EnumChatFormatting.AQUA.toString() + EnumChatFormatting.ITALIC.toString() + "<SHIFT>" + EnumChatFormatting.GRAY.toString() + EnumChatFormatting.ITALIC.toString() + " for more information.";
     }
 }

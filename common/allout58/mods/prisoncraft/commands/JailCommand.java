@@ -17,6 +17,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 
 public class JailCommand implements ICommand
 {
@@ -57,7 +58,7 @@ public class JailCommand implements ICommand
     {
         if (astring.length < 1 || astring.length > 2)
         {
-            icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
+            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.invalidArgument"));
         }
         else
         {
@@ -74,7 +75,7 @@ public class JailCommand implements ICommand
                 }
                 catch (NumberFormatException e)
                 {
-                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.nan"));
+                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.nan"));
                 }
             }
         }

@@ -13,6 +13,7 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 
 public class PermLevelCommand implements ICommand
 {
@@ -53,7 +54,7 @@ public class PermLevelCommand implements ICommand
     {
         if (astring.length > 1)
         {
-            icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
+            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.invalidArgument"));
         }
         else
         {
@@ -66,7 +67,7 @@ public class PermLevelCommand implements ICommand
             {
                 pl = JailPermissions.getInstance().getPlayerPermissionLevel(astring[0]);
             }
-            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.permlevel").addText(pl.toString()));
+            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.permlevel").addText(pl.toString()));
         }
     }
 

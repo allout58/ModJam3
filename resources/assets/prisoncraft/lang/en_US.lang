@@ -45,6 +45,8 @@ string.idremoved.fail=ID not found. Not removing.
 string.invalidperms=Not enough permissions to run this command.
 string.permlevel=Permission level: 
 string.invalidperms.tool=Not enough permissions to use this tool.
+string.mustbeplayer=You must be a player to run this command.
+string.jailedplayer=Jailed Player:
 
 #Config wand strings
 string.configwand.nextpt=Now click the other corner of the cell.
@@ -53,6 +55,8 @@ string.configwand.tpout=Now click where you want the released player to be telep
 string.configwand.done=All done! Now click the manager block for this cell to initialize it.
 
 #Prison manager specific strings
-string.blockprisonmanager.success=Jail creation successful!
-string.blockprisonmanager.fail=Jail creation failed. Rerun configuration tool and check for all points before creating.
-string.blockprisonmanager.failoverwrite=Jail creation failed because this manager already has a linked cell.
+string.blockprisonmanager.cell.success=Jail cell creation successful!
+string.blockprisonmanager.cell.fail=Jail cell creation failed. Rerun configuration tool and check for all points before creating.
+string.blockprisonmanager.cell.failoverwrite=Jail cell creation failed because this manager already has a linked cell.
+string.blockprisonmanager.jail.success=Jail cell added to Jail group!
+string.blockprisonmanager.jail.failoverwrite=Jail cannot be added to a jail because it is already in a jail group.

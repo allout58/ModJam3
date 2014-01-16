@@ -19,6 +19,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 
 public class JailMan
 {
@@ -76,7 +77,7 @@ public class JailMan
         PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(jailer.getEntityWorld());
         if (ws.getTesList().size() == 0)
         {
-            jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.nojail"));
+            jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.nojail"));
             return false;
         }
         else
@@ -100,12 +101,12 @@ public class JailMan
                             }
                             else
                             {
-                                jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.playeralreadyjailed"));
+                                jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.playeralreadyjailed"));
                                 return false;
                             }
 
                         }
-                        else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.noplayerfound"));
+                        else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.noplayerfound"));
                     }
                 }
             }
@@ -122,14 +123,14 @@ public class JailMan
                         e.printStackTrace();
                     }
                 }
-                jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addText(jailer.getCommandSenderName()).addKey("string.sends").addText(player.username).addKey("string.tojail"));
+                jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(jailer.getCommandSenderName()).addKey("string.sends").addText(player.username).addKey("string.tojail"));
                 if (!jailer.getCommandSenderName().equalsIgnoreCase(MinecraftServer.getServer().getCommandSenderName()))
                 {
-                    MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addText(jailer.getCommandSenderName()).addKey("string.sends").addText(player.username).addKey("string.tojail"));
+                    MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(jailer.getCommandSenderName()).addKey("string.sends").addText(player.username).addKey("string.tojail"));
                 }
                 return true;
             }
-            else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.noopenjails"));
+            else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.noopenjails"));
             return false;
         }
     }
@@ -138,7 +139,7 @@ public class JailMan
     {
         return TryJailPlayer(MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playerName), jailer, time);
     }
-    
+
     /**
      * playerJailerName must be of a player, not Server or other
      */
@@ -152,7 +153,7 @@ public class JailMan
         PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(jailer.getEntityWorld());
         if (ws.getTesList().size() == 0)
         {
-            jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.nojails"));
+            jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.nojails"));
             return false;
         }
         else
@@ -169,22 +170,22 @@ public class JailMan
                         if (player != null && ((TileEntityPrisonManager) te).playerName.equalsIgnoreCase(player.username))
                         {
                             if (((TileEntityPrisonManager) te).unjailPlayer()) foundOpen = true;
-                            else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.playeroffline"));
+                            else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.playeroffline"));
                         }
-                        else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.playeroffline"));
+                        else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.playeroffline"));
                     }
                 }
             }
             if (foundOpen)
             {
-                jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addText(jailer.getCommandSenderName()).addKey("string.frees").addText(player.username).addKey("string.fromjail"));
+                jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(jailer.getCommandSenderName()).addKey("string.frees").addText(player.username).addKey("string.fromjail"));
                 if (!jailer.getCommandSenderName().equalsIgnoreCase(MinecraftServer.getServer().getCommandSenderName()))
                 {
-                    MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addText(jailer.getCommandSenderName()).addKey("string.frees").addText(player.username).addKey("string.fromjail"));
+                    MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(jailer.getCommandSenderName()).addKey("string.frees").addText(player.username).addKey("string.fromjail"));
                 }
                 return true;
             }
-            else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.noplayerfound"));
+            else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.noplayerfound"));
             return false;
         }
     }
@@ -199,6 +200,6 @@ public class JailMan
      */
     public boolean TryUnjailPlayer(String playerName, String jailerName)
     {
-          return TryUnjailPlayer(playerName, MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(jailerName));      
+        return TryUnjailPlayer(playerName, MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(jailerName));
     }
 }

@@ -14,6 +14,7 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.storage.SaveHandler;
 
 public class ChangableIdConfigCommand implements ICommand
@@ -56,7 +57,7 @@ public class ChangableIdConfigCommand implements ICommand
     {
         if (astring.length < 1 || astring.length > 2)
         {
-            icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
+            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()+EnumChatFormatting.ITALIC.toString()).addKey("string.invalidArgument"));
         }
         else
         {
@@ -65,10 +66,10 @@ public class ChangableIdConfigCommand implements ICommand
                 if (astring[0].equalsIgnoreCase("save"))
                 {
                     ConfigChangableIDs.getInstance().save();
-                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.savedconfig"));
+                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.savedconfig"));
                     if (!icommandsender.getCommandSenderName().equalsIgnoreCase("server"))
                     {
-                        MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.savedconfig"));
+                        MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.savedconfig"));
                     }
 
                 }
@@ -78,15 +79,15 @@ public class ChangableIdConfigCommand implements ICommand
                     String fileName = saveHandler.getWorldDirectory().getAbsolutePath() + "/PCUnbreakableIDs.txt";
                     File f = new File(fileName);
                     ConfigChangableIDs.getInstance().load(f);
-                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.loadedconfig"));
+                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.loadedconfig"));
                     if (!icommandsender.getCommandSenderName().equalsIgnoreCase("server"))
                     {
-                        MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.loadedconfig"));
+                        MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.loadedconfig"));
                     }
                 }
                 else
                 {
-                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.invalidArgument"));
+                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()+EnumChatFormatting.ITALIC.toString()).addKey("string.invalidArgument"));
                 }
             }
             if (astring.length == 2)
@@ -97,15 +98,15 @@ public class ChangableIdConfigCommand implements ICommand
                     {
                         int integer = Integer.parseInt(astring[1]);
                         ConfigChangableIDs.getInstance().addID(integer);
-                        icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.idadded"));
+                        icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.idadded"));
                         if (!icommandsender.getCommandSenderName().equalsIgnoreCase("server"))
                         {
-                            MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.idadded"));
+                            MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.idadded"));
                         }
                     }
                     catch (NumberFormatException e)
                     {
-                        icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.nan"));
+                        icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()+EnumChatFormatting.ITALIC.toString()).addKey("string.nan"));
                     }
                 }
                 if (astring[0].equalsIgnoreCase("remove"))
@@ -115,20 +116,20 @@ public class ChangableIdConfigCommand implements ICommand
                         int integer = Integer.parseInt(astring[1]);
                         if (ConfigChangableIDs.getInstance().removeID(integer))
                         {
-                            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.idremoved"));
+                            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.idremoved"));
                             if (!icommandsender.getCommandSenderName().equalsIgnoreCase("server"))
                             {
-                                MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.idremove"));
+                                MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.idremoved"));
                             }
                         }
                         else
                         {
-                            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.idremoved.fail"));
+                            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] "+EnumChatFormatting.RED.toString()+EnumChatFormatting.ITALIC.toString()).addKey("string.idremoved.fail"));
                         }
                     }
                     catch (NumberFormatException e)
                     {
-                        icommandsender.sendChatToPlayer(new ChatMessageComponent().addKey("string.nan"));
+                        icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()+EnumChatFormatting.ITALIC.toString()).addKey("string.nan"));
                     }
                 }
             }

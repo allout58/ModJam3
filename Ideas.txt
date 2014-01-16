@@ -1,6 +1,5 @@
 Ideas:
 
-Reason in jail command
-Banhammer and olive branch - in-game items for banning and pardoning
-Config tool shows highlights
+Reason in jail command (seperate command/tool afterwards?)
+Actual jails, not just individual cells
 Chunkload jail and manager

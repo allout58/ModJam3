@@ -36,6 +36,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.EnumGameType;
 
 public class TileEntityPrisonManager extends TileEntity// implements IInventory
@@ -285,14 +287,15 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                 jailedPlayerPrevJailPerms = JailPermissions.getInstance().getPlayerPermissionLevel(player);
                 JailPermissions.getInstance().removeUserPlayer(player);
             }
-            player.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.jailed"));
+            player.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.jailed"));
             for (int i = 0; i < signs.size(); i++)
             {
                 int coord[] = (int[]) signs.get(i);
                 TileEntity te = worldObj.getBlockTileEntity(coord[0], coord[1], coord[2]);
                 if (te instanceof TileEntitySign)
                 {
-                    ((TileEntitySign) te).signText[0] = playerName;
+                    ((TileEntitySign) te).signText[0]=StatCollector.translateToLocal("string.jailedplayer");
+                    ((TileEntitySign) te).signText[1] = EnumChatFormatting.ITALIC.toString()+playerName;
                     PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 100, this.worldObj.provider.dimensionId, new Packet130UpdateSign(te.xCoord, te.yCoord, te.zCoord, ((TileEntitySign) te).signText));
                 }
             }
@@ -347,7 +350,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                     JailPermissions.getInstance().addUserPlayer(jailedPlayer, jailedPlayerPrevJailPerms);
                 }
             }
-            jailedPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "]").addKey("string.unjailed"));
+            jailedPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.unjailed"));
             for (int i = 0; i < signs.size(); i++)
             {
                 int coord[] = (int[]) signs.get(i);

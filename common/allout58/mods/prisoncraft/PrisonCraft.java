@@ -37,7 +37,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@Mod(modid = ModConstants.MODID, name = ModConstants.NAME, version = "0.0.2b")
+@Mod(modid = ModConstants.MODID, name = ModConstants.NAME, version = "0.0.4")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, channels={ModConstants.JAILPACKETCHANNEL,ModConstants.UNJAILPACKETCHANNEL}, packetHandler = PacketHandler.class)
 public class PrisonCraft
 {
