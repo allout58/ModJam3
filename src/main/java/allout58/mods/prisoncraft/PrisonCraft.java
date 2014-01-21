@@ -10,10 +10,10 @@ import net.minecraft.world.storage.SaveHandler;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import allout58.mods.prisoncraft.blocks.BlockList;
-import allout58.mods.prisoncraft.commands.ChangableIdConfigCommand;
 import allout58.mods.prisoncraft.commands.ChangeJailPermsCommand;
 import allout58.mods.prisoncraft.commands.JailCommand;
 import allout58.mods.prisoncraft.commands.PermLevelCommand;
+import allout58.mods.prisoncraft.commands.PrisonCraftCommand;
 import allout58.mods.prisoncraft.commands.UnJailCommand;
 import allout58.mods.prisoncraft.config.Config;
 import allout58.mods.prisoncraft.config.ConfigChangableIDs;
@@ -62,6 +62,7 @@ public class PrisonCraft
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+        proxy.registerRenderers();
         logger = Logger.getLogger(ModConstants.MODID);
         logger.setParent(FMLLog.getLogger());
 
@@ -80,7 +81,7 @@ public class PrisonCraft
         event.registerServerCommand(new JailCommand());
         event.registerServerCommand(new UnJailCommand());
         event.registerServerCommand(new ChangeJailPermsCommand());
-        event.registerServerCommand(new ChangableIdConfigCommand());
+        event.registerServerCommand(new PrisonCraftCommand());
         event.registerServerCommand(new PermLevelCommand());
         SaveHandler saveHandler = (SaveHandler) event.getServer().worldServerForDimension(0).getSaveHandler();
         File configFile = new File(saveHandler.getWorldDirectory().getAbsolutePath() + "/PCUnbreakableIDs.txt");

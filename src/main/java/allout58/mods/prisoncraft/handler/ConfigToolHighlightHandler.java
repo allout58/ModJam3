@@ -2,8 +2,8 @@ package allout58.mods.prisoncraft.handler;
 
 import org.lwjgl.opengl.GL11;
 
-import allout58.mods.prisoncraft.PrisonCraftWorldSave;
 import allout58.mods.prisoncraft.items.ItemConfigWand;
+import allout58.mods.prisoncraft.jail.PrisonCraftWorldSave;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

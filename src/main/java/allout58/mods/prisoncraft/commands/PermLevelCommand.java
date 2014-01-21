@@ -54,7 +54,7 @@ public class PermLevelCommand implements ICommand
     {
         if (astring.length > 1)
         {
-            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.invalidArgument"));
+            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString() ).addKey("string.invalidArgument"));
         }
         else
         {

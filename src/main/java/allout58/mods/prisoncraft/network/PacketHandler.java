@@ -50,14 +50,14 @@ public class PacketHandler implements IPacketHandler
             time = inputStream.readDouble();
             if (JailPermissions.getInstance().playerCanUse(jailer, PermissionLevel.Jailer))
             {
-                JailMan.getInstance().TryJailPlayer(name, jailer, time);
+                JailMan.getInstance().TryJailPlayer(name, jailer,"", time);
             }
             else
             {
                 EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(jailer);
                 if (player != null)
                 {
-                    player.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.invalidperms.tool"));
+                    player.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() ).addKey("string.invalidperms.tool"));
                 }
             }
         }
@@ -90,7 +90,7 @@ public class PacketHandler implements IPacketHandler
                 EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(jailer);
                 if (player != null)
                 {
-                    player.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.invalidperms.tool"));
+                    player.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() ).addKey("string.invalidperms.tool"));
                 }
             }
         }

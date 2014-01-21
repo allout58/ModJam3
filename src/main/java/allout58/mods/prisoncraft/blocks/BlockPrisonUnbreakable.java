@@ -24,6 +24,7 @@ public class BlockPrisonUnbreakable extends BlockContainer
         setResistance(6000000.0F);
         setLightValue(.2F);
         setUnlocalizedName("prisonUnbreakable");
+        setTextureName("minecraft:bedrock");
     }
 
     @Override

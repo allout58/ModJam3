@@ -31,7 +31,7 @@ public class ItemConfigWand extends Item
     {
         super(id - ModConstants.ITEM_ID_DIFF);
         setUnlocalizedName("prisonConfigWand");
-        setCreativeTab(PrisonCraft.creativeTab);
+//        setCreativeTab(PrisonCraft.creativeTab);
         setMaxStackSize(1);
     }
 

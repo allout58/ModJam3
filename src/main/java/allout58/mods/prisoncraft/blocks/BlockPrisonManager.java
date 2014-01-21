@@ -1,16 +1,17 @@
 package allout58.mods.prisoncraft.blocks;
 
 import allout58.mods.prisoncraft.PrisonCraft;
-import allout58.mods.prisoncraft.PrisonCraftWorldSave;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.constants.TextureConstants;
 import allout58.mods.prisoncraft.items.ItemList;
+import allout58.mods.prisoncraft.jail.PrisonCraftWorldSave;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonUnbreakable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,9 +27,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
-public class BlockPrisonManager extends BlockContainer
+public class BlockPrisonManager extends Block implements ITileEntityProvider
 {
-    public Icon top, bottom, side, side_uninit;
+    public Icon top, bottom, side, side_nolink, side_uninit;
 
     public BlockPrisonManager(int par1, Material par2Material)
     {
@@ -36,7 +37,8 @@ public class BlockPrisonManager extends BlockContainer
         setBlockUnbreakable();
         setResistance(6000000.0F);
         setUnlocalizedName("prisonManager");
-        setCreativeTab(PrisonCraft.creativeTab);
+        setTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side");
+        // setCreativeTab(PrisonCraft.creativeTab);
     }
 
     @Override
@@ -48,19 +50,41 @@ public class BlockPrisonManager extends BlockContainer
         return this.side;
     }
 
+    @Override
+    @SideOnly(Side.CLIENT)
+    // public Icon getBlockTextureByPass(IBlockAccess world, int x, int y, int
+    // z, int side, int pass)
     public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
     {
         int meta = world.getBlockMetadata(x, y, z);
+        // if (pass == 0)
+        // {
         if (side == ForgeDirection.DOWN.ordinal()) return this.bottom;
         if (side == ForgeDirection.UP.ordinal()) return this.top;
+        // return this.side;
+        // }
+        // else if (pass == 1)
+        // {
+        // if(side==ForgeDirection.DOWN.ordinal()||side==ForgeDirection.UP.ordinal())return
+        // this.blank;
         if (meta == 0)
         {
             return this.side_uninit;
         }
+        if (meta == 1)
+        {
+            return this.side_nolink;
+        }
         else
         {
             return this.side;
+            // return this.blank;
         }
+        // }
+        // else
+        // {
+        // return null;
+        // }
 
     }
 
@@ -68,23 +92,12 @@ public class BlockPrisonManager extends BlockContainer
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister ir)
     {
+        super.registerIcons(ir);
         this.side = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side");
         this.side_uninit = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side_uninit");
+        this.side_nolink = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side_nolink");
         this.bottom = this.top = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_top_bottom");
-    }
 
-    @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLiving, ItemStack par6ItemStack)
-    {
-        TileEntity te = world.getBlockTileEntity(x, y, z);
-        if (te instanceof TileEntityPrisonManager)
-        {
-            int coord[] = new int[3];
-            coord[0] = te.xCoord;
-            coord[1] = te.yCoord;
-            coord[2] = te.zCoord;
-            PrisonCraftWorldSave.forWorld(world).getTesList().add(coord);
-        }
     }
 
     @Override
@@ -102,7 +115,7 @@ public class BlockPrisonManager extends BlockContainer
             PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(world);
             for (int i = 0; i < ws.getTesList().size(); i++)
             {
-                int coord[] = (int[]) ws.getTesList().get(i);
+                int coord[] = ws.getTesList().get(i).coord;
                 if (coord[0] == logic.xCoord && coord[1] == logic.yCoord && coord[2] == logic.zCoord)
                 {
                     PrisonCraftWorldSave.forWorld(world).getTesList().remove(i);
@@ -134,20 +147,38 @@ public class BlockPrisonManager extends BlockContainer
                             {
                                 if (((TileEntityPrisonManager) te).changeBlocks(entityPlayer.inventory.getCurrentItem().stackTagCompound))
                                 {
-                                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.blockprisonmanager.cell.success"));
+                                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.blockprisonmanager.cell.success"));
                                 }
                                 else
                                 {
-                                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.blockprisonmanager.cell.failoverwrite"));
+                                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.blockprisonmanager.cell.failoverwrite"));
                                 }
-                                return true;
                             }
                             else
                             {
-                                entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.blockprisonmanager.cell.fail"));
-                                return true;
+                                entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.blockprisonmanager.cell.fail"));
+
+                            }
+                            return true;
+                        }
+                    }
+                    if (entityPlayer.inventory.getCurrentItem().itemID == ItemList.jailLink.itemID)
+                    {
+                        if (entityPlayer.inventory.getCurrentItem().hasTagCompound())
+                        {
+                            if (entityPlayer.inventory.getCurrentItem().stackTagCompound.hasKey("jailName"))
+                            {
+                                if (((TileEntityPrisonManager) te).setJailName(entityPlayer.inventory.getCurrentItem().stackTagCompound.getString("jailName")))
+                                {
+                                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.blockprisonmanager.jail.success"));
+                                }
+                                else
+                                {
+                                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.blockprisonmanager.jail.failoverwrite"));
+                                }
                             }
                         }
+                        return true;
                     }
                 }
             }

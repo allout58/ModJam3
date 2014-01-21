@@ -9,9 +9,9 @@ import java.util.List;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.network.PacketDispatcher;
 
-import allout58.mods.prisoncraft.PrisonCraftWorldSave;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.jail.JailMan;
+import allout58.mods.prisoncraft.jail.PrisonCraftWorldSave;
 import allout58.mods.prisoncraft.permissions.JailPermissions;
 import allout58.mods.prisoncraft.permissions.PermissionLevel;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
@@ -64,7 +64,7 @@ public class UnJailCommand implements ICommand
     {
         if (astring.length != 1)
         {
-            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.invalidArgument"));
+            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString() ).addKey("string.invalidArgument"));
         }
         else
         {

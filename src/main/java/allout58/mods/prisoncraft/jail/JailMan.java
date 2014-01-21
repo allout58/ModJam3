@@ -10,7 +10,6 @@ import java.util.Timer;
 import java.util.logging.Logger;
 
 import allout58.mods.prisoncraft.PrisonCraft;
-import allout58.mods.prisoncraft.PrisonCraftWorldSave;
 import allout58.mods.prisoncraft.config.Config;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
@@ -72,41 +71,51 @@ public class JailMan
         }
     }
 
-    public boolean TryJailPlayer(EntityPlayer player, ICommandSender jailer, double time)
+    public boolean TryJailPlayer(EntityPlayer player, ICommandSender jailer, String jailName, double time)
     {
         PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(jailer.getEntityWorld());
         if (ws.getTesList().size() == 0)
         {
-            jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.nojail"));
+            jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.nojail"));
             return false;
         }
         else
         {
             boolean foundOpen = false;
+            boolean foundJail = false;
             for (int i = 0; i < ws.getTesList().size(); i++)
             {
-                int coord[] = (int[]) ws.getTesList().get(i);
+                JailManRef ref = ws.getTesList().get(i);
+                int coord[] = ref.coord;
                 TileEntity te = jailer.getEntityWorld().getBlockTileEntity(coord[0], coord[1], coord[2]);
                 if (te instanceof TileEntityPrisonManager)
                 {
-                    if (!((TileEntityPrisonManager) te).hasJailedPlayer)
+                    if (ref.jailName.equalsIgnoreCase(jailName) || ref.jailName == "")
                     {
-                        if (player != null)
+                        foundJail = true;
+                        if (!((TileEntityPrisonManager) te).hasJailedPlayer)
                         {
-
-                            if (((TileEntityPrisonManager) te).jailPlayer(player, time))
+                            if (player != null)
                             {
-                                foundOpen = true;
-                                break;
+
+                                if (((TileEntityPrisonManager) te).jailPlayer(player, time))
+                                {
+                                    foundOpen = true;
+                                    break;
+                                }
+                                else
+                                {
+                                    jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.playeralreadyjailed"));
+                                    return false;
+                                }
+
                             }
                             else
                             {
-                                jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.playeralreadyjailed"));
+                                jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.noplayerfound"));
                                 return false;
                             }
-
                         }
-                        else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.noplayerfound"));
                     }
                 }
             }
@@ -130,22 +139,26 @@ public class JailMan
                 }
                 return true;
             }
-            else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.noopenjails"));
+            else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.noopenjails"));
+            if (!foundJail)
+            {
+                jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.jailnotfound"));
+            }
             return false;
         }
     }
 
-    public boolean TryJailPlayer(String playerName, ICommandSender jailer, double time)
+    public boolean TryJailPlayer(String playerName, ICommandSender jailer, String jailName, double time)
     {
-        return TryJailPlayer(MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playerName), jailer, time);
+        return TryJailPlayer(MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playerName), jailer, jailName, time);
     }
 
     /**
      * playerJailerName must be of a player, not Server or other
      */
-    public boolean TryJailPlayer(String playerName, String playerJailerName, double time)
+    public boolean TryJailPlayer(String playerName, String playerJailerName, String jailName, double time)
     {
-        return TryJailPlayer(playerName, MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playerJailerName), time);
+        return TryJailPlayer(playerName, MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playerJailerName), jailName, time);
     }
 
     public boolean TryUnjailPlayer(EntityPlayer player, ICommandSender jailer)
@@ -153,7 +166,7 @@ public class JailMan
         PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(jailer.getEntityWorld());
         if (ws.getTesList().size() == 0)
         {
-            jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.nojails"));
+            jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.nojails"));
             return false;
         }
         else
@@ -161,7 +174,7 @@ public class JailMan
             boolean foundOpen = false;
             for (int i = 0; i < ws.getTesList().size(); i++)
             {
-                int coord[] = (int[]) ws.getTesList().get(i);
+                int coord[] = ws.getTesList().get(i).coord;
                 TileEntity te = jailer.getEntityWorld().getBlockTileEntity(coord[0], coord[1], coord[2]);
                 if (te instanceof TileEntityPrisonManager)
                 {
@@ -170,9 +183,9 @@ public class JailMan
                         if (player != null && ((TileEntityPrisonManager) te).playerName.equalsIgnoreCase(player.username))
                         {
                             if (((TileEntityPrisonManager) te).unjailPlayer()) foundOpen = true;
-                            else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.playeroffline"));
+                            else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.playeroffline"));
                         }
-                        else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.playeroffline"));
+                        else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.playeroffline"));
                     }
                 }
             }
@@ -185,7 +198,7 @@ public class JailMan
                 }
                 return true;
             }
-            else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.noplayerfound"));
+            else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.noplayerfound"));
             return false;
         }
     }

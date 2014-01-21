@@ -1,7 +1,8 @@
-package allout58.mods.prisoncraft;
+package allout58.mods.prisoncraft.jail;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -15,7 +16,8 @@ public class PrisonCraftWorldSave extends WorldSavedData
 
     public static World worldObj;
 
-    private List tesList = new ArrayList(); // int[] only!
+    private List<JailManRef> tesList = new ArrayList<JailManRef>(); // int[]
+                                                                    // only!
 
     public PrisonCraftWorldSave()
     {
@@ -27,7 +29,7 @@ public class PrisonCraftWorldSave extends WorldSavedData
         super(PrisonCraftWorldSave.key);
     }
 
-    public List getTesList()
+    public List<JailManRef> getTesList()
     {
         this.markDirty();
         return tesList;
@@ -37,8 +39,7 @@ public class PrisonCraftWorldSave extends WorldSavedData
     {
         worldObj = world;
         // Retrieves the PrisonCraftWorldSave instance for the given world,
-        // creating it
-        // if necessary
+        // creating it if necessary
         MapStorage storage = world.perWorldStorage;
         PrisonCraftWorldSave result = (PrisonCraftWorldSave) storage.loadData(PrisonCraftWorldSave.class, key);
         if (result == null)
@@ -58,9 +59,13 @@ public class PrisonCraftWorldSave extends WorldSavedData
             for (int i = 0; i < size; i++)
             {
                 NBTTagCompound t = tags.getCompoundTag(i + "");
-                int coord[] = t.getIntArray("coord");
-
-                tesList.add(coord);
+                JailManRef ref = new JailManRef();
+                ref.coord = t.getIntArray("coord");
+                if (t.hasKey("jailname"))
+                {
+                    ref.jailName = t.getString("jailname");
+                    tesList.add(ref);
+                }
             }
         }
     }
@@ -72,7 +77,8 @@ public class PrisonCraftWorldSave extends WorldSavedData
         for (int i = 0; i < tesList.size(); i++)
         {
             NBTTagCompound t = new NBTTagCompound();
-            t.setIntArray("coord", (int[]) tesList.get(i));
+            t.setString("jailname", tesList.get(i).jailName);
+            t.setIntArray("coord", tesList.get(i).coord);
             tags.setCompoundTag(i + "", t);// HACKY! :D
         }
     }

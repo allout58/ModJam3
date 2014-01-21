@@ -8,6 +8,7 @@
 includeCP/fmlbranding.properties
 eclipse/*
 build/*
+bin/*
 .gradle/*
 .settings/*
 .project

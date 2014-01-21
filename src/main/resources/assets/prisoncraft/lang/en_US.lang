@@ -9,6 +9,7 @@ item.prisonConfigWand.name=Prison Configuration Tool
 item.prisonConfigWandLocked.name=Prison Configuration Tool (Locked)
 item.banhammer.name=Banhammer
 item.olivebranch.name=Olive Branch
+item.jaillink.name=Jail Linker
 
 #Creative Tab
 itemGroup.PrisonCraft=PrisonCraft
@@ -47,6 +48,7 @@ string.permlevel=Permission level:
 string.invalidperms.tool=Not enough permissions to use this tool.
 string.mustbeplayer=You must be a player to run this command.
 string.jailedplayer=Jailed Player:
+string.jailnotfound=No jails of that name found
 
 #Config wand strings
 string.configwand.nextpt=Now click the other corner of the cell.

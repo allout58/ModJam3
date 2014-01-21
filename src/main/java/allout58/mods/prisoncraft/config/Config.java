@@ -15,6 +15,7 @@ public class Config
     public static int configWand;
     public static int banhammer;
     public static int oliveBranch;
+    public static int jailLink;
     // Config options
     public static boolean changeGameMode;
     public static boolean takeInventory;
@@ -42,6 +43,7 @@ public class Config
         configWand = config.getItem("configWand", startItem++).getInt();
         banhammer = config.getItem("banhammer", startItem++).getInt();
         oliveBranch = config.getItem("oliveBranch", startItem++).getInt();
+        jailLink = config.getItem("jailLink", startItem++).getInt();
 
         changeGameMode = config.get("JailOptions", "ChangePlayerGameMode", true).getBoolean(true);
         takeInventory = config.get("JailOptions", "TakePlayerInventory", true).getBoolean(true);

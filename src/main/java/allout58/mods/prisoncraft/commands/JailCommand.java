@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import allout58.mods.prisoncraft.PrisonCraftWorldSave;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.jail.JailMan;
+import allout58.mods.prisoncraft.jail.PrisonCraftWorldSave;
 import allout58.mods.prisoncraft.permissions.JailPermissions;
 import allout58.mods.prisoncraft.permissions.PermissionLevel;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
@@ -44,7 +44,7 @@ public class JailCommand implements ICommand
     @Override
     public String getCommandUsage(ICommandSender icommandsender)
     {
-        return "/jail <playername> [time]";
+        return "/jail <playername> <jailname> [time]";
     }
 
     @Override
@@ -56,26 +56,26 @@ public class JailCommand implements ICommand
     @Override
     public void processCommand(ICommandSender icommandsender, String[] astring)
     {
-        if (astring.length < 1 || astring.length > 2)
+        if (astring.length < 1 || astring.length > 3)
         {
-            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.invalidArgument"));
+            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()).addKey("string.invalidArgument"));
         }
         else
         {
-            if (astring.length == 1)
-            {
-                JailMan.getInstance().TryJailPlayer(astring[0], icommandsender, -1);
-            }
             if (astring.length == 2)
+            {
+                JailMan.getInstance().TryJailPlayer(astring[0], icommandsender, astring[1], -1);
+            }
+            if (astring.length == 3)
             {
                 try
                 {
-                    double t = Double.parseDouble(astring[1]);
-                    JailMan.getInstance().TryJailPlayer(astring[0], icommandsender, t);
+                    double t = Double.parseDouble(astring[2]);
+                    JailMan.getInstance().TryJailPlayer(astring[0], icommandsender, astring[1], t);
                 }
                 catch (NumberFormatException e)
                 {
-                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString() + EnumChatFormatting.ITALIC.toString()).addKey("string.nan"));
+                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()).addKey("string.nan"));
                 }
             }
         }
@@ -91,9 +91,16 @@ public class JailCommand implements ICommand
     public List addTabCompletionOptions(ICommandSender icommandsender, String[] astring)
     {
         final List<String> MATCHES = new LinkedList<String>();
-        final String ARG_LC = astring[0].toLowerCase();
-        for (String un : MinecraftServer.getServer().getAllUsernames())
-            if (un.toLowerCase().startsWith(ARG_LC)) MATCHES.add(un);
+        final String ARG_LC = astring[astring.length - 1].toLowerCase();
+        if (astring.length == 1)
+        {
+            for (String un : MinecraftServer.getServer().getAllUsernames())
+                if (un.toLowerCase().startsWith(ARG_LC)) MATCHES.add(un);
+        }
+        if (astring.length == 2)
+        {
+
+        }
         return MATCHES.isEmpty() ? null : MATCHES;
     }
 
