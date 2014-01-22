@@ -1,5 +1,6 @@
 package allout58.mods.prisoncraft.blocks;
 
+import allout58.libs.LayedTextureBlock.block.BlockLayeredTexture;
 import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.constants.TextureConstants;
@@ -27,7 +28,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 
-public class BlockPrisonManager extends Block implements ITileEntityProvider
+public class BlockPrisonManager extends BlockLayeredTexture implements ITileEntityProvider
 {
     public Icon top, bottom, side, side_nolink, side_uninit;
 
@@ -52,39 +53,38 @@ public class BlockPrisonManager extends Block implements ITileEntityProvider
 
     @Override
     @SideOnly(Side.CLIENT)
-    // public Icon getBlockTextureByPass(IBlockAccess world, int x, int y, int
-    // z, int side, int pass)
-    public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
+    public Icon getBlockTextureByPass(IBlockAccess world, int x, int y, int z, int side, int pass)
+    // public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int
+    // side)
     {
         int meta = world.getBlockMetadata(x, y, z);
-        // if (pass == 0)
-        // {
-        if (side == ForgeDirection.DOWN.ordinal()) return this.bottom;
-        if (side == ForgeDirection.UP.ordinal()) return this.top;
-        // return this.side;
-        // }
-        // else if (pass == 1)
-        // {
-        // if(side==ForgeDirection.DOWN.ordinal()||side==ForgeDirection.UP.ordinal())return
-        // this.blank;
-        if (meta == 0)
+        if (pass == 0)
         {
-            return this.side_uninit;
+            if (side == ForgeDirection.DOWN.ordinal()) return this.bottom;
+            if (side == ForgeDirection.UP.ordinal()) return this.top;
+            return this.side;
         }
-        if (meta == 1)
+        else if (pass == 1)
         {
-            return this.side_nolink;
+            if (side == ForgeDirection.DOWN.ordinal() || side == ForgeDirection.UP.ordinal()) return this.blank;
+            if (meta == 0)
+            {
+                return this.side_uninit;
+            }
+            if (meta == 1)
+            {
+                return this.side_nolink;
+            }
+            else
+            {
+                // return this.side;
+                return this.blank;
+            }
         }
         else
         {
-            return this.side;
-            // return this.blank;
+            return null;
         }
-        // }
-        // else
-        // {
-        // return null;
-        // }
 
     }
 

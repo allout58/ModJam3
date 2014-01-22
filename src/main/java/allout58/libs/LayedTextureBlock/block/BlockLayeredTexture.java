@@ -1,14 +1,13 @@
-package allout58.mods.prisoncraft.blocks;
+package allout58.libs.LayedTextureBlock.block;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import allout58.mods.prisoncraft.client.ClientProxy;
-import allout58.mods.prisoncraft.constants.TextureConstants;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
+import allout58.libs.LayedTextureBlock.client.ClientProxy;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class BlockLayeredTexture extends Block
 {
@@ -48,17 +47,18 @@ public abstract class BlockLayeredTexture extends Block
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister ir)
     {
-        this.blank=ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":blank");
+        this.blank=ir.registerIcon("LayeredTextureBlockLib:blank");
     }
     
     @Override
     public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
     {
-        return this.getBlockTextureByPass(world, x, y, z, side,0);
+        return this.getBlockTextureByPass(world, x, y, z, side,ClientProxy.renderPass);
     }
     
     /**
      * Gets the texture for a side for a render pass
+     * Override in subclasses to actually 
      * @param world
      * @param x
      * @param y
