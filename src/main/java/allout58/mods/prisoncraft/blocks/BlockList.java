@@ -12,6 +12,7 @@ public class BlockList
     public static Block prisonUnbreakGlass;
     public static Block prisonUnbreakPaneGlass;
     public static Block prisonUnbreakPaneIron;
+    public static Block prisonJailView;
 
     public static void init()
     {
@@ -20,11 +21,13 @@ public class BlockList
         prisonUnbreakGlass = new BlockPrisonUnbreakableGlass(Config.prisonUnbreakGlass, Material.glass);
         prisonUnbreakPaneGlass = new BlockPrisonUnbreakablePane(Config.prisonUnbreakPaneGlass, "glass", "glass_pane_top", Material.rock);
         prisonUnbreakPaneIron = new BlockPrisonUnbreakablePane(Config.prisonUnbreakPaneIron, "iron_bars", "iron_bars", Material.rock);
+        prisonJailView=new BlockJailView(Config.prisonJailView, Material.iron);
 
         GameRegistry.registerBlock(prisonMan, "prisonMan");
         GameRegistry.registerBlock(prisonUnbreak, "prisonUnbreak");
         GameRegistry.registerBlock(prisonUnbreakGlass, "prisonUnbreakGlass");
         GameRegistry.registerBlock(prisonUnbreakPaneGlass, "prisonUnbreakPaneGlass");
-        GameRegistry.registerBlock(prisonUnbreakPaneIron, "prisonUnbreakPanIron");
+        GameRegistry.registerBlock(prisonUnbreakPaneIron, "prisonUnbreakPaneIron");
+        GameRegistry.registerBlock(prisonJailView, "prisonJailView");
     }
 }

@@ -17,6 +17,7 @@ import allout58.mods.prisoncraft.commands.PrisonCraftCommand;
 import allout58.mods.prisoncraft.commands.UnJailCommand;
 import allout58.mods.prisoncraft.config.Config;
 import allout58.mods.prisoncraft.config.ConfigChangableIDs;
+import allout58.mods.prisoncraft.config.ConfigServer;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.handler.ConfigToolHighlightHandler;
 import allout58.mods.prisoncraft.items.ItemList;
@@ -86,7 +87,7 @@ public class PrisonCraft
         SaveHandler saveHandler = (SaveHandler) event.getServer().worldServerForDimension(0).getSaveHandler();
         File configFile = new File(saveHandler.getWorldDirectory().getAbsolutePath() + "/PCUnbreakableIDs.txt");
         ConfigChangableIDs.getInstance().load(configFile);
-        if (Config.logJailing)
+        if (ConfigServer.logJailing)
         {
             File jailRecordFile = new File(saveHandler.getWorldDirectory().getAbsolutePath() + "/JailingRecord.csv");
             JailMan.getInstance().initializeRecorder(jailRecordFile);

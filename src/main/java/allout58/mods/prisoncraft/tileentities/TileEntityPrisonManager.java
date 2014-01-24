@@ -2,28 +2,10 @@ package allout58.mods.prisoncraft.tileentities;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
-
-import cpw.mods.fml.common.network.PacketDispatcher;
-
-import allout58.mods.prisoncraft.PrisonCraft;
-import allout58.mods.prisoncraft.blocks.BlockList;
-import allout58.mods.prisoncraft.commands.JailCommand;
-import allout58.mods.prisoncraft.config.Config;
-import allout58.mods.prisoncraft.config.ConfigChangableIDs;
-import allout58.mods.prisoncraft.constants.ModConstants;
-import allout58.mods.prisoncraft.jail.JailManRef;
-import allout58.mods.prisoncraft.jail.PrisonCraftWorldSave;
-import allout58.mods.prisoncraft.permissions.JailPermissions;
-import allout58.mods.prisoncraft.permissions.PermissionLevel;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFurnace;
-import net.minecraft.block.BlockGlass;
-import net.minecraft.command.CommandBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -33,13 +15,23 @@ import net.minecraft.network.packet.Packet130UpdateSign;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.EnumGameType;
+import allout58.mods.prisoncraft.PrisonCraft;
+import allout58.mods.prisoncraft.blocks.BlockList;
+import allout58.mods.prisoncraft.config.Config;
+import allout58.mods.prisoncraft.config.ConfigChangableIDs;
+import allout58.mods.prisoncraft.config.ConfigServer;
+import allout58.mods.prisoncraft.constants.ModConstants;
+import allout58.mods.prisoncraft.jail.JailManRef;
+import allout58.mods.prisoncraft.jail.PrisonCraftWorldSave;
+import allout58.mods.prisoncraft.permissions.JailPermissions;
+import allout58.mods.prisoncraft.permissions.PermissionLevel;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class TileEntityPrisonManager extends TileEntity// implements IInventory
 {
@@ -59,6 +51,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
     public int tpCoordOut[] = new int[3];
     public String playerName;
     public String jailname;
+    public String reason;
 
     private List signs = new ArrayList();
 
@@ -236,6 +229,11 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
         }
     }
 
+    public void setReason(String reason)
+    {
+        this.reason = reason;
+    }
+
     private boolean isValidID(int id)
     {
         for (int i = 0; i < ConfigChangableIDs.getInstance().getIDs().length; i++)
@@ -265,7 +263,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                 secsLeftJailTime = (int) (time * 60); // time in min.->secsLeft
                                                       // in
                                                       // sec.
-                if (Config.changeGameMode)
+                if (ConfigServer.changeGameMode)
                 {
                     if (player instanceof EntityPlayerMP)
                     {
@@ -288,7 +286,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                     PrisonCraft.logger.severe("Gamemode not set. Player obj not of type EntityPlayerMP.");
                 }
                 player.setPositionAndUpdate(tpCoordIn[0] + .5, tpCoordIn[1], tpCoordIn[2] + .5);
-                if (Config.takeInventory)
+                if (ConfigServer.takeInventory)
                 {
                     // Take their inventory
                     for (int i = START_MAIN; i < START_HOTBAR; i++)
@@ -305,11 +303,11 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                     }
                     player.inventory.clearInventory(-1, -1);
                 }
-                if (Config.noMovement)
+                if (ConfigServer.noMovement)
                 {
                     player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 300, false));
                 }
-                if (Config.removeJailPerms)
+                if (ConfigServer.removeJailPerms)
                 {
                     jailedPlayerPrevJailPerms = JailPermissions.getInstance().getPlayerPermissionLevel(player);
                     JailPermissions.getInstance().removeUserPlayer(player);
@@ -339,7 +337,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
         {
             isDirty = true;
 
-            if (Config.takeInventory)
+            if (ConfigServer.takeInventory)
             {
                 // give their inventory
                 for (int i = START_MAIN; i < START_HOTBAR; i++)
@@ -356,12 +354,12 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                 }
                 jailedPlayer.inventory.onInventoryChanged();
             }
-            if (Config.noMovement)
+            if (ConfigServer.noMovement)
             {
                 jailedPlayer.removePotionEffect(Potion.moveSlowdown.id);
             }
             jailedPlayer.setPositionAndUpdate(tpCoordOut[0] + .5, tpCoordOut[1], tpCoordOut[2] + .5);
-            if (Config.changeGameMode)
+            if (ConfigServer.changeGameMode)
             {
                 if (jailedPlayer instanceof EntityPlayerMP)
                 {
@@ -372,7 +370,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                     PrisonCraft.logger.severe("Game mode could not be reverted. Jailed Player obj in not of type EntityPlayerMP.");
                 }
             }
-            if (Config.removeJailPerms)
+            if (ConfigServer.removeJailPerms)
             {
                 if (jailedPlayerPrevJailPerms != PermissionLevel.Default)
                 {
@@ -416,11 +414,11 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
             }
             if (jailedPlayer != null)
             {
-                if (Config.noMovement && worldObj.getTotalWorldTime() % 50 == 0)
+                if (ConfigServer.noMovement && worldObj.getTotalWorldTime() % 50 == 0)
                 {
-                    jailedPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 300, false));
+                    jailedPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 120, 300, false));
                 }
-                if (Config.noJumping && worldObj.getTotalWorldTime() % 20 == 0)
+                if (ConfigServer.noJumping && worldObj.getTotalWorldTime() % 20 == 0)
                 {
                     jailedPlayer.setPositionAndUpdate(jailedPlayer.posX, tpCoordIn[1], jailedPlayer.posZ);
                 }
@@ -513,6 +511,10 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
         {
             jailname = tags.getString("jailName");
         }
+        if (tags.hasKey("reason"))
+        {
+            reason = tags.getString("reason");
+        }
         secsLeftJailTime = tags.getInteger("secLeftJailTime");
         NBTTagCompound signTags = tags.getCompoundTag("SignTags");
         int numSize = tags.getInteger("numSigns");
@@ -568,6 +570,10 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
         if (jailname != null && !jailname.isEmpty())
         {
             tags.setString("jailName", jailname);
+        }
+        if (reason != null && !reason.isEmpty())
+        {
+            tags.setString("reason", reason);
         }
         if (hasJailedPlayer)
         {

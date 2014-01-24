@@ -36,3 +36,35 @@ processResources
         exclude 'mcmod.info'
     }
 }
+// add some stuff to the version
+version = "${minecraft.version}-$version"
+
+// change the name of my obfuscated jar
+jar {
+        appendix = 'universal'
+}
+
+// add a source jar
+task sourceJar(type: Jar) {
+        from sourceSets.main.allSource
+        appendix = 'src'
+}
+
+// add a javadoc jar
+task javadocJar(type: Jar, dependsOn: javadoc) {
+        appendix = 'javadoc'
+        from 'build/docs/javadoc'
+}
+
+// because the normal output has been made to be obfuscated
+task deobfJar(type: Jar) {
+        from sourceSets.main.output
+        appendix = 'deobf'
+}
+
+
+artifacts {
+        archives sourceJar
+        archives deobfJar
+        archives javadocJar
+}

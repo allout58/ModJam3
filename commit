@@ -1,3 +1,6 @@
-Layered Texture Blocks!
+Reason it out
 
-Soon to be moved to its own repo and project...
+Added beginnings of reason for jailing.
+Added beginnings of jail view block
+Updated build.gradle for deobf and other jars.
+Separated configs (server/client)

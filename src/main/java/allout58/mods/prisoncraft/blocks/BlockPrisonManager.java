@@ -1,6 +1,6 @@
 package allout58.mods.prisoncraft.blocks;
 
-import allout58.libs.LayedTextureBlock.block.BlockLayeredTexture;
+import allout58.libs.LayeredTextureBlock.block.BlockLayeredTexture;
 import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.constants.TextureConstants;
@@ -53,18 +53,17 @@ public class BlockPrisonManager extends BlockLayeredTexture implements ITileEnti
 
     @Override
     @SideOnly(Side.CLIENT)
-    public Icon getBlockTextureByPass(IBlockAccess world, int x, int y, int z, int side, int pass)
-    // public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int
-    // side)
+//    public Icon getBlockTextureByPass(IBlockAccess world, int x, int y, int z, int side, int pass)
+     public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int     side)
     {
         int meta = world.getBlockMetadata(x, y, z);
-        if (pass == 0)
+        if (renderPass == 0)
         {
             if (side == ForgeDirection.DOWN.ordinal()) return this.bottom;
             if (side == ForgeDirection.UP.ordinal()) return this.top;
             return this.side;
         }
-        else if (pass == 1)
+        else if (renderPass == 1)
         {
             if (side == ForgeDirection.DOWN.ordinal() || side == ForgeDirection.UP.ordinal()) return this.blank;
             if (meta == 0)
@@ -92,7 +91,6 @@ public class BlockPrisonManager extends BlockLayeredTexture implements ITileEnti
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister ir)
     {
-        super.registerIcons(ir);
         this.side = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side");
         this.side_uninit = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side_uninit");
         this.side_nolink = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side_nolink");

@@ -3,22 +3,20 @@ package allout58.mods.prisoncraft.jail;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Timer;
-import java.util.logging.Logger;
+import java.util.List;
 
-import allout58.mods.prisoncraft.PrisonCraft;
-import allout58.mods.prisoncraft.config.Config;
-import allout58.mods.prisoncraft.constants.ModConstants;
-import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
+import allout58.mods.prisoncraft.PrisonCraft;
+import allout58.mods.prisoncraft.config.ConfigServer;
+import allout58.mods.prisoncraft.constants.ModConstants;
+import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
 
 public class JailMan
 {
@@ -36,6 +34,7 @@ public class JailMan
         return instance;
     }
 
+    //Recording
     public void initializeRecorder(File f)
     {
         logFile = f;
@@ -71,6 +70,7 @@ public class JailMan
         }
     }
 
+    //Jailing
     public boolean TryJailPlayer(EntityPlayer player, ICommandSender jailer, String jailName, double time)
     {
         PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(jailer.getEntityWorld());
@@ -121,7 +121,7 @@ public class JailMan
             }
             if (foundOpen)
             {
-                if (Config.logJailing)
+                if (ConfigServer.logJailing)
                 {
                     try
                     {
@@ -161,6 +161,7 @@ public class JailMan
         return TryJailPlayer(playerName, MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playerJailerName), jailName, time);
     }
 
+    //Unjailing
     public boolean TryUnjailPlayer(EntityPlayer player, ICommandSender jailer)
     {
         PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(jailer.getEntityWorld());
@@ -214,5 +215,27 @@ public class JailMan
     public boolean TryUnjailPlayer(String playerName, String jailerName)
     {
         return TryUnjailPlayer(playerName, MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(jailerName));
+    }
+
+    public boolean TrySetReason(String player, ICommandSender jailer, String reason)
+    {
+        List<JailManRef> refs=PrisonCraftWorldSave.forWorld(jailer.getEntityWorld()).getTesList();
+        for(int i=0;i<refs.size();i++)
+        {
+            int[] coord=refs.get(i).coord;
+            TileEntity te=jailer.getEntityWorld().getBlockTileEntity(coord[0], coord[1], coord[2]);
+            if(te instanceof TileEntityPrisonManager)
+            {
+                if(((TileEntityPrisonManager) te).hasJailedPlayer)
+                {
+                    if(((TileEntityPrisonManager) te).playerName.equalsIgnoreCase(player))
+                    {
+                        ((TileEntityPrisonManager) te).setReason(reason);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }
