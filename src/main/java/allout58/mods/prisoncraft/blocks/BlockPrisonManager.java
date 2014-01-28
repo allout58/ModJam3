@@ -53,8 +53,7 @@ public class BlockPrisonManager extends BlockLayeredTexture implements ITileEnti
 
     @Override
     @SideOnly(Side.CLIENT)
-//    public Icon getBlockTextureByPass(IBlockAccess world, int x, int y, int z, int side, int pass)
-     public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int     side)
+    public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
     {
         int meta = world.getBlockMetadata(x, y, z);
         if (renderPass == 0)
@@ -76,8 +75,8 @@ public class BlockPrisonManager extends BlockLayeredTexture implements ITileEnti
             }
             else
             {
-                // return this.side;
-                return this.blank;
+                 return this.blank;
+//                return null;
             }
         }
         else
@@ -91,6 +90,7 @@ public class BlockPrisonManager extends BlockLayeredTexture implements ITileEnti
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister ir)
     {
+        //super.registerIcons(ir);
         this.side = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side");
         this.side_uninit = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side_uninit");
         this.side_nolink = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side_nolink");

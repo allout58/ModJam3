@@ -7,10 +7,10 @@ import codechicken.nei.api.IConfigureNEI;
 
 import com.google.common.base.Throwables;
 
-public class PrisonCraftNEIConfig implements IConfigureNEI
+public class PrisonCraftNEIConfig// implements IConfigureNEI
 {
 
-    @Override
+//    @Override
     public void loadConfig()
     {
         if (Config.prisonUnbreak > 0)
@@ -30,14 +30,14 @@ public class PrisonCraftNEIConfig implements IConfigureNEI
         }
     }
 
-    @Override
+//    @Override
     public String getName()
     {
         // TODO Auto-generated method stub
         return "PrisonCraft";
     }
 
-    @Override
+//    @Override
     public String getVersion()
     {
         return "0.0.1";
