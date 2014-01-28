@@ -50,6 +50,8 @@ string.invalidperms.tool=Not enough permissions to use this tool.
 string.mustbeplayer=You must be a player to run this command.
 string.jailedplayer=Jailed Player:
 string.jailnotfound=No jails of that name found
+string.setsreason= sets jailing reason for 
+string.to= to 
 
 #Config wand strings
 string.configwand.nextpt=Now click the other corner of the cell.

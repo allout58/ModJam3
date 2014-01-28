@@ -231,6 +231,11 @@ public class JailMan
                     if(((TileEntityPrisonManager) te).playerName.equalsIgnoreCase(player))
                     {
                         ((TileEntityPrisonManager) te).setReason(reason);
+                        jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(jailer.getCommandSenderName()).addKey("string.setsreason").addText(player).addKey("to").addText(reason));
+                        if (!jailer.getCommandSenderName().equalsIgnoreCase(MinecraftServer.getServer().getCommandSenderName()))
+                        {
+                            MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(jailer.getCommandSenderName()).addKey("string.setsreason").addText(player).addKey("to").addText(reason));
+                        }
                         return true;
                     }
                 }

@@ -2,6 +2,11 @@ package allout58.mods.prisoncraft.tileentities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
+
+import org.lwjgl.util.vector.Vector3f;
+
+import paulscode.sound.Vector3D;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -260,9 +265,8 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                 isDirty = true;
                 jailedPlayer = player;
                 playerName = player.username;
-                secsLeftJailTime = (int) (time * 60); // time in min.->secsLeft
-                                                      // in
-                                                      // sec.
+                // time in min.->secsLeft in sec.
+                secsLeftJailTime = (int) (time * 60);
                 if (ConfigServer.changeGameMode)
                 {
                     if (player instanceof EntityPlayerMP)
@@ -424,6 +428,19 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                 }
                 if (!worldObj.isRemote)
                 {
+                    // TP back in
+                    if (worldObj.getTotalWorldTime() % 200 == 0)
+                    {
+                        Vector3f vPlayer = new Vector3f((float) jailedPlayer.posX, (float) jailedPlayer.posY, (float) jailedPlayer.posZ);
+                        Vector3f vJail = new Vector3f(tpCoordIn[0], tpCoordIn[1], tpCoordIn[2]);
+                        Vector3f vDiff = Vector3f.sub(vPlayer, vJail, null);
+                        if (vDiff.length() > 30 || vDiff.length() < -30)
+                        {
+                            jailedPlayer.setPositionAndUpdate(tpCoordIn[0] + .5, tpCoordIn[1], tpCoordIn[2] + .5);
+                        }
+                    }
+
+                    // Auto-unjail
                     if (secsLeftJailTime == -1)
                     {
                         this.unjailPlayer();
