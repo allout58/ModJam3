@@ -21,11 +21,6 @@ public class CommonProxy
     {
     }
 
-    public void loadConfig(FMLPreInitializationEvent e)
-    {
-        ConfigServer.init(new Configuration(new File(e.getModConfigurationDirectory(),ModConstants.MODID+"-server.cfg")));
-    }
-
     // From MachineMuse's PowerSuits mod
     public static boolean shouldAddAdditionalInfo()
     {

@@ -10,7 +10,7 @@ public class ConfigServer
     public static boolean noMovement;
     public static boolean noJumping;
     public static boolean removeJailPerms;
-    // Loggin options
+    // Logging options
     public static boolean logJailing;
 
     public static void init(Configuration config)

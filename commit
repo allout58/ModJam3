@@ -1,5 +1,3 @@
-Tiny updates-untested
+Server config actually initialized
 
-TP player back in if more than 30m away.
-Implement some of reason command.
-Reintegrated LayeredTextureLib (for now).
+Bugs: not saving again.

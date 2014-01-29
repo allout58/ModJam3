@@ -2,11 +2,6 @@ package allout58.mods.prisoncraft.tileentities;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
-
-import org.lwjgl.util.vector.Vector3f;
-
-import paulscode.sound.Vector3D;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,9 +21,11 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.EnumGameType;
+
+import org.lwjgl.util.vector.Vector3f;
+
 import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.blocks.BlockList;
-import allout58.mods.prisoncraft.config.Config;
 import allout58.mods.prisoncraft.config.ConfigChangableIDs;
 import allout58.mods.prisoncraft.config.ConfigServer;
 import allout58.mods.prisoncraft.constants.ModConstants;
@@ -225,7 +222,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
             JailManRef ref = new JailManRef();
             ref.coord = coord;
             ref.jailName = jailname;
-            PrisonCraftWorldSave.forWorld(worldObj).getTesList().add(ref);
+//            PrisonCraftWorldSave.forWorld(worldObj).getTesList().add(ref);
             return true;
         }
         else
@@ -389,7 +386,9 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                 if (te instanceof TileEntitySign)
                 {
                     ((TileEntitySign) te).signText[0] = "";
+                    ((TileEntitySign) te).signText[1] = "";
                     ((TileEntitySign) te).signText[2] = "";
+                    ((TileEntitySign) te).signText[3] = "";
                     PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 100, this.worldObj.provider.dimensionId, new Packet130UpdateSign(te.xCoord, te.yCoord, te.zCoord, ((TileEntitySign) te).signText));
                 }
             }
@@ -434,7 +433,8 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                         Vector3f vPlayer = new Vector3f((float) jailedPlayer.posX, (float) jailedPlayer.posY, (float) jailedPlayer.posZ);
                         Vector3f vJail = new Vector3f(tpCoordIn[0], tpCoordIn[1], tpCoordIn[2]);
                         Vector3f vDiff = Vector3f.sub(vPlayer, vJail, null);
-                        if (vDiff.length() > 30 || vDiff.length() < -30)
+                        float len=vDiff.length();
+                        if (len > 30 || len < -30)
                         {
                             jailedPlayer.setPositionAndUpdate(tpCoordIn[0] + .5, tpCoordIn[1], tpCoordIn[2] + .5);
                         }
@@ -459,6 +459,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                                 PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 100, this.worldObj.provider.dimensionId, new Packet130UpdateSign(te.xCoord, te.yCoord, te.zCoord, ((TileEntitySign) te).signText));
                             }
                         }
+                        isDirty=true;
                     }
                 }
             }
@@ -561,6 +562,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
     @Override
     public void writeToNBT(NBTTagCompound tags)
     {
+        System.out.println("Writing jail to NBT");
         super.writeToNBT(tags);
         tags.setBoolean("HasJailedPlayer", hasJailedPlayer);
         tags.setInteger("jailDim", dimension);
@@ -627,47 +629,4 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
         readFromNBT(packet.data);
         worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
     }
-
-    /* Inventory */
-    /*
-     * @Override public int getSizeInventory() { return playerInventory.length;
-     * }
-     * 
-     * @Override public ItemStack getStackInSlot(int i) { return
-     * playerInventory[i]; }
-     * 
-     * @Override public ItemStack decrStackSize(int slot, int amount) {
-     * ItemStack itemStack = getStackInSlot(slot); if (itemStack != null) { if
-     * (itemStack.stackSize <= amount) { setInventorySlotContents(slot, null); }
-     * else { itemStack = itemStack.splitStack(amount); if (itemStack.stackSize
-     * == 0) { setInventorySlotContents(slot, null); } } }
-     * 
-     * return itemStack; }
-     * 
-     * @Override public ItemStack getStackInSlotOnClosing(int slot) { ItemStack
-     * itemStack = getStackInSlot(slot); if (itemStack != null) {
-     * setInventorySlotContents(slot, null); } return itemStack; }
-     * 
-     * @Override public void setInventorySlotContents(int slot, ItemStack
-     * itemStack) { playerInventory[slot] = itemStack; if (itemStack != null &&
-     * itemStack.stackSize > getInventoryStackLimit()) { itemStack.stackSize =
-     * getInventoryStackLimit(); } }
-     * 
-     * @Override public String getInvName() { return
-     * "container.PlayerHeldInventory"; }
-     * 
-     * @Override public boolean isInvNameLocalized() { return false; }
-     * 
-     * @Override public int getInventoryStackLimit() { return 1; }
-     * 
-     * @Override public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-     * return true; }
-     * 
-     * @Override public void openChest() { }
-     * 
-     * @Override public void closeChest() { }
-     * 
-     * @Override public boolean isItemValidForSlot(int slot, ItemStack
-     * itemstack) { return true; }
-     */
 }

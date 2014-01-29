@@ -15,13 +15,7 @@ public class ClientProxy extends CommonProxy
     {
 
     }
-    
-    @Override
-    public void loadConfig(FMLPreInitializationEvent e)
-    {
-    }
-    
-
+     
     // NEI Compat
     public void doNEICheck(int id)
     {
