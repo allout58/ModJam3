@@ -26,6 +26,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.blocks.BlockList;
+import allout58.mods.prisoncraft.config.Config;
 import allout58.mods.prisoncraft.config.ConfigChangableIDs;
 import allout58.mods.prisoncraft.config.ConfigServer;
 import allout58.mods.prisoncraft.constants.ModConstants;
@@ -264,7 +265,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                 playerName = player.username;
                 // time in min.->secsLeft in sec.
                 secsLeftJailTime = (int) (time * 60);
-                if (ConfigServer.changeGameMode)
+                if (Config.changeGameMode)
                 {
                     if (player instanceof EntityPlayerMP)
                     {
@@ -287,7 +288,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                     PrisonCraft.logger.severe("Gamemode not set. Player obj not of type EntityPlayerMP.");
                 }
                 player.setPositionAndUpdate(tpCoordIn[0] + .5, tpCoordIn[1], tpCoordIn[2] + .5);
-                if (ConfigServer.takeInventory)
+                if (Config.takeInventory)
                 {
                     // Take their inventory
                     for (int i = START_MAIN; i < START_HOTBAR; i++)
@@ -304,11 +305,11 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                     }
                     player.inventory.clearInventory(-1, -1);
                 }
-                if (ConfigServer.noMovement)
+                if (Config.noMovement)
                 {
                     player.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 300, false));
                 }
-                if (ConfigServer.removeJailPerms)
+                if (Config.removeJailPerms)
                 {
                     jailedPlayerPrevJailPerms = JailPermissions.getInstance().getPlayerPermissionLevel(player);
                     JailPermissions.getInstance().removeUserPlayer(player);
@@ -338,7 +339,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
         {
             isDirty = true;
 
-            if (ConfigServer.takeInventory)
+            if (Config.takeInventory)
             {
                 // give their inventory
                 for (int i = START_MAIN; i < START_HOTBAR; i++)
@@ -355,12 +356,12 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                 }
                 jailedPlayer.inventory.onInventoryChanged();
             }
-            if (ConfigServer.noMovement)
+            if (Config.noMovement)
             {
                 jailedPlayer.removePotionEffect(Potion.moveSlowdown.id);
             }
             jailedPlayer.setPositionAndUpdate(tpCoordOut[0] + .5, tpCoordOut[1], tpCoordOut[2] + .5);
-            if (ConfigServer.changeGameMode)
+            if (Config.changeGameMode)
             {
                 if (jailedPlayer instanceof EntityPlayerMP)
                 {
@@ -371,7 +372,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                     PrisonCraft.logger.severe("Game mode could not be reverted. Jailed Player obj in not of type EntityPlayerMP.");
                 }
             }
-            if (ConfigServer.removeJailPerms)
+            if (Config.removeJailPerms)
             {
                 if (jailedPlayerPrevJailPerms != PermissionLevel.Default)
                 {
@@ -417,11 +418,11 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
             }
             if (jailedPlayer != null)
             {
-                if (ConfigServer.noMovement && worldObj.getTotalWorldTime() % 50 == 0)
+                if (Config.noMovement && worldObj.getTotalWorldTime() % 50 == 0)
                 {
                     jailedPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 120, 300, false));
                 }
-                if (ConfigServer.noJumping && worldObj.getTotalWorldTime() % 20 == 0)
+                if (Config.noJumping && worldObj.getTotalWorldTime() % 20 == 0)
                 {
                     jailedPlayer.setPositionAndUpdate(jailedPlayer.posX, tpCoordIn[1], jailedPlayer.posZ);
                 }

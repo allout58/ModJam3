@@ -1,3 +1,3 @@
-Server config actually initialized
+Fixed the not saving bug.
 
-Bugs: not saving again.
+Apparently having ConfigServer screws things up...

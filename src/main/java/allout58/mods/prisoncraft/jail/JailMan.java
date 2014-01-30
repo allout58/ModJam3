@@ -14,7 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 import allout58.mods.prisoncraft.PrisonCraft;
-import allout58.mods.prisoncraft.config.ConfigServer;
+import allout58.mods.prisoncraft.config.Config;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
 
@@ -121,7 +121,7 @@ public class JailMan
             }
             if (foundOpen)
             {
-                if (ConfigServer.logJailing)
+                if (Config.logJailing)
                 {
                     try
                     {

@@ -61,7 +61,7 @@ public class PrisonCraft
 
     public static Logger logger;
     
-    private File configBase;
+//    private File configBase;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -71,7 +71,7 @@ public class PrisonCraft
         logger.setParent(FMLLog.getLogger());
 
         Config.init(new Configuration(event.getSuggestedConfigurationFile()));
-        configBase=event.getModConfigurationDirectory();
+//        configBase=event.getModConfigurationDirectory();
         
         MinecraftForge.EVENT_BUS.register(new ConfigToolHighlightHandler());
 
@@ -93,9 +93,9 @@ public class PrisonCraft
         File configFile = new File(saveHandler.getWorldDirectory().getAbsolutePath() + "/PCUnbreakableIDs.txt");
         ConfigChangableIDs.getInstance().load(configFile);
         
-        ConfigServer.init(new Configuration(new File(configBase,ModConstants.MODID+"-server.cfg")));
+//        ConfigServer.init(new Configuration(new File(configBase,ModConstants.MODID+"-server.cfg")));
         
-        if (ConfigServer.logJailing)
+        if (Config.logJailing)
         {
             File jailRecordFile = new File(saveHandler.getWorldDirectory().getAbsolutePath() + "/JailingRecord.csv");
             JailMan.getInstance().initializeRecorder(jailRecordFile);
