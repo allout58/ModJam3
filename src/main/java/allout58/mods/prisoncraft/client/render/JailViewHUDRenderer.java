@@ -7,56 +7,67 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 
 public class JailViewHUDRenderer extends TileEntitySpecialRenderer
 {
 
-    public static double WIDHT = 3;
-    public static double HEIGHT = 4;
+    public static double WIDTH = 3;
+    public static double HEIGHT = 3;
 
     @Override
     public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float tick)
     {
         Tessellator tess = Tessellator.instance;
 
-//        GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-
         GL11.glPushMatrix();
-        
+
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_LIGHTING);
 
-//        GL11.glEnable(GL11.GL_BLEND);
-//        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-//        GL11.glDepthMask(false);
-        GL11.glTranslated(x, y, z);
+        GL11.glTranslated(x + 0.5, y + 0.5, z + 0.5);
 
-//        EntityLivingBase player = Minecraft.getMinecraft().renderViewEntity;
-//        double px = player.lastTickPosX + (player.posX - player.lastTickPosX) * tick;
-//        double py = player.lastTickPosY + (player.posY - player.lastTickPosY) * tick;
-//        double pz = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * tick;
-//
-        double offset = 0.05;
-        double delta = 1 + 2 * offset;
+        EntityLivingBase player = Minecraft.getMinecraft().renderViewEntity;
 
-        double dx = 0-offset;//tileentity.xCoord - px - offset;
-        double dy = 1;//tileentity.yCoord - py - offset+1;
-        double dz = 0-offset;//tileentity.zCoord - pz - offset;
+        Vector3f vPlayer = new Vector3f(((float) player.posX), ((float) player.posY), ((float) player.posZ));
+        Vector3f vTE = new Vector3f(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord);
+
+        Vector3f vRes = Vector3f.sub(vPlayer, vTE, null);
+
+        double ro = Math.atan2(vRes.x, vRes.z) * 180 / Math.PI + 180;
+
+        GL11.glRotated(ro, 0, 1, 0);
+
+        // double px = player.lastTickPosX + (player.posX - player.lastTickPosX)
+        // * tick;
+        // double py = player.lastTickPosY + (player.posY - player.lastTickPosY)
+        // * tick;
+        // double pz = player.lastTickPosZ + (player.posZ - player.lastTickPosZ)
+        // * tick;
+
+        // double offset = 0.05;
+        // double delta = 1 + 2 * offset;
+
+        double dx = -0.5 * WIDTH;// tileentity.xCoord - px - offset;
+        double dy = 0;// tileentity.yCoord - py - offset+1;
+        double dz = 0;// tileentity.zCoord - pz - offset;
 
         tess.startDrawingQuads();
         tess.setColorOpaque(0, 0, 0);
         tess.addVertex(dx, dy, dz);
-        tess.addVertex(dx, dy + delta, dz);
-        tess.addVertex(dx + delta, dy + delta, dz);
-        tess.addVertex(dx + delta, dy, dz);
+        tess.addVertex(dx, dy + HEIGHT, dz);
+        tess.addVertex(dx + WIDTH, dy + HEIGHT, dz);
+        tess.addVertex(dx + WIDTH, dy, dz);
         tess.draw();
+        
+        
 
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_LIGHTING);
 
         GL11.glPopMatrix();
 
-//        GL11.glPopAttrib();
+        // GL11.glPopAttrib();
     }
 
 }
