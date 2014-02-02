@@ -34,7 +34,7 @@ public class JailMan
         return instance;
     }
 
-    //Recording
+    // Recording
     public void initializeRecorder(File f)
     {
         logFile = f;
@@ -70,7 +70,7 @@ public class JailMan
         }
     }
 
-    //Jailing
+    // Jailing
     public boolean TryJailPlayer(EntityPlayer player, ICommandSender jailer, String jailName, double time)
     {
         PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(jailer.getEntityWorld());
@@ -83,41 +83,48 @@ public class JailMan
         {
             boolean foundOpen = false;
             boolean foundJail = false;
-            for (int i = 0; i < ws.getTesList().size(); i++)
+            if (ws.jails.contains(jailName))
             {
-                JailManRef ref = ws.getTesList().get(i);
-                int coord[] = ref.coord;
-                TileEntity te = jailer.getEntityWorld().getBlockTileEntity(coord[0], coord[1], coord[2]);
-                if (te instanceof TileEntityPrisonManager)
+                for (int i = 0; i < ws.getTesList().size(); i++)
                 {
-                    if (ref.jailName.equalsIgnoreCase(jailName) || ref.jailName == "")
+                    JailManRef ref = ws.getTesList().get(i);
+                    int coord[] = ref.coord;
+                    TileEntity te = jailer.getEntityWorld().getBlockTileEntity(coord[0], coord[1], coord[2]);
+                    if (te instanceof TileEntityPrisonManager)
                     {
-                        foundJail = true;
-                        if (!((TileEntityPrisonManager) te).hasJailedPlayer)
+                        if (ref.jailName.equalsIgnoreCase(jailName) || ref.jailName == "")
                         {
-                            if (player != null)
+                            foundJail = true;
+                            if (!((TileEntityPrisonManager) te).hasJailedPlayer)
                             {
-
-                                if (((TileEntityPrisonManager) te).jailPlayer(player, time))
+                                if (player != null)
                                 {
-                                    foundOpen = true;
-                                    break;
+                                    if (((TileEntityPrisonManager) te).jailPlayer(player, time))
+                                    {
+                                        foundOpen = true;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.playeralreadyjailed"));
+                                        return false;
+                                    }
+
                                 }
                                 else
                                 {
-                                    jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.playeralreadyjailed"));
+                                    jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.noplayerfound"));
                                     return false;
                                 }
-
-                            }
-                            else
-                            {
-                                jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.noplayerfound"));
-                                return false;
                             }
                         }
                     }
                 }
+            }
+            if (!foundJail)
+            {
+                jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.jailnotfound"));
+                return false;
             }
             if (foundOpen)
             {
@@ -140,10 +147,6 @@ public class JailMan
                 return true;
             }
             else jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.noopenjails"));
-            if (!foundJail)
-            {
-                jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.jailnotfound"));
-            }
             return false;
         }
     }
@@ -161,7 +164,7 @@ public class JailMan
         return TryJailPlayer(playerName, MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playerJailerName), jailName, time);
     }
 
-    //Unjailing
+    // Unjailing
     public boolean TryUnjailPlayer(EntityPlayer player, ICommandSender jailer)
     {
         PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(jailer.getEntityWorld());
@@ -219,28 +222,34 @@ public class JailMan
 
     public boolean TrySetReason(String player, ICommandSender jailer, String reason)
     {
-        List<JailManRef> refs=PrisonCraftWorldSave.forWorld(jailer.getEntityWorld()).getTesList();
-        for(int i=0;i<refs.size();i++)
+        List<JailManRef> refs = PrisonCraftWorldSave.forWorld(jailer.getEntityWorld()).getTesList();
+        for (int i = 0; i < refs.size(); i++)
         {
-            int[] coord=refs.get(i).coord;
-            TileEntity te=jailer.getEntityWorld().getBlockTileEntity(coord[0], coord[1], coord[2]);
-            if(te instanceof TileEntityPrisonManager)
+            int[] coord = refs.get(i).coord;
+            TileEntity te = jailer.getEntityWorld().getBlockTileEntity(coord[0], coord[1], coord[2]);
+            if (te instanceof TileEntityPrisonManager)
             {
-                if(((TileEntityPrisonManager) te).hasJailedPlayer)
+                if (((TileEntityPrisonManager) te).hasJailedPlayer)
                 {
-                    if(((TileEntityPrisonManager) te).playerName.equalsIgnoreCase(player))
+                    if (((TileEntityPrisonManager) te).playerName.equalsIgnoreCase(player))
                     {
                         ((TileEntityPrisonManager) te).setReason(reason);
-                        jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(jailer.getCommandSenderName()).addKey("string.setsreason").addText(player).addKey("to").addText(reason));
+                        jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(jailer.getCommandSenderName()).addKey("string.setsreason").addText(player).addKey("string.to").addText('"'+reason+'"'));
                         if (!jailer.getCommandSenderName().equalsIgnoreCase(MinecraftServer.getServer().getCommandSenderName()))
                         {
-                            MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(jailer.getCommandSenderName()).addKey("string.setsreason").addText(player).addKey("to").addText(reason));
+                            MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(jailer.getCommandSenderName()).addKey("string.setsreason").addText(player).addKey("string.to").addText('"'+reason+'"'));
                         }
                         return true;
+                    }
+                    else
+                    {
+                        jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(EnumChatFormatting.RED.toString()).addKey("string.noplayerfound"));
+                        return false;
                     }
                 }
             }
         }
+        jailer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(EnumChatFormatting.RED.toString()).addKey("string.jailnotfound"));
         return false;
     }
 }

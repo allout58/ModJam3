@@ -3,7 +3,6 @@ package allout58.mods.prisoncraft.jail;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -16,8 +15,8 @@ public class PrisonCraftWorldSave extends WorldSavedData
 
     public static World worldObj;
 
-    private List<JailManRef> tesList = new ArrayList<JailManRef>(); // int[]
-                                                                    // only!
+    private List<JailManRef> tesList = new ArrayList<JailManRef>();
+    public List<String> jails = new ArrayList<String>();
 
     public PrisonCraftWorldSave()
     {
@@ -33,6 +32,14 @@ public class PrisonCraftWorldSave extends WorldSavedData
     {
         this.markDirty();
         return tesList;
+    }
+
+    public void addJailName(String name)
+    {
+        if (!jails.contains(name))
+        {
+            jails.add(name);
+        }
     }
 
     public static PrisonCraftWorldSave forWorld(World world)
@@ -64,6 +71,7 @@ public class PrisonCraftWorldSave extends WorldSavedData
                 if (t.hasKey("jailname"))
                 {
                     ref.jailName = t.getString("jailname");
+                    addJailName(ref.jailName);
                     tesList.add(ref);
                 }
             }

@@ -99,7 +99,8 @@ public class JailCommand implements ICommand
         }
         if (astring.length == 2)
         {
-//TODO: Jail names
+            for(String jn : PrisonCraftWorldSave.forWorld(icommandsender.getEntityWorld()).jails)
+                if(jn.toLowerCase().startsWith(ARG_LC)) MATCHES.add(jn);
         }
         return MATCHES.isEmpty() ? null : MATCHES;
     }

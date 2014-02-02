@@ -8,5 +8,6 @@ public class TileEntityList
     {
         GameRegistry.registerTileEntity(TileEntityPrisonUnbreakable.class, "prisonUnbreakable");
         GameRegistry.registerTileEntity(TileEntityPrisonManager.class, "prisonManager");
+        GameRegistry.registerTileEntity(TileEntityJailView.class, "jailView");
     }
 }

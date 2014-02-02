@@ -192,6 +192,11 @@ public class BlockPrisonManager extends BlockLayeredTexture implements ITileEnti
                 if (((TileEntityPrisonManager) te).hasJailedPlayer) chat.addText(((TileEntityPrisonManager) te).playerName);
                 else chat.addKey("string.noOne");
                 entityPlayer.sendChatToPlayer(chat);
+                
+                if(((TileEntityPrisonManager)te).hasJailedPlayer && ((TileEntityPrisonManager)te).reason!=null && !((TileEntityPrisonManager)te).reason.isEmpty())
+                {
+                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addKey("string.reason").addText(((TileEntityPrisonManager)te).reason));
+                }
             }
             return true;
         }

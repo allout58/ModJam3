@@ -223,7 +223,8 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
             JailManRef ref = new JailManRef();
             ref.coord = coord;
             ref.jailName = jailname;
-//            PrisonCraftWorldSave.forWorld(worldObj).getTesList().add(ref);
+            PrisonCraftWorldSave.forWorld(worldObj).getTesList().add(ref);
+            PrisonCraftWorldSave.forWorld(worldObj).addJailName(ref.jailName);
             return true;
         }
         else
@@ -397,6 +398,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
             hasJailedPlayer = false;
             jailedPlayer = null;
             playerName = "";
+            reason="";
             return true;
         }
         else return false;
@@ -511,7 +513,6 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
     }
 
     /* NBT */
-
     @Override
     public void readFromNBT(NBTTagCompound tags)
     {

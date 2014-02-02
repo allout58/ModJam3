@@ -61,12 +61,9 @@ public class ReasonCommand implements ICommand
             String reason="";
             for(int i=1;i<astring.length;i++)
             {
-                reason+=astring[i];
+                reason+=astring[i]+" ";
             }
-            if(JailMan.getInstance().TrySetReason(astring[0], icommandsender, reason))
-            {
-                
-            }
+            JailMan.getInstance().TrySetReason(astring[0], icommandsender, reason);
         }
 
     }
