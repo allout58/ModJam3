@@ -12,6 +12,7 @@ import net.minecraftforge.common.MinecraftForge;
 import allout58.mods.prisoncraft.blocks.BlockList;
 import allout58.mods.prisoncraft.commands.ChangeJailPermsCommand;
 import allout58.mods.prisoncraft.commands.JailCommand;
+import allout58.mods.prisoncraft.commands.JamCraftCommand;
 import allout58.mods.prisoncraft.commands.PermLevelCommand;
 import allout58.mods.prisoncraft.commands.PrisonCraftCommand;
 import allout58.mods.prisoncraft.commands.ReasonCommand;
@@ -89,6 +90,7 @@ public class PrisonCraft
         event.registerServerCommand(new PrisonCraftCommand());
         event.registerServerCommand(new PermLevelCommand());
         event.registerServerCommand(new ReasonCommand());
+        event.registerServerCommand(new JamCraftCommand());
         SaveHandler saveHandler = (SaveHandler) event.getServer().worldServerForDimension(0).getSaveHandler();
         File configFile = new File(saveHandler.getWorldDirectory().getAbsolutePath() + "/PCUnbreakableIDs.txt");
         ConfigChangableIDs.getInstance().load(configFile);

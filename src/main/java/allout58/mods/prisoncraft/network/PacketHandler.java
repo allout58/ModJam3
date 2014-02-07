@@ -133,7 +133,7 @@ public class PacketHandler implements IPacketHandler
             type = inputStream.readByte();
             if (type == PacketHandler.JV_SEND_ALL)
             {
-                System.out.println("Sending all from server to client");
+//                System.out.println("Sending all from server to client");
                 PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(MinecraftServer.getServer().worldServerForDimension(0));
                 ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
                 DataOutputStream outputStream = new DataOutputStream(bos);
@@ -149,7 +149,7 @@ public class PacketHandler implements IPacketHandler
                             outputStream.writeUTF(ws.people.get(i).jail);
                             outputStream.writeUTF(ws.people.get(i).name);
                             outputStream.writeInt(ws.people.get(i).time);
-                            outputStream.writeUTF((ws.people.get(i).reason!=null)?ws.people.get(i).reason:"");
+                            outputStream.writeUTF((ws.people.get(i).reason != null) ? ws.people.get(i).reason : "");
                         }
                     }
                     catch (Exception ex)
@@ -177,7 +177,7 @@ public class PacketHandler implements IPacketHandler
             }
             else if (type == PacketHandler.JV_SEND_ONE)
             {
-                System.out.println("Sending one from client to server");
+//                System.out.println("Sending one from client to server");
                 uname = inputStream.readUTF();
                 PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(MinecraftServer.getServer().worldServerForDimension(0));
                 ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
@@ -186,12 +186,12 @@ public class PacketHandler implements IPacketHandler
                 {
                     try
                     {
-                        boolean found=false;
+                        boolean found = false;
                         for (int i = 0; i < ws.people.size(); i++)
                         {
                             if (ws.people.get(i).name.equalsIgnoreCase(uname))
                             {
-                                found=true;
+                                found = true;
                                 ws.people.get(i).updateTime(ws.worldObj);
                                 outputStream.writeByte(PacketHandler.JV_RECIEVE_ONE);
                                 outputStream.writeUTF(ws.people.get(i).jail);
@@ -200,9 +200,9 @@ public class PacketHandler implements IPacketHandler
                                 outputStream.writeUTF(ws.people.get(i).reason);
                             }
                         }
-                        if(!found)
+                        if (!found)
                         {
-                            
+
                             outputStream.writeByte(PacketHandler.JV_RECIEVE_NONE);
                         }
                     }
@@ -259,42 +259,42 @@ public class PacketHandler implements IPacketHandler
             type = inputStream.readByte();
             if (type == PacketHandler.JV_RECIEVE_ALL)
             {
-                System.out.println("Recieving all from server");
+                // System.out.println("Recieving all from server");
                 int size = inputStream.readInt();
                 JailViewHUDRenderer.people.clear();
-                for(int i=0;i<size;i++)
+                for (int i = 0; i < size; i++)
                 {
-                    JailedPersonData pd=new JailedPersonData();
-                    pd.jail=inputStream.readUTF();
-                    pd.name=inputStream.readUTF();
-                    pd.time=inputStream.readInt();
-                    pd.reason=inputStream.readUTF();
+                    JailedPersonData pd = new JailedPersonData();
+                    pd.jail = inputStream.readUTF();
+                    pd.name = inputStream.readUTF();
+                    pd.time = inputStream.readInt();
+                    pd.reason = inputStream.readUTF();
                     JailViewHUDRenderer.people.add(pd);
                 }
             }
             else if (type == PacketHandler.JV_RECIEVE_ONE)
             {
-                System.out.println("Recieving one from server");
-                JailedPersonData pd=new JailedPersonData();
-                pd.jail=inputStream.readUTF();
-                pd.name=inputStream.readUTF();
-                pd.time=inputStream.readInt();
-                pd.reason=inputStream.readUTF();
-                for(int i=0;i<JailViewHUDRenderer.people.size();i++)
+                // System.out.println("Recieving one from server");
+                JailedPersonData pd = new JailedPersonData();
+                pd.jail = inputStream.readUTF();
+                pd.name = inputStream.readUTF();
+                pd.time = inputStream.readInt();
+                pd.reason = inputStream.readUTF();
+                for (int i = 0; i < JailViewHUDRenderer.people.size(); i++)
                 {
-                    if(JailViewHUDRenderer.people.get(i).name.equals(pd.name))
+                    if (JailViewHUDRenderer.people.get(i).name.equals(pd.name))
                     {
-                        JailViewHUDRenderer.people.get(i).jail=pd.jail;
-                        JailViewHUDRenderer.people.get(i).time=pd.time;
-                        JailViewHUDRenderer.people.get(i).reason=pd.reason;
+                        JailViewHUDRenderer.people.get(i).jail = pd.jail;
+                        JailViewHUDRenderer.people.get(i).time = pd.time;
+                        JailViewHUDRenderer.people.get(i).reason = pd.reason;
                         break;
                     }
                 }
             }
-            else if(type == PacketHandler.JV_RECIEVE_NONE)
+            else if (type == PacketHandler.JV_RECIEVE_NONE)
             {
-                System.out.println("Recieved none from server");
-                //not really sure what do with this...
+                // System.out.println("Recieved none from server");
+                // not really sure what do with this...
             }
             else
             {

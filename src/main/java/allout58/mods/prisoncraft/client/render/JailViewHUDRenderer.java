@@ -72,7 +72,7 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
             packet.data = bos.toByteArray();
             packet.length = bos.size();
             PacketDispatcher.sendPacketToServer(packet);
-            System.out.println("First time: send all!");
+            // System.out.println("First time: send all!");
         }
 
         ticks++;
@@ -90,7 +90,7 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
         if (ticks % 1000 == 0)
         {
             updateAllPeople();
-            System.out.println("Update all people");
+            // System.out.println("Update all people");
         }
         if (ticks >= 4000)
         {
@@ -133,15 +133,8 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
         float var14 = 0.01266667F * 1.5F;
         float var17 = 0.015F;
 
-        // GL11.glPushMatrix();
-
-        // GL11.glDepthMask(true);
-        // GL11.glDisable(GL11.GL_DEPTH_TEST);
-
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_LIGHTING);
-
-        // GL11.glDisable(GL11.GL_DEPTH_TEST);
 
         drawText(EnumChatFormatting.UNDERLINE.toString() + "Name", COL_1_X, 0, 0.012F);
         drawText(EnumChatFormatting.UNDERLINE.toString() + "Time", COL_2_X - 10, 0, 0.012F);
@@ -149,26 +142,26 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
 
         glTranslated(0, -.05, 0);
 
-        int s = (people.size() < MAX_ROWS ? people.size() : MAX_ROWS);
+        int s = MAX_ROWS;
 
-        for (int i = 0; i < s; i++)
+        for (int i = 0; i < people.size() && s > 0; i++)
         {
-            String time = "\u221E";
-            if (people.get(i).time != -1)
+            if (people.get(i).jail.equals(((TileEntityJailView) tileentity).jailname))
             {
-                time = Integer.toString(people.get(i).time);
-            }
+                String time = "\u221E";
+                if (people.get(i).time != -1)
+                {
+                    time = Integer.toString(people.get(i).time);
+                }
 
-            drawText(clampString(people.get(i).name, 20), COL_1_X - 5, FONT_HEIGHT * (i + 1), 0.009F);
-            drawText(time, COL_2_X + 15, FONT_HEIGHT * (i + 1), 0.009F);
-            drawText(clampString(people.get(i).reason, 34), COL_3_X + 25, FONT_HEIGHT * (i + 1), 0.009F);
+                drawText(clampString(people.get(i).name, 20), COL_1_X - 5, FONT_HEIGHT * (MAX_ROWS - s + 1), 0.009F);
+                drawText(time, COL_2_X + 15, FONT_HEIGHT * (MAX_ROWS - s + 1), 0.009F);
+                drawText(clampString(people.get(i).reason, 34), COL_3_X + 25, FONT_HEIGHT * (MAX_ROWS - s + 1), 0.009F);
+                s--;
+            }
         }
 
-        // GL11.glPopMatrix();
-
         glPopMatrix();
-
-        // GL11.glPopAttrib();
     }
 
     private void drawText(String text, int x, int y, float size)

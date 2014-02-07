@@ -65,21 +65,21 @@ public class PrisonCraftWorldSave extends WorldSavedData
     public void readFromNBT(NBTTagCompound tags)
     {
         people.clear();
-        JailedPersonData jT = new JailedPersonData();
-        jT.coord = new int[] { 0, 0, 0 };
-        jT.name = "abc1";
-        jT.reason = ":P";
-        jT.time = 200;
-        jT.jail = "MAIN";
-        people.add(jT);
-
-        JailedPersonData j2 = new JailedPersonData();
-        j2.coord = new int[] { 0, 0, 0 };
-        j2.name = "infiniteMiner";
-        j2.reason = "Because forever";
-        j2.time = -1;
-        j2.jail = "M1";
-        people.add(j2);
+//        JailedPersonData jT = new JailedPersonData();
+//        jT.coord = new int[] { 0, 0, 0 };
+//        jT.name = "abc1";
+//        jT.reason = ":P";
+//        jT.time = 200;
+//        jT.jail = "MAIN";
+//        people.add(jT);
+//
+//        JailedPersonData j2 = new JailedPersonData();
+//        j2.coord = new int[] { 0, 0, 0 };
+//        j2.name = "infiniteMiner";
+//        j2.reason = "Because forever";
+//        j2.time = -1;
+//        j2.jail = "M1";
+//        people.add(j2);
 
         if (tags.hasKey("NumTEs"))
         {

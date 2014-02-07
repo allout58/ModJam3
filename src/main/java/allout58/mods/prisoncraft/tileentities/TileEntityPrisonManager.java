@@ -595,7 +595,6 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
     @Override
     public void writeToNBT(NBTTagCompound tags)
     {
-        System.out.println("Writing jail to NBT");
         super.writeToNBT(tags);
         tags.setBoolean("HasJailedPlayer", hasJailedPlayer);
         tags.setInteger("jailDim", dimension);

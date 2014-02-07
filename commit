@@ -1,4 +1,4 @@
-Send all the packets!
+Fix stuff up for JamCraft
 
-I think I have all the stuff set up for a fully functioning (crosses fingers) jail view.
-Lots of packet handling and rendering stuffs... 
+Remove system.out.println 's
+Other stuffs...
