@@ -25,6 +25,7 @@ public class TileEntityJailView extends TileEntity
             return false;
         }
     }
+    
 
     @Override
     public void updateEntity()

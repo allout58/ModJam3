@@ -50,7 +50,7 @@ public class ItemOliveBranch extends ItemEntityTargetTool
 
             //Send packet
             Packet250CustomPayload packet = new Packet250CustomPayload();
-            packet.channel = ModConstants.UNJAILPACKETCHANNEL;
+            packet.channel = ModConstants.UNJAIL_PACKET_CHANNEL;
             packet.data = bos.toByteArray();
             packet.length = bos.size();
             PacketDispatcher.sendPacketToServer(packet);

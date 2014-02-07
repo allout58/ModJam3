@@ -3,6 +3,9 @@ package allout58.mods.prisoncraft.jail;
 import java.util.ArrayList;
 import java.util.List;
 
+import allout58.mods.prisoncraft.tileentities.TileEntityJailView;
+import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -17,6 +20,7 @@ public class PrisonCraftWorldSave extends WorldSavedData
 
     private List<JailManRef> tesList = new ArrayList<JailManRef>();
     public List<String> jails = new ArrayList<String>();
+    public List<JailedPersonData> people = new ArrayList<JailedPersonData>();
 
     public PrisonCraftWorldSave()
     {
@@ -60,6 +64,23 @@ public class PrisonCraftWorldSave extends WorldSavedData
     @Override
     public void readFromNBT(NBTTagCompound tags)
     {
+        people.clear();
+        JailedPersonData jT = new JailedPersonData();
+        jT.coord = new int[] { 0, 0, 0 };
+        jT.name = "abc1";
+        jT.reason = ":P";
+        jT.time = 200;
+        jT.jail = "MAIN";
+        people.add(jT);
+
+        JailedPersonData j2 = new JailedPersonData();
+        j2.coord = new int[] { 0, 0, 0 };
+        j2.name = "infiniteMiner";
+        j2.reason = "Because forever";
+        j2.time = -1;
+        j2.jail = "M1";
+        people.add(j2);
+
         if (tags.hasKey("NumTEs"))
         {
             int size = tags.getInteger("NumTEs");
@@ -68,6 +89,21 @@ public class PrisonCraftWorldSave extends WorldSavedData
                 NBTTagCompound t = tags.getCompoundTag(i + "");
                 JailManRef ref = new JailManRef();
                 ref.coord = t.getIntArray("coord");
+                TileEntity te = worldObj.getBlockTileEntity(ref.coord[0], ref.coord[1], ref.coord[2]);
+                if (te instanceof TileEntityPrisonManager)
+                {
+                    TileEntityPrisonManager tp = (TileEntityPrisonManager) te;
+                    JailedPersonData j = new JailedPersonData();
+                    j.coord = ref.coord;
+                    j.name = tp.playerName;
+                    j.reason = tp.reason;
+                    j.time = tp.secsLeftJailTime;
+                    j.jail = tp.jailname;
+                    if (j.name != "")
+                    {
+                        people.add(j);
+                    }
+                }
                 if (t.hasKey("jailname"))
                 {
                     ref.jailName = t.getString("jailname");

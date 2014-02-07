@@ -31,6 +31,7 @@ import allout58.mods.prisoncraft.config.ConfigChangableIDs;
 import allout58.mods.prisoncraft.config.ConfigServer;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.jail.JailManRef;
+import allout58.mods.prisoncraft.jail.JailedPersonData;
 import allout58.mods.prisoncraft.jail.PrisonCraftWorldSave;
 import allout58.mods.prisoncraft.permissions.JailPermissions;
 import allout58.mods.prisoncraft.permissions.PermissionLevel;
@@ -62,7 +63,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
     private EntityPlayer jailedPlayer;
     private PermissionLevel jailedPlayerPrevJailPerms;
 
-    private int secsLeftJailTime;
+    public int secsLeftJailTime;
 
     private boolean isDirty = false;
 
@@ -236,6 +237,14 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
     public void setReason(String reason)
     {
         this.reason = reason;
+        List<JailedPersonData> list=PrisonCraftWorldSave.forWorld(worldObj).people;
+        for(int i=0;i<list.size();i++)
+        {
+            if(list.get(i).name==playerName)
+            {
+                list.get(i).reason=reason;
+            }
+        }
     }
 
     private boolean isValidID(int id)
@@ -264,6 +273,9 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                 isDirty = true;
                 jailedPlayer = player;
                 playerName = player.username;
+                
+                PrisonCraftWorldSave.forWorld(worldObj).people.add(getJailedPersonData());
+
                 // time in min.->secsLeft in sec.
                 secsLeftJailTime = (int) (time * 60);
                 if (Config.changeGameMode)
@@ -395,6 +407,14 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                 }
             }
             playerInventory = new ItemStack[INVENTORY_SIZE];
+            List<JailedPersonData> l=PrisonCraftWorldSave.forWorld(worldObj).people;
+            for(int i=0;i<l.size();i++)
+            {
+                if(l.get(i).name==playerName)
+                {
+                    PrisonCraftWorldSave.forWorld(worldObj).people.remove(i);
+                }
+            }
             hasJailedPlayer = false;
             jailedPlayer = null;
             playerName = "";
@@ -510,6 +530,17 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
             }
         }
         return false;
+    }
+    
+    public JailedPersonData getJailedPersonData()
+    {
+        JailedPersonData pd=new JailedPersonData();
+        pd.name=jailedPlayer.username;
+        pd.time=secsLeftJailTime;
+        pd.coord=new int[]{xCoord,yCoord,zCoord};
+        pd.reason=reason;
+        pd.jail=jailname;
+        return pd;
     }
 
     /* NBT */

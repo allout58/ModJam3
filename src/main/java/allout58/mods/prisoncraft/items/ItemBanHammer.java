@@ -61,7 +61,7 @@ public class ItemBanHammer extends ItemEntityTargetTool
             }
 
             Packet250CustomPayload packet = new Packet250CustomPayload();
-            packet.channel = ModConstants.JAILPACKETCHANNEL;
+            packet.channel = ModConstants.JAIL_PACKET_CHANNEL;
             packet.data = bos.toByteArray();
             packet.length = bos.size();
             PacketDispatcher.sendPacketToServer(packet);

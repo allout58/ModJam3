@@ -5,8 +5,10 @@ public class ModConstants
     public static final String MODID = "prisoncraft";
     public static final String NAME = "PrisonCraft";
 //    public static final String PACKETCHANNEL = "PrisonCraft";
-    public static final String JAILPACKETCHANNEL = "PCJail";
-    public static final String UNJAILPACKETCHANNEL = "PCUnjail";    
+    public static final String JAIL_PACKET_CHANNEL = "PCJail";
+    public static final String UNJAIL_PACKET_CHANNEL = "PCUnjail";
+    public static final String JV_CLIENT_TO_SERVER_PACKET_CHANNEL = "JVCtoS";
+    public static final String JV_SERVER_TO_CLIENT_PACKET_CHANNEL = "JVStoC";
 
     public static final int ITEM_ID_DIFF = 256;
 

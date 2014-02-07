@@ -40,7 +40,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 @Mod(modid = ModConstants.MODID, name = ModConstants.NAME, version = "0.0.4")
-@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels={ModConstants.JAILPACKETCHANNEL,ModConstants.UNJAILPACKETCHANNEL}, packetHandler = PacketHandler.class)
+@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels={ModConstants.JAIL_PACKET_CHANNEL,ModConstants.UNJAIL_PACKET_CHANNEL, ModConstants.JV_CLIENT_TO_SERVER_PACKET_CHANNEL,ModConstants.JV_SERVER_TO_CLIENT_PACKET_CHANNEL}, packetHandler = PacketHandler.class)
 public class PrisonCraft
 {
     public static CreativeTabs creativeTab = new CreativeTabs("PrisonCraft")

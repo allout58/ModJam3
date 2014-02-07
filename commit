@@ -1,3 +1,4 @@
-More rendering stuffs
+Send all the packets!
 
-Got rotation and translation good to go. Now textures and text rendering left...
+I think I have all the stuff set up for a fully functioning (crosses fingers) jail view.
+Lots of packet handling and rendering stuffs... 
