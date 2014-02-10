@@ -1,11 +1,6 @@
 package allout58.mods.prisoncraft;
 
-import java.lang.reflect.Method;
-
-import allout58.mods.prisoncraft.config.Config;
-import codechicken.nei.api.IConfigureNEI;
-
-import com.google.common.base.Throwables;
+//import codechicken.nei.api.IConfigureNEI;
 
 public class PrisonCraftNEIConfig// implements IConfigureNEI
 {
@@ -13,9 +8,9 @@ public class PrisonCraftNEIConfig// implements IConfigureNEI
 //    @Override
     public void loadConfig()
     {
-        if (Config.prisonUnbreak > 0)
-        {
-            codechicken.nei.api.API.hideItem(Config.prisonUnbreak);
+//        if (Config.prisonUnbreak > 0)
+//        {
+//            codechicken.nei.api.API.hideItem(Config.prisonUnbreak);
 //            try
 //            {
 //                // I have no idea how to link with NEI API
@@ -27,7 +22,7 @@ public class PrisonCraftNEIConfig// implements IConfigureNEI
 //            {
 //                Throwables.propagate(e);
 //            }
-        }
+//        }
     }
 
 //    @Override
