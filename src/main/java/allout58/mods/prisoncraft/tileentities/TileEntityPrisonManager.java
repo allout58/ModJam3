@@ -453,10 +453,10 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                     // TP back in
                     if (worldObj.getTotalWorldTime() % 200 == 0)
                     {
-                        Vector3f vPlayer = new Vector3f((float) jailedPlayer.posX, (float) jailedPlayer.posY, (float) jailedPlayer.posZ);
-                        Vector3f vJail = new Vector3f(tpCoordIn[0], tpCoordIn[1], tpCoordIn[2]);
-                        Vector3f vDiff = Vector3f.sub(vPlayer, vJail, null);
-                        float len=vDiff.length();
+                        float x=(float) (jailedPlayer.posX-tpCoordIn[0]);
+                        float y=(float) (jailedPlayer.posY-tpCoordIn[1]);
+                        float z=(float) (jailedPlayer.posZ-tpCoordIn[2]);
+                        float len=(float) Math.sqrt(x*x+y*y+z*z);
                         if (len > 30 || len < -30)
                         {
                             jailedPlayer.setPositionAndUpdate(tpCoordIn[0] + .5, tpCoordIn[1], tpCoordIn[2] + .5);
