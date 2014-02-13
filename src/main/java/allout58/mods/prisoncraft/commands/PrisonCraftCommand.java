@@ -135,15 +135,15 @@ public class PrisonCraftCommand implements ICommand
 
     private void processIds(ICommandSender sender, String[] astring)
     {
-        if (astring.length < 1 || astring.length > 2)
+        if (astring.length < 2 || astring.length > 3)
         {
             sender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()).addKey("string.invalidArgument"));
         }
         else
         {
-            if (astring.length == 1)
+            if (astring.length == 2)
             {
-                if (astring[0].equalsIgnoreCase("save"))
+                if (astring[1].equalsIgnoreCase("save"))
                 {
                     ConfigChangableIDs.getInstance().save();
                     sender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.savedconfig"));
@@ -153,7 +153,7 @@ public class PrisonCraftCommand implements ICommand
                     }
 
                 }
-                else if (astring[0].equalsIgnoreCase("reload"))
+                else if (astring[1].equalsIgnoreCase("reload"))
                 {
                     SaveHandler saveHandler = (SaveHandler) MinecraftServer.getServer().worldServerForDimension(0).getSaveHandler();
                     String fileName = saveHandler.getWorldDirectory().getAbsolutePath() + "/PCUnbreakableIDs.txt";
@@ -170,13 +170,13 @@ public class PrisonCraftCommand implements ICommand
                     sender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()).addKey("string.invalidArgument"));
                 }
             }
-            if (astring.length == 2)
+            if (astring.length == 3)
             {
-                if (astring[0].equalsIgnoreCase("add"))
+                if (astring[1].equalsIgnoreCase("add"))
                 {
                     try
                     {
-                        int integer = Integer.parseInt(astring[1]);
+                        int integer = Integer.parseInt(astring[2]);
                         ConfigChangableIDs.getInstance().addID(integer);
                         sender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.idadded"));
                         if (!sender.getCommandSenderName().equalsIgnoreCase("server"))
@@ -189,11 +189,11 @@ public class PrisonCraftCommand implements ICommand
                         sender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()).addKey("string.nan"));
                     }
                 }
-                if (astring[0].equalsIgnoreCase("remove"))
+                if (astring[1].equalsIgnoreCase("remove"))
                 {
                     try
                     {
-                        int integer = Integer.parseInt(astring[1]);
+                        int integer = Integer.parseInt(astring[2]);
                         if (ConfigChangableIDs.getInstance().removeID(integer))
                         {
                             sender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.idremoved"));
