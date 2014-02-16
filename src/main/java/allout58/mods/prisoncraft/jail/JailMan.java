@@ -1,5 +1,7 @@
 package allout58.mods.prisoncraft.jail;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -7,8 +9,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
+
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatMessageComponent;
@@ -16,6 +21,7 @@ import net.minecraft.util.EnumChatFormatting;
 import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.config.Config;
 import allout58.mods.prisoncraft.constants.ModConstants;
+import allout58.mods.prisoncraft.network.PacketHandler;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
 
 public class JailMan
@@ -100,7 +106,7 @@ public class JailMan
                                 if (player != null)
                                 {
                                     if (((TileEntityPrisonManager) te).jailPlayer(player, time))
-                                    {
+                                    { 
                                         foundOpen = true;
                                         break;
                                     }

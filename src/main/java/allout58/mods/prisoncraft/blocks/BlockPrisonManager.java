@@ -90,7 +90,7 @@ public class BlockPrisonManager extends BlockLayeredTexture implements ITileEnti
     @SideOnly(Side.CLIENT)
     public void registerIcons(IconRegister ir)
     {
-        //super.registerIcons(ir);
+        super.registerIcons(ir);
         this.side = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side");
         this.side_uninit = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side_uninit");
         this.side_nolink = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side_nolink");

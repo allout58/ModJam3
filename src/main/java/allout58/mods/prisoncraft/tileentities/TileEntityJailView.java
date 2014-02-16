@@ -8,13 +8,13 @@ import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityJailView extends TileEntity
 {
-    public String jailname;
+    public String jailname = "NULL";
 
     private boolean isDirty = false;
 
     public boolean setJailName(String name)
     {
-        if (!(jailname != null && !jailname.isEmpty()))
+        if (jailname=="NULL")
         {
             jailname = name;
             this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 1, 3);
@@ -25,7 +25,6 @@ public class TileEntityJailView extends TileEntity
             return false;
         }
     }
-    
 
     @Override
     public void updateEntity()
@@ -41,19 +40,15 @@ public class TileEntityJailView extends TileEntity
     @Override
     public void readFromNBT(NBTTagCompound tags)
     {
-        if(tags.hasKey("jailname"))
-        {
-            jailname=tags.getString("jailname");
-        }
+        super.readFromNBT(tags);
+        jailname = tags.getString("jailname");
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tags)
     {
-        if(jailname!=null && !jailname.isEmpty())
-        {
-            tags.setString("jailname", jailname);
-        }
+        super.writeToNBT(tags);
+        tags.setString("jailname", jailname);
     }
 
     /* Packets */

@@ -72,7 +72,7 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
             packet.data = bos.toByteArray();
             packet.length = bos.size();
             PacketDispatcher.sendPacketToServer(packet);
-            // System.out.println("First time: send all!");
+//            System.out.println("First time: send all!");
         }
 
         ticks++;
@@ -90,7 +90,7 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
         if (ticks % 1000 == 0)
         {
             updateAllPeople();
-            // System.out.println("Update all people");
+//            System.out.println("Update all people");
         }
         if (ticks >= 4000)
         {
@@ -105,7 +105,7 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
         glDisable(GL_TEXTURE_2D);
         glDisable(GL_LIGHTING);
 
-        glTranslated(x + 0.5, y + .5, z + 0.5);
+        glTranslated(x + 0.5, y + .51, z + 0.5);
 
         EntityLivingBase player = Minecraft.getMinecraft().renderViewEntity;
 
@@ -123,7 +123,7 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
         double dz = 0;
 
         tess.startDrawingQuads();
-        tess.setColorRGBA(255, 255, 255, 255);
+        tess.setColorRGBA(0x8e, 0x8e, 0x8e, 255);
         tess.addVertex(dx, dy, dz);
         tess.addVertex(dx, dy + HEIGHT, dz);
         tess.addVertex(dx + WIDTH, dy + HEIGHT, dz);

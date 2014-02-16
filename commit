@@ -1,1 +1,5 @@
-Fix some setups complaining about lwjgl.Vector3f not being there... meh, real maths...
+Done creating for 1.6.4-0.0.4
+
+Added textures for JV block
+Changed BG color of "screen" for JV block
+Made JV block actually save correctly (derp)

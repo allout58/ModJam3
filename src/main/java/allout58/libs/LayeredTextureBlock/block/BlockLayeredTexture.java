@@ -1,7 +1,9 @@
 package allout58.libs.LayeredTextureBlock.block;
 
+import allout58.mods.prisoncraft.constants.TextureConstants;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.Icon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -100,5 +102,12 @@ public abstract class BlockLayeredTexture extends Block
     public final int getRenderBlockPass()
     {
         return 1;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerIcons(IconRegister ir)
+    {
+        this.blank = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":blank");
     }
 }

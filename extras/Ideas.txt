@@ -1,5 +1,3 @@
 Ideas:
 
-Reason in jail command (seperate command/tool afterwards?)
-Actual jails, not just individual cells
 Chunkload jail and manager

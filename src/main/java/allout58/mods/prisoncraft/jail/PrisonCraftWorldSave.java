@@ -65,12 +65,13 @@ public class PrisonCraftWorldSave extends WorldSavedData
     public void readFromNBT(NBTTagCompound tags)
     {
         people.clear();
+//        System.out.println("PC World Save read!");
 //        JailedPersonData jT = new JailedPersonData();
 //        jT.coord = new int[] { 0, 0, 0 };
 //        jT.name = "abc1";
 //        jT.reason = ":P";
 //        jT.time = 200;
-//        jT.jail = "MAIN";
+//        jT.jail = "Number1";
 //        people.add(jT);
 //
 //        JailedPersonData j2 = new JailedPersonData();

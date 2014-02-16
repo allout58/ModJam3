@@ -197,7 +197,7 @@ public class PacketHandler implements IPacketHandler
                                 outputStream.writeUTF(ws.people.get(i).jail);
                                 outputStream.writeUTF(ws.people.get(i).name);
                                 outputStream.writeInt(ws.people.get(i).time);
-                                outputStream.writeUTF(ws.people.get(i).reason);
+                                outputStream.writeUTF((ws.people.get(i).reason != null) ? ws.people.get(i).reason : "");
                             }
                         }
                         if (!found)
@@ -259,7 +259,7 @@ public class PacketHandler implements IPacketHandler
             type = inputStream.readByte();
             if (type == PacketHandler.JV_RECIEVE_ALL)
             {
-                // System.out.println("Recieving all from server");
+//                System.out.println("Recieving all from server");
                 int size = inputStream.readInt();
                 JailViewHUDRenderer.people.clear();
                 for (int i = 0; i < size; i++)
@@ -274,7 +274,7 @@ public class PacketHandler implements IPacketHandler
             }
             else if (type == PacketHandler.JV_RECIEVE_ONE)
             {
-                // System.out.println("Recieving one from server");
+//                System.out.println("Recieving one from server");
                 JailedPersonData pd = new JailedPersonData();
                 pd.jail = inputStream.readUTF();
                 pd.name = inputStream.readUTF();
@@ -293,7 +293,7 @@ public class PacketHandler implements IPacketHandler
             }
             else if (type == PacketHandler.JV_RECIEVE_NONE)
             {
-                // System.out.println("Recieved none from server");
+//                 System.out.println("Recieved none from server");
                 // not really sure what do with this...
             }
             else
