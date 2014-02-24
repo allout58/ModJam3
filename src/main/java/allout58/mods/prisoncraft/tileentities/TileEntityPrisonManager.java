@@ -30,9 +30,11 @@ import allout58.mods.prisoncraft.config.Config;
 import allout58.mods.prisoncraft.config.ConfigChangableIDs;
 import allout58.mods.prisoncraft.config.ConfigServer;
 import allout58.mods.prisoncraft.constants.ModConstants;
+import allout58.mods.prisoncraft.jail.JailMan;
 import allout58.mods.prisoncraft.jail.JailManRef;
 import allout58.mods.prisoncraft.jail.JailedPersonData;
 import allout58.mods.prisoncraft.jail.PrisonCraftWorldSave;
+import allout58.mods.prisoncraft.network.PacketHandler;
 import allout58.mods.prisoncraft.permissions.JailPermissions;
 import allout58.mods.prisoncraft.permissions.PermissionLevel;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -245,6 +247,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                 list.get(i).reason=reason;
             }
         }
+        PacketHandler.updateAllClient();
     }
 
     private boolean isValidID(int id)
@@ -339,6 +342,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                         PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 100, this.worldObj.provider.dimensionId, new Packet130UpdateSign(te.xCoord, te.yCoord, te.zCoord, ((TileEntitySign) te).signText));
                     }
                 }
+                PacketHandler.updateAllClient();
                 return true;
             }
             else return false;
@@ -419,6 +423,8 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
             jailedPlayer = null;
             playerName = "";
             reason="";
+            isDirty=true;
+            PacketHandler.updateAllClient();
             return true;
         }
         else return false;
@@ -430,7 +436,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
         if (isDirty)
         {
             isDirty = false;
-            worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+            worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
         }
         if (hasJailedPlayer)
         {

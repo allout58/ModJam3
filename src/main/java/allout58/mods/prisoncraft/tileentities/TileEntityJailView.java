@@ -32,7 +32,7 @@ public class TileEntityJailView extends TileEntity
         if (isDirty)
         {
             isDirty = false;
-            worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
     }
 

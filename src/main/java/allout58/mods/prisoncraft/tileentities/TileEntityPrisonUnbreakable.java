@@ -54,7 +54,7 @@ public class TileEntityPrisonUnbreakable extends TileEntity
         if (isDirty)
         {
             isDirty = false;
-            worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
     }
 

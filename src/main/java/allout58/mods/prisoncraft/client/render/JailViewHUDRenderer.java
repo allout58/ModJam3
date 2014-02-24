@@ -72,7 +72,7 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
             packet.data = bos.toByteArray();
             packet.length = bos.size();
             PacketDispatcher.sendPacketToServer(packet);
-//            System.out.println("First time: send all!");
+            System.out.println("First time: send all!");
         }
 
         ticks++;
@@ -85,12 +85,17 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
                 {
                     people.get(i).time--;
                 }
+                if (people.get(i).time==0)
+                {
+                    people.remove(i);
+                }
+                    
             }
         }
         if (ticks % 1000 == 0)
         {
             updateAllPeople();
-//            System.out.println("Update all people");
+            System.out.println("Update all people");
         }
         if (ticks >= 4000)
         {
@@ -105,7 +110,7 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
         glDisable(GL_TEXTURE_2D);
         glDisable(GL_LIGHTING);
 
-        glTranslated(x + 0.5, y + .51, z + 0.5);
+        glTranslated(x + 0.5, y + .52, z + 0.5);
 
         EntityLivingBase player = Minecraft.getMinecraft().renderViewEntity;
 
@@ -149,7 +154,7 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
             if (people.get(i).jail.equals(((TileEntityJailView) tileentity).jailname))
             {
                 String time = "\u221E";
-                if (people.get(i).time != -1)
+                if (people.get(i).time >= -1)
                 {
                     time = Integer.toString(people.get(i).time);
                 }
@@ -175,7 +180,7 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
         {
             size += .015F;
             extraX = 1.33;
-            extraY = .51;
+            extraY = .295;
         }
         glTranslated(WIDTH * .5 - .1 + extraX, HEIGHT - .1 + extraY, -.005);
         glRotated(180, 0, 0, 1);

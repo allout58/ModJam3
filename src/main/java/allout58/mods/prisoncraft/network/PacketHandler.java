@@ -133,51 +133,12 @@ public class PacketHandler implements IPacketHandler
             type = inputStream.readByte();
             if (type == PacketHandler.JV_SEND_ALL)
             {
-//                System.out.println("Sending all from server to client");
-                PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(MinecraftServer.getServer().worldServerForDimension(0));
-                ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
-                DataOutputStream outputStream = new DataOutputStream(bos);
-                if (ws.people.size() > 0)
-                {
-                    try
-                    {
-                        outputStream.writeByte(PacketHandler.JV_RECIEVE_ALL);
-                        outputStream.writeInt(ws.people.size());
-                        for (int i = 0; i < ws.people.size(); i++)
-                        {
-                            ws.people.get(i).updateTime(ws.worldObj);
-                            outputStream.writeUTF(ws.people.get(i).jail);
-                            outputStream.writeUTF(ws.people.get(i).name);
-                            outputStream.writeInt(ws.people.get(i).time);
-                            outputStream.writeUTF((ws.people.get(i).reason != null) ? ws.people.get(i).reason : "");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.printStackTrace();
-                    }
-
-                }
-                else
-                {
-                    try
-                    {
-                        outputStream.write(PacketHandler.JV_RECIEVE_NONE);
-                    }
-                    catch (Exception ex)
-                    {
-                        ex.printStackTrace();
-                    }
-                }
-                Packet250CustomPayload outPacket = new Packet250CustomPayload();
-                outPacket.channel = ModConstants.JV_SERVER_TO_CLIENT_PACKET_CHANNEL;
-                outPacket.data = bos.toByteArray();
-                outPacket.length = bos.size();
-                PacketDispatcher.sendPacketToAllPlayers(outPacket);
+                System.out.println("Sending all from server to client");
+                PacketHandler.updateAllClient();
             }
             else if (type == PacketHandler.JV_SEND_ONE)
             {
-//                System.out.println("Sending one from client to server");
+                System.out.println("Sending one from client to server");
                 uname = inputStream.readUTF();
                 PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(MinecraftServer.getServer().worldServerForDimension(0));
                 ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
@@ -259,7 +220,7 @@ public class PacketHandler implements IPacketHandler
             type = inputStream.readByte();
             if (type == PacketHandler.JV_RECIEVE_ALL)
             {
-//                System.out.println("Recieving all from server");
+                System.out.println("Recieving all from server");
                 int size = inputStream.readInt();
                 JailViewHUDRenderer.people.clear();
                 for (int i = 0; i < size; i++)
@@ -274,7 +235,7 @@ public class PacketHandler implements IPacketHandler
             }
             else if (type == PacketHandler.JV_RECIEVE_ONE)
             {
-//                System.out.println("Recieving one from server");
+                System.out.println("Recieving one from server");
                 JailedPersonData pd = new JailedPersonData();
                 pd.jail = inputStream.readUTF();
                 pd.name = inputStream.readUTF();
@@ -293,7 +254,7 @@ public class PacketHandler implements IPacketHandler
             }
             else if (type == PacketHandler.JV_RECIEVE_NONE)
             {
-//                 System.out.println("Recieved none from server");
+                 System.out.println("Recieved none from server");
                 // not really sure what do with this...
             }
             else
@@ -312,4 +273,50 @@ public class PacketHandler implements IPacketHandler
             return;
         }
     }
+
+    public static void updateAllClient()
+    {
+        System.out.println("Sending all from server to client");
+        PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(MinecraftServer.getServer().worldServerForDimension(0));
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
+        DataOutputStream outputStream = new DataOutputStream(bos);
+//        if (ws.people.size() > 0)
+//        {
+            try
+            {
+                outputStream.writeByte(PacketHandler.JV_RECIEVE_ALL);
+                outputStream.writeInt(ws.people.size());
+                for (int i = 0; i < ws.people.size(); i++)
+                {
+                    ws.people.get(i).updateTime(ws.worldObj);
+                    outputStream.writeUTF(ws.people.get(i).jail);
+                    outputStream.writeUTF(ws.people.get(i).name);
+                    outputStream.writeInt(ws.people.get(i).time);
+                    outputStream.writeUTF((ws.people.get(i).reason != null) ? ws.people.get(i).reason : "");
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
+
+//        }
+//        else
+//        {
+//            try
+//            {
+//                outputStream.write(PacketHandler.JV_RECIEVE_NONE);
+//            }
+//            catch (Exception ex)
+//            {
+//                ex.printStackTrace();
+//            }
+//        }
+        Packet250CustomPayload outPacket = new Packet250CustomPayload();
+        outPacket.channel = ModConstants.JV_SERVER_TO_CLIENT_PACKET_CHANNEL;
+        outPacket.data = bos.toByteArray();
+        outPacket.length = bos.size();
+        PacketDispatcher.sendPacketToAllPlayers(outPacket);
+    }
+    
 }

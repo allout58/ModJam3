@@ -1,5 +1,5 @@
-Done creating for 1.6.4-0.0.4
+Small updates
 
-Added textures for JV block
-Changed BG color of "screen" for JV block
-Made JV block actually save correctly (derp)
+Forced sending updates to client on jail/unjail
+Fixed unjailed people not removing on client-side
+Fixed a couple small rendering things
