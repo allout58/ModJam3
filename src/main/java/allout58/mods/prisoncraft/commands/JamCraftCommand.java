@@ -28,13 +28,13 @@ public class JamCraftCommand implements ICommand
     @Override
     public String getCommandName()
     {
-        return "jamcraft";
+        return "pcjamcraft";
     }
 
     @Override
     public String getCommandUsage(ICommandSender icommandsender)
     {
-        return "/jamcraft";
+        return "/pcjamcraft";
     }
 
     @Override

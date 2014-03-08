@@ -26,6 +26,17 @@ public class BlockPrisonUnbreakable extends BlockContainer
         setUnlocalizedName("prisonUnbreakable");
         setTextureName("minecraft:bedrock");
     }
+    
+    @Override
+    public int idPicked(World world, int x, int y, int z)
+    {
+        TileEntity te=world.getBlockTileEntity(x, y, z);
+        if(te instanceof TileEntityPrisonUnbreakable)
+        {
+            return ((TileEntityPrisonUnbreakable) te).getFakeBlockID();
+        }
+        return 1;
+    }
 
     @Override
     public int quantityDropped(Random rand)

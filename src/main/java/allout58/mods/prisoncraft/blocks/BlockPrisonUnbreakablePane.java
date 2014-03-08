@@ -32,6 +32,18 @@ public class BlockPrisonUnbreakablePane extends BlockPane implements ITileEntity
         setLightValue(.2F);
         setUnlocalizedName("prisonUnbreakablePane");
     }
+    
+    
+    @Override
+    public int idPicked(World world, int x, int y, int z)
+    {
+        TileEntity te=world.getBlockTileEntity(x, y, z);
+        if(te instanceof TileEntityPrisonUnbreakable)
+        {
+            return ((TileEntityPrisonUnbreakable) te).getFakeBlockID();
+        }
+        return 1;
+    }
 
     @Override
     public boolean canPaneConnectTo(IBlockAccess access, int x, int y, int z, ForgeDirection dir)

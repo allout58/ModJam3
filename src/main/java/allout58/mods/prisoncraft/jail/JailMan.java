@@ -89,7 +89,7 @@ public class JailMan
         {
             boolean foundOpen = false;
             boolean foundJail = false;
-            if (ws.jails.contains(jailName))
+            if (ws.jails.contains(jailName)||jailName=="")
             {
                 for (int i = 0; i < ws.getTesList().size(); i++)
                 {
@@ -98,7 +98,7 @@ public class JailMan
                     TileEntity te = jailer.getEntityWorld().getBlockTileEntity(coord[0], coord[1], coord[2]);
                     if (te instanceof TileEntityPrisonManager)
                     {
-                        if (ref.jailName.equalsIgnoreCase(jailName) || ref.jailName == "")
+                        if (ref.jailName.equalsIgnoreCase(jailName) || jailName == "")
                         {
                             foundJail = true;
                             if (!((TileEntityPrisonManager) te).hasJailedPlayer)

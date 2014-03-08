@@ -52,6 +52,11 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
     @Override
     public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float tick)
     {
+        if(tileentity.blockMetadata==0)
+        {
+            //drawText("Not linked", 20, 20, 1);
+            return;
+        }
         if (!hasFirstChecked)
         {
             hasFirstChecked = true;

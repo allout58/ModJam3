@@ -1,5 +1,4 @@
-Small updates
+Final for 1.6
 
-Forced sending updates to client on jail/unjail
-Fixed unjailed people not removing on client-side
-Fixed a couple small rendering things
+Cleaned up code some
+Removed any possibility of the JamCraft command.

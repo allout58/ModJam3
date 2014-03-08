@@ -12,7 +12,9 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
+import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.client.render.JailViewHUDRenderer;
+import allout58.mods.prisoncraft.config.Config;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.jail.JailMan;
 import allout58.mods.prisoncraft.jail.JailedPersonData;
@@ -53,6 +55,10 @@ public class PacketHandler implements IPacketHandler
         {
             handleJVStoC(packet);
         }
+//        else if (packet.channel.equals(ModConstants.SYNC_SETTINGS_FROM_SERVER_PACKET_CHANNEL)) //&& FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
+//        {
+//            handleSettingSync(packet);
+//        }
     }
 
     private void handleJail(Packet250CustomPayload packet)
@@ -254,7 +260,7 @@ public class PacketHandler implements IPacketHandler
             }
             else if (type == PacketHandler.JV_RECIEVE_NONE)
             {
-                 System.out.println("Recieved none from server");
+                System.out.println("Recieved none from server");
                 // not really sure what do with this...
             }
             else
@@ -274,49 +280,68 @@ public class PacketHandler implements IPacketHandler
         }
     }
 
+//    private void handleSettingSync(Packet250CustomPayload packet)
+//    {
+//        DataInputStream inputStream = new DataInputStream(new ByteArrayInputStream(packet.data));
+//        try
+//        {
+////            Config.changeGameMode = inputStream.readBoolean();
+////            Config.takeInventory = inputStream.readBoolean();
+//            Config.noMovement = inputStream.readBoolean();
+//            Config.noJumping = inputStream.readBoolean();
+//            PrisonCraft.logger.info("Recieved settings from server");
+//            
+//        }
+//        catch (IOException e)
+//        {
+//            e.printStackTrace();
+//        }
+//
+//    }
+
     public static void updateAllClient()
     {
         System.out.println("Sending all from server to client");
         PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(MinecraftServer.getServer().worldServerForDimension(0));
         ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
         DataOutputStream outputStream = new DataOutputStream(bos);
-//        if (ws.people.size() > 0)
-//        {
-            try
+        // if (ws.people.size() > 0)
+        // {
+        try
+        {
+            outputStream.writeByte(PacketHandler.JV_RECIEVE_ALL);
+            outputStream.writeInt(ws.people.size());
+            for (int i = 0; i < ws.people.size(); i++)
             {
-                outputStream.writeByte(PacketHandler.JV_RECIEVE_ALL);
-                outputStream.writeInt(ws.people.size());
-                for (int i = 0; i < ws.people.size(); i++)
-                {
-                    ws.people.get(i).updateTime(ws.worldObj);
-                    outputStream.writeUTF(ws.people.get(i).jail);
-                    outputStream.writeUTF(ws.people.get(i).name);
-                    outputStream.writeInt(ws.people.get(i).time);
-                    outputStream.writeUTF((ws.people.get(i).reason != null) ? ws.people.get(i).reason : "");
-                }
+                ws.people.get(i).updateTime(ws.worldObj);
+                outputStream.writeUTF(ws.people.get(i).jail);
+                outputStream.writeUTF(ws.people.get(i).name);
+                outputStream.writeInt(ws.people.get(i).time);
+                outputStream.writeUTF((ws.people.get(i).reason != null) ? ws.people.get(i).reason : "");
             }
-            catch (Exception ex)
-            {
-                ex.printStackTrace();
-            }
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
 
-//        }
-//        else
-//        {
-//            try
-//            {
-//                outputStream.write(PacketHandler.JV_RECIEVE_NONE);
-//            }
-//            catch (Exception ex)
-//            {
-//                ex.printStackTrace();
-//            }
-//        }
+        // }
+        // else
+        // {
+        // try
+        // {
+        // outputStream.write(PacketHandler.JV_RECIEVE_NONE);
+        // }
+        // catch (Exception ex)
+        // {
+        // ex.printStackTrace();
+        // }
+        // }
         Packet250CustomPayload outPacket = new Packet250CustomPayload();
         outPacket.channel = ModConstants.JV_SERVER_TO_CLIENT_PACKET_CHANNEL;
         outPacket.data = bos.toByteArray();
         outPacket.length = bos.size();
         PacketDispatcher.sendPacketToAllPlayers(outPacket);
     }
-    
+
 }

@@ -43,7 +43,7 @@ public class ChangeJailPermsCommand implements ICommand
     @Override
     public String getCommandUsage(ICommandSender icommandsender)
     {
-        return "/prisonperms <add|remove> <playername> <permlevel>\n /prisonperms <reload|save>";
+        return "/prisonperms <add|remove> <playername> <permlevel>\n/prisonperms <reload|save>";
     }
 
     @Override

@@ -21,16 +21,11 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.EnumGameType;
-
-import org.lwjgl.util.vector.Vector3f;
-
 import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.blocks.BlockList;
 import allout58.mods.prisoncraft.config.Config;
 import allout58.mods.prisoncraft.config.ConfigChangableIDs;
-import allout58.mods.prisoncraft.config.ConfigServer;
 import allout58.mods.prisoncraft.constants.ModConstants;
-import allout58.mods.prisoncraft.jail.JailMan;
 import allout58.mods.prisoncraft.jail.JailManRef;
 import allout58.mods.prisoncraft.jail.JailedPersonData;
 import allout58.mods.prisoncraft.jail.PrisonCraftWorldSave;

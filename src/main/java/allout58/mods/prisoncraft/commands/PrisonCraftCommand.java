@@ -54,10 +54,10 @@ public class PrisonCraftCommand implements ICommand
     public String getCommandUsage(ICommandSender icommandsender)
     {
         String use = "/prisoncraft configure <cell|jail> [jailname]\n";
-        use += "/prisoncraft doneconfig";
+        use += "/prisoncraft doneconfig\n";
         use += "/prisoncraft ids <add|remove> <id>\n";
         use += "/prisoncraft ids <save|reload>";
-        return null;
+        return use;
     }
 
     @Override
@@ -233,7 +233,7 @@ public class PrisonCraftCommand implements ICommand
             {
                 EntityPlayer player = (EntityPlayer) sender;
                 player.dropPlayerItem(new ItemStack(ItemList.configWand)).delayBeforeCanPickup = 0;
-                player.dropPlayerItem(new ItemStack(BlockList.prisonMan, 64)).delayBeforeCanPickup = 0;
+                player.dropPlayerItem(new ItemStack(BlockList.prisonMan)).delayBeforeCanPickup = 0;
                 if (player instanceof EntityPlayerMP)
                 {
                     ((EntityPlayerMP) player).setGameType(EnumGameType.CREATIVE);

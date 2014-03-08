@@ -28,9 +28,14 @@ public class Config
     public static boolean logJailing;
 
     public static int[] unbreakIDWhitelistDefault;
+    
+    private static boolean isInit=false;
+    private static Configuration conf;
 
     public static void init(Configuration config)
     {
+        isInit=true;
+        conf=config;
         config.load();
 
         int startBlock = 4000;
@@ -60,5 +65,18 @@ public class Config
         config.addCustomCategoryComment("WallWhiteListDefault", "This is the default for each world. As of version 0.0.3, this is configurable in game on a per world basis");
 
         config.save();
+    }
+
+    public static void reload()
+    {
+        if(isInit)
+        {
+            conf.load();
+            
+            noMovement = conf.get("JailOptions", "AllowNoPlayerMovement", true).getBoolean(true);
+            noJumping = conf.get("JailOptions", "AllowNoPlayerJumping", false, "This feature is very buggy. Use at your own risk.").getBoolean(false);
+                        
+            conf.save();
+        }
     }
 }

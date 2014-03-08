@@ -22,7 +22,7 @@ public class ItemJailLink extends Item
         setUnlocalizedName("jaillink");
         setMaxStackSize(1);
         setTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + getUnlocalizedName().substring(5));
-        setCreativeTab(PrisonCraft.creativeTab);
+//        setCreativeTab(PrisonCraft.creativeTab);
     }
 
     @Override
