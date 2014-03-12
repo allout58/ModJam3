@@ -17,3 +17,6 @@ bin/*
 MinecraftForge-*.txt
 forge-*-changelog.txt
 gradle-app.setting
+*.iml
+*.ipr
+*.iws
