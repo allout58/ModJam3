@@ -7,9 +7,9 @@ import net.minecraft.block.material.Material;
 public class BlockPrisonUnbreakableGlass extends BlockPrisonUnbreakable
 {
 
-    public BlockPrisonUnbreakableGlass(int par1, Material par2Material)
+    public BlockPrisonUnbreakableGlass(Material par2Material)
     {
-        super(par1, par2Material);
+        super(par2Material);
     }
 
     @SideOnly(Side.CLIENT)

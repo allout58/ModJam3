@@ -53,6 +53,7 @@ string.jailnotfound=No jails of that name found.
 string.setsreason= sets jailing reason for 
 string.to= to 
 string.reason=Reason: 
+string.linkedjailname=Linked jail name: 
 
 #Config wand strings
 string.configwand.nextpt=Now click the other corner of the cell.
@@ -66,3 +67,7 @@ string.blockprisonmanager.cell.fail=Jail cell creation failed. Rerun configurati
 string.blockprisonmanager.cell.failoverwrite=Jail cell creation failed because this manager already has a linked cell.
 string.blockprisonmanager.jail.success=Jail cell added to Jail group!
 string.blockprisonmanager.jail.failoverwrite=Jail cannot be added to a jail because it is already in a jail group.
+
+#Jail view specific strings
+string.jailview.jail.success=Jail viewer now watching jail group!
+string.jailview.jail.failoverwrite=Jail view cannot watch that jail group because it is already watching a jail group.

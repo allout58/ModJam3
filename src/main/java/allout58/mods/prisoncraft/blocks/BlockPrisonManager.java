@@ -1,50 +1,46 @@
 package allout58.mods.prisoncraft.blocks;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import allout58.libs.LayeredTextureBlock.block.BlockLayeredTexture;
-import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.constants.TextureConstants;
 import allout58.mods.prisoncraft.items.ItemList;
 import allout58.mods.prisoncraft.jail.PrisonCraftWorldSave;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
-import allout58.mods.prisoncraft.tileentities.TileEntityPrisonUnbreakable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.Icon;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
 
 public class BlockPrisonManager extends BlockLayeredTexture implements ITileEntityProvider
 {
-    public Icon top, bottom, side, side_nolink, side_uninit;
+    public IIcon top, bottom, side, side_nolink, side_uninit;
 
-    public BlockPrisonManager(int par1, Material par2Material)
+    public BlockPrisonManager(Material par2Material)
     {
-        super(par1, par2Material);
+        super(par2Material);
         setBlockUnbreakable();
         setResistance(6000000.0F);
-        setUnlocalizedName("prisonManager");
-        setTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side");
+        setBlockName("prisonManager");
+        setBlockTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side");
         // setCreativeTab(PrisonCraft.creativeTab);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
-    public Icon getIcon(int side, int meta)
+    public IIcon getIcon(int side, int meta)
     {
         if (side == 1) return this.top;
         if (side == 0) return this.bottom;
@@ -53,7 +49,7 @@ public class BlockPrisonManager extends BlockLayeredTexture implements ITileEnti
 
     @Override
     @SideOnly(Side.CLIENT)
-    public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side)
+    public IIcon getIcon(IBlockAccess world, int x, int y, int z, int side)
     {
         int meta = world.getBlockMetadata(x, y, z);
         if (renderPass == 0)
@@ -75,8 +71,8 @@ public class BlockPrisonManager extends BlockLayeredTexture implements ITileEnti
             }
             else
             {
-                 return this.blank;
-//                return null;
+                return this.blank;
+                // return null;
             }
         }
         else
@@ -88,9 +84,9 @@ public class BlockPrisonManager extends BlockLayeredTexture implements ITileEnti
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister ir)
+    public void registerBlockIcons(IIconRegister ir)
     {
-        //super.registerIcons(ir);
+        super.registerBlockIcons(ir);
         this.side = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side");
         this.side_uninit = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side_uninit");
         this.side_nolink = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side_nolink");
@@ -99,15 +95,15 @@ public class BlockPrisonManager extends BlockLayeredTexture implements ITileEnti
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world)
+    public TileEntity createNewTileEntity(World world, int meta)
     {
         return new TileEntityPrisonManager();
     }
 
     @Override
-    public void breakBlock(World world, int x, int y, int z, int par5, int par6)
+    public void breakBlock(World world, int x, int y, int z, Block block, int meta)
     {
-        TileEntity logic = world.getBlockTileEntity(x, y, z);
+        TileEntity logic = world.getTileEntity(x, y, z);
         if (logic instanceof TileEntityPrisonManager)
         {
             PrisonCraftWorldSave ws = PrisonCraftWorldSave.forWorld(world);
@@ -122,7 +118,7 @@ public class BlockPrisonManager extends BlockLayeredTexture implements ITileEnti
             ((TileEntityPrisonManager) logic).revertBlocks();
             ((TileEntityPrisonManager) logic).unjailPlayer();
         }
-        super.breakBlock(world, x, y, z, par5, par6);
+        super.breakBlock(world, x, y, z, block, meta);
     }
 
     @Override
@@ -131,12 +127,12 @@ public class BlockPrisonManager extends BlockLayeredTexture implements ITileEnti
         super.onBlockActivated(world, x, y, z, entityPlayer, par6, par7, par8, par9);
         if (!world.isRemote)
         {
-            TileEntity te = world.getBlockTileEntity(x, y, z);
+            TileEntity te = world.getTileEntity(x, y, z);
             if (te instanceof TileEntityPrisonManager)
             {
                 if (entityPlayer.inventory.getCurrentItem() != null)
                 {
-                    if (entityPlayer.inventory.getCurrentItem().itemID == ItemList.configWand.itemID)
+                    if (entityPlayer.inventory.getCurrentItem().isItemEqual(new ItemStack(ItemList.configWand)))
                     {
                         if (entityPlayer.inventory.getCurrentItem().stackTagCompound != null)
                         {
@@ -145,22 +141,21 @@ public class BlockPrisonManager extends BlockLayeredTexture implements ITileEnti
                             {
                                 if (((TileEntityPrisonManager) te).changeBlocks(entityPlayer.inventory.getCurrentItem().stackTagCompound))
                                 {
-                                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.blockprisonmanager.cell.success"));
+                                    entityPlayer.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.blockprisonmanager.cell.success")));
                                 }
                                 else
                                 {
-                                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.blockprisonmanager.cell.failoverwrite"));
+                                    entityPlayer.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.blockprisonmanager.cell.failoverwrite")));
                                 }
                             }
                             else
                             {
-                                entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.blockprisonmanager.cell.fail"));
-
+                                entityPlayer.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.blockprisonmanager.cell.fail")));
                             }
                             return true;
                         }
                     }
-                    if (entityPlayer.inventory.getCurrentItem().itemID == ItemList.jailLink.itemID)
+                    if (entityPlayer.inventory.getCurrentItem().isItemEqual(new ItemStack(ItemList.jailLink)))
                     {
                         if (entityPlayer.inventory.getCurrentItem().hasTagCompound())
                         {
@@ -168,11 +163,11 @@ public class BlockPrisonManager extends BlockLayeredTexture implements ITileEnti
                             {
                                 if (((TileEntityPrisonManager) te).setJailName(entityPlayer.inventory.getCurrentItem().stackTagCompound.getString("jailName")))
                                 {
-                                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.blockprisonmanager.jail.success"));
+                                    entityPlayer.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.blockprisonmanager.jail.success")));
                                 }
                                 else
                                 {
-                                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.blockprisonmanager.jail.failoverwrite"));
+                                    entityPlayer.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.blockprisonmanager.jail.failoverwrite")));
                                 }
                             }
                         }
@@ -184,18 +179,17 @@ public class BlockPrisonManager extends BlockLayeredTexture implements ITileEnti
         if (entityPlayer.isSneaking()) return false;
         else
         {
-            TileEntity te = world.getBlockTileEntity(x, y, z);
-            if (te instanceof TileEntityPrisonManager && !te.worldObj.isRemote)
+            TileEntity te = world.getTileEntity(x, y, z);
+            if (te instanceof TileEntityPrisonManager && !te.getWorldObj().isRemote)
             {
-                ChatMessageComponent chat = new ChatMessageComponent();
-                chat.addKey("string.playerInJail");
-                if (((TileEntityPrisonManager) te).hasJailedPlayer) chat.addText(((TileEntityPrisonManager) te).playerName);
-                else chat.addKey("string.noOne");
-                entityPlayer.sendChatToPlayer(chat);
-                
-                if(((TileEntityPrisonManager)te).hasJailedPlayer && ((TileEntityPrisonManager)te).reason!=null && !((TileEntityPrisonManager)te).reason.isEmpty())
+                String msg = StatCollector.translateToLocal("string.playerInJail");
+                if (((TileEntityPrisonManager) te).hasJailedPlayer) msg += ((TileEntityPrisonManager) te).playerName;
+                else msg += StatCollector.translateToLocal("string.noOne");
+                entityPlayer.addChatMessage(new ChatComponentText(msg));
+
+                if (((TileEntityPrisonManager) te).hasJailedPlayer && ((TileEntityPrisonManager) te).reason != null && !((TileEntityPrisonManager) te).reason.isEmpty())
                 {
-                    entityPlayer.sendChatToPlayer(new ChatMessageComponent().addKey("string.reason").addText(((TileEntityPrisonManager)te).reason));
+                    entityPlayer.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("string.reason" + ((TileEntityPrisonManager) te).reason)));
                 }
             }
             return true;

@@ -1,28 +1,26 @@
 package allout58.mods.prisoncraft.items;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import allout58.mods.prisoncraft.CommonProxy;
-import allout58.mods.prisoncraft.constants.ModConstants;
+import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.constants.TextureConstants;
 import allout58.mods.prisoncraft.jail.JailMan;
+import allout58.mods.prisoncraft.network.UnjailPacket;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
+import cpw.mods.fml.common.network.FMLOutboundHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemOliveBranch extends ItemEntityTargetTool
 {
 
-    public ItemOliveBranch(int id)
+    public ItemOliveBranch()
     {
-        super(id);
+        super();
         setUnlocalizedName("olivebranch");
         setTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + getUnlocalizedName().substring(5));
     }
@@ -35,26 +33,8 @@ public class ItemOliveBranch extends ItemEntityTargetTool
         if (stack.hasTagCompound() && stack.stackTagCompound.hasKey("userHit"))
         {
             // Build packet
-            ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
-            DataOutputStream outputStream = new DataOutputStream(bos);
-            try
-            {
-                outputStream.writeUTF(stack.stackTagCompound.getString("userHit"));
-                outputStream.writeUTF(player.username);
-                outputStream.writeDouble(-1);
-            }
-            catch (Exception ex)
-            {
-                ex.printStackTrace();
-            }
-
-            //Send packet
-            Packet250CustomPayload packet = new Packet250CustomPayload();
-            packet.channel = ModConstants.UNJAIL_PACKET_CHANNEL;
-            packet.data = bos.toByteArray();
-            packet.length = bos.size();
-            PacketDispatcher.sendPacketToServer(packet);
-            stack.stackTagCompound=null;
+            PrisonCraft.channels.get(Side.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
+            PrisonCraft.channels.get(Side.CLIENT).writeOutbound(new UnjailPacket(stack.stackTagCompound.getString("userHit"), player.getDisplayName()));
         }
 
         return stack;
@@ -65,9 +45,9 @@ public class ItemOliveBranch extends ItemEntityTargetTool
     {
         if (!world.isRemote)
         {
-            if(world.getBlockTileEntity(x, y, z) instanceof TileEntityPrisonManager)
+            if(world.getTileEntity(x, y, z) instanceof TileEntityPrisonManager)
             {
-                TileEntityPrisonManager te=(TileEntityPrisonManager)world.getBlockTileEntity(x, y, z);
+                TileEntityPrisonManager te=(TileEntityPrisonManager)world.getTileEntity(x, y, z);
                 if (te.hasJailedPlayer)
                 {
                     JailMan.getInstance().TryUnjailPlayer(te.playerName, player);

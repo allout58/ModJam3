@@ -8,20 +8,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.lang.*;
 
-import allout58.mods.prisoncraft.PrisonCraft;
-
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.Player;
-import cpw.mods.fml.relauncher.Side;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.storage.SaveHandler;
+import allout58.mods.prisoncraft.PrisonCraft;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 
 public class JailPermissions
 {
@@ -147,8 +140,8 @@ public class JailPermissions
                     if (canUse.get(i) instanceof PlayerPermsision)
                     {
                         PlayerPermsision pp = (PlayerPermsision) canUse.get(i);
-                        //Ignore server and rcon when writing to list
-                        if(pp.UserName.equalsIgnoreCase("server")||pp.UserName.equalsIgnoreCase("rcon")) continue;
+                        // Ignore server and rcon when writing to list
+                        if (pp.UserName.equalsIgnoreCase("server") || pp.UserName.equalsIgnoreCase("rcon")) continue;
                         writer.write(pp.UserName + "-" + pp.Level.getValue() + "\n");
                     }
                 }
@@ -232,12 +225,12 @@ public class JailPermissions
                         }
                         catch (IndexOutOfBoundsException e)
                         {
-                            PrisonCraft.logger.log(Level.SEVERE, "Could not parse line " + num + " in perms file: Invalid perm level");
+                            PrisonCraft.logger.error("Could not parse line " + num + " in perms file: Invalid perm level");
                         }
                     }
                     else
                     {
-                        PrisonCraft.logger.log(Level.SEVERE, "Could not parse line " + num + " in perms file: No '-'");
+                        PrisonCraft.logger.error("Could not parse line " + num + " in perms file: No '-'");
                     }
                 }
                 reader.close();
@@ -262,7 +255,7 @@ public class JailPermissions
             }
         }
         PrisonCraft.logger.info("Adding server and rcon with highest permissions");
-        addUserPlayer("server",PermissionLevel.FinalWord);
+        addUserPlayer("server", PermissionLevel.FinalWord);
         addUserPlayer("rcon", PermissionLevel.FinalWord);
     }
 

@@ -1,48 +1,54 @@
 package allout58.mods.prisoncraft.blocks;
 
-import java.util.List;
 import java.util.Random;
 
-import allout58.mods.prisoncraft.tileentities.TileEntityPrisonUnbreakable;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPane;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Icon;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
+import allout58.mods.prisoncraft.tileentities.TileEntityPrisonUnbreakable;
 
 public class BlockPrisonUnbreakablePane extends BlockPane implements ITileEntityProvider
 {
 
-    public BlockPrisonUnbreakablePane(int blockID, String str1, String str2, Material par2Material)
+    public BlockPrisonUnbreakablePane(String iconName, String topIcon, Material mat)
     {
-        super(blockID, str1, str2, par2Material, false);
+        super(iconName, topIcon, mat, false);
         setBlockUnbreakable();
         setResistance(6000000.0F);
-        setLightValue(.2F);
-        setUnlocalizedName("prisonUnbreakablePane");
+        setLightLevel(.2F);
+        setBlockName("prisonUnbreakablePane");
+    }
+    
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+    {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if (te instanceof TileEntityPrisonUnbreakable)
+        {
+            Block block = ((TileEntityPrisonUnbreakable) te).getFakeBlock();
+            int meta = ((TileEntityPrisonUnbreakable) te).getFakeBlockMeta();
+            return new ItemStack(block, 1, block.getDamageValue(world, x, y, z));
+        }
+        return null;
     }
 
     @Override
     public boolean canPaneConnectTo(IBlockAccess access, int x, int y, int z, ForgeDirection dir)
     {
-        TileEntity te = access.getBlockTileEntity(x, y, z);
-        int bId = -1;
+        TileEntity te = access.getTileEntity(x, y, z);
+        Block block = null;
         if (te instanceof TileEntityPrisonUnbreakable)
         {
-            bId = ((TileEntityPrisonUnbreakable) te).getFakeBlockID();
+            block = ((TileEntityPrisonUnbreakable) te).getFakeBlock();
         }
-        return super.canPaneConnectTo(access, x, y, z, dir) || access.getBlockId(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ) == bId;
+        return super.canPaneConnectTo(access, x, y, z, dir) || access.getBlock(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ) == block;
     }
 
     @Override
@@ -58,33 +64,32 @@ public class BlockPrisonUnbreakablePane extends BlockPane implements ITileEntity
     }
 
     @Override
-    public void breakBlock(World world, int x, int y, int z, int oldID, int oldMeta)
+    public void breakBlock(World world, int x, int y, int z, Block oldBlock, int oldMeta)
     {
-        TileEntity logic = world.getBlockTileEntity(x, y, z);
+        TileEntity logic = world.getTileEntity(x, y, z);
         if (logic instanceof TileEntityPrisonUnbreakable)
         {
             if (((TileEntityPrisonUnbreakable) logic).canDestroy())
             {
-                super.breakBlock(world, x, y, z, oldID, oldMeta);
+                super.breakBlock(world, x, y, z, oldBlock, oldMeta);
             }
             else
             {
-                int fakeID = ((TileEntityPrisonUnbreakable) logic).getFakeBlockID();
-                super.breakBlock(world, x, y, z, oldID, oldMeta);
-                world.setBlock(x, y, z, oldID, oldMeta, 3);
-                TileEntity te = world.getBlockTileEntity(x, y, z);
+                Block fakeBlock = ((TileEntityPrisonUnbreakable) logic).getFakeBlock();
+                super.breakBlock(world, x, y, z, oldBlock, oldMeta);
+                world.setBlock(x, y, z, oldBlock, oldMeta, 3);
+                TileEntity te = world.getTileEntity(x, y, z);
                 if (te instanceof TileEntityPrisonUnbreakable)
                 {
-                    ((TileEntityPrisonUnbreakable) te).setFakeBlockID(fakeID);
+                    ((TileEntityPrisonUnbreakable) te).setFakeBlock(fakeBlock);
                 }
             }
         }
     }
 
     @Override
-    public TileEntity createNewTileEntity(World world)
+    public TileEntity createNewTileEntity(World world, int meta)
     {
-        // TODO Auto-generated method stub
         return new TileEntityPrisonUnbreakable();
     }
 }

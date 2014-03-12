@@ -16,13 +16,13 @@ import net.minecraft.util.EnumChatFormatting;
 public class ItemJailLink extends Item
 {
 
-    public ItemJailLink(int id)
+    public ItemJailLink()
     {
-        super(id - ModConstants.ITEM_ID_DIFF);
+        super();
         setUnlocalizedName("jaillink");
         setMaxStackSize(1);
         setTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + getUnlocalizedName().substring(5));
-        setCreativeTab(PrisonCraft.creativeTab);
+//        setCreativeTab(PrisonCraft.creativeTab);
     }
 
     @Override

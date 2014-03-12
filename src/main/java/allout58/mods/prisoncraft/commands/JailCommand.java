@@ -4,20 +4,18 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import allout58.mods.prisoncraft.constants.ModConstants;
+import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.StatCollector;
 import allout58.mods.prisoncraft.jail.JailMan;
 import allout58.mods.prisoncraft.jail.PrisonCraftWorldSave;
 import allout58.mods.prisoncraft.permissions.JailPermissions;
 import allout58.mods.prisoncraft.permissions.PermissionLevel;
-import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
-
-import net.minecraft.command.ICommand;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.EnumChatFormatting;
 
 public class JailCommand implements ICommand
 {
@@ -56,9 +54,11 @@ public class JailCommand implements ICommand
     @Override
     public void processCommand(ICommandSender icommandsender, String[] astring)
     {
+        IChatComponent invalidArg = new ChatComponentTranslation("string.invalidArgument");
+        invalidArg.getChatStyle().setColor(EnumChatFormatting.RED);
         if (astring.length < 2 || astring.length > 3)
         {
-            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()).addKey("string.invalidArgument"));
+            icommandsender.addChatMessage(invalidArg);
         }
         else
         {
@@ -75,7 +75,7 @@ public class JailCommand implements ICommand
                 }
                 catch (NumberFormatException e)
                 {
-                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()).addKey("string.nan"));
+                    icommandsender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.nan")));
                 }
             }
         }
@@ -99,8 +99,8 @@ public class JailCommand implements ICommand
         }
         if (astring.length == 2)
         {
-            for(String jn : PrisonCraftWorldSave.forWorld(icommandsender.getEntityWorld()).jails)
-                if(jn.toLowerCase().startsWith(ARG_LC)) MATCHES.add(jn);
+            for (String jn : PrisonCraftWorldSave.forWorld(icommandsender.getEntityWorld()).jails)
+                if (jn.toLowerCase().startsWith(ARG_LC)) MATCHES.add(jn);
         }
         return MATCHES.isEmpty() ? null : MATCHES;
     }

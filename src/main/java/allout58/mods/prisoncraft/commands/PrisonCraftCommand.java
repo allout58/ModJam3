@@ -5,26 +5,26 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.WorldSettings.GameType;
+import net.minecraft.world.storage.SaveHandler;
 import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.blocks.BlockList;
-import allout58.mods.prisoncraft.config.ConfigChangableIDs;
+import allout58.mods.prisoncraft.config.ConfigChangableBlocks;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.items.ItemList;
 import allout58.mods.prisoncraft.permissions.JailPermissions;
 import allout58.mods.prisoncraft.permissions.PermissionLevel;
-
-import net.minecraft.command.ICommand;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.world.EnumGameType;
-import net.minecraft.world.storage.SaveHandler;
 
 public class PrisonCraftCommand implements ICommand
 {
@@ -54,10 +54,10 @@ public class PrisonCraftCommand implements ICommand
     public String getCommandUsage(ICommandSender icommandsender)
     {
         String use = "/prisoncraft configure <cell|jail> [jailname]\n";
-        use += "/prisoncraft doneconfig";
+        use += "/prisoncraft doneconfig\n";
         use += "/prisoncraft ids <add|remove> <id>\n";
         use += "/prisoncraft ids <save|reload>";
-        return null;
+        return use;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class PrisonCraftCommand implements ICommand
     {
         if (astring.length < 1)
         {
-            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()).addKey("string.invalidArgument"));
+            icommandsender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.invalidArgument")));
         }
         else
         {
@@ -135,81 +135,79 @@ public class PrisonCraftCommand implements ICommand
 
     private void processIds(ICommandSender sender, String[] astring)
     {
-        if (astring.length < 1 || astring.length > 2)
+        if (astring.length < 2 || astring.length > 3)
         {
-            sender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()).addKey("string.invalidArgument"));
+            sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.invalidArgument")));
         }
         else
         {
-            if (astring.length == 1)
+            if (astring.length == 2)
             {
-                if (astring[0].equalsIgnoreCase("save"))
+                if (astring[1].equalsIgnoreCase("save"))
                 {
-                    ConfigChangableIDs.getInstance().save();
-                    sender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.savedconfig"));
+                    ConfigChangableBlocks.getInstance().save();
+                    sender.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.savedconfig")));
                     if (!sender.getCommandSenderName().equalsIgnoreCase("server"))
                     {
-                        MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.savedconfig"));
+                        MinecraftServer.getServer().addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.savedconfig")));
                     }
 
                 }
-                else if (astring[0].equalsIgnoreCase("reload"))
+                else if (astring[1].equalsIgnoreCase("reload"))
                 {
                     SaveHandler saveHandler = (SaveHandler) MinecraftServer.getServer().worldServerForDimension(0).getSaveHandler();
                     String fileName = saveHandler.getWorldDirectory().getAbsolutePath() + "/PCUnbreakableIDs.txt";
                     File f = new File(fileName);
-                    ConfigChangableIDs.getInstance().load(f);
-                    sender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.loadedconfig"));
+                    ConfigChangableBlocks.getInstance().load(f);
+                    sender.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.loadedconfig")));
                     if (!sender.getCommandSenderName().equalsIgnoreCase("server"))
                     {
-                        MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.loadedconfig"));
+                        MinecraftServer.getServer().addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.loadedconfig")));
                     }
                 }
                 else
                 {
-                    sender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()).addKey("string.invalidArgument"));
+                    sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.invalidArgument")));
                 }
             }
-            if (astring.length == 2)
+            if (astring.length == 3)
             {
-                if (astring[0].equalsIgnoreCase("add"))
+                if (astring[1].equalsIgnoreCase("add"))
                 {
                     try
                     {
-                        int integer = Integer.parseInt(astring[1]);
-                        ConfigChangableIDs.getInstance().addID(integer);
-                        sender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.idadded"));
+                        ConfigChangableBlocks.getInstance().addName(astring[2]);
+                        sender.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.idadded")));
                         if (!sender.getCommandSenderName().equalsIgnoreCase("server"))
                         {
-                            MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.idadded"));
+                            MinecraftServer.getServer().addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.idadded")));
                         }
                     }
                     catch (NumberFormatException e)
                     {
-                        sender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()).addKey("string.nan"));
+                        sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.invalidArgument")));
                     }
                 }
-                if (astring[0].equalsIgnoreCase("remove"))
+                if (astring[1].equalsIgnoreCase("remove"))
                 {
                     try
                     {
-                        int integer = Integer.parseInt(astring[1]);
-                        if (ConfigChangableIDs.getInstance().removeID(integer))
+                        if (ConfigChangableBlocks.getInstance().removeName(astring[2]))
                         {
-                            sender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.idremoved"));
+                            sender.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.idremoved")));
                             if (!sender.getCommandSenderName().equalsIgnoreCase("server"))
                             {
-                                MinecraftServer.getServer().sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.idremoved"));
+                                MinecraftServer.getServer().addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.idremoved")));
                             }
                         }
                         else
                         {
-                            sender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString()).addKey("string.idremoved.fail"));
+                            sender.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.idremoved.fail")));
                         }
                     }
                     catch (NumberFormatException e)
                     {
-                        sender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()).addKey("string.nan"));
+                        sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.nan")));
                     }
                 }
             }
@@ -220,34 +218,34 @@ public class PrisonCraftCommand implements ICommand
     {
         if (!(sender instanceof EntityPlayer))
         {
-            sender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()).addKey("string.mustbeplayer"));
+            sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.mustbeplayer")));
             return;
         }
         if (astring.length < 2 || astring.length > 3)
         {
-            sender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()).addKey("string.invalidArgument"));
+            sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.invalidArgument")));
         }
         else
         {
             if (astring[1].equalsIgnoreCase("cell"))
             {
                 EntityPlayer player = (EntityPlayer) sender;
-                player.dropPlayerItem(new ItemStack(ItemList.configWand)).delayBeforeCanPickup = 0;
-                player.dropPlayerItem(new ItemStack(BlockList.prisonMan, 64)).delayBeforeCanPickup = 0;
+                player.dropItem(ItemList.configWand,1).delayBeforeCanPickup = 0;
+                player.dropItem(Item.getItemFromBlock(BlockList.prisonMan),1).delayBeforeCanPickup = 0;
                 if (player instanceof EntityPlayerMP)
                 {
-                    ((EntityPlayerMP) player).setGameType(EnumGameType.CREATIVE);
+                    ((EntityPlayerMP) player).setGameType(GameType.CREATIVE);
                 }
                 else
                 {
-                    PrisonCraft.logger.severe("Gamemode not set. Player obj not of type EntityPlayerMP in configuring command.");
+                    PrisonCraft.logger.error("Gamemode not set. Player obj not of type EntityPlayerMP in configuring command.");
                 }
             }
             if (astring[1].equalsIgnoreCase("jail"))
             {
                 if (astring.length != 3)
                 {
-                    sender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()).addKey("string.invalidArgument"));
+                    sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.invalidArgument")));
                 }
                 else
                 {
@@ -255,7 +253,7 @@ public class PrisonCraftCommand implements ICommand
                     ItemStack is = new ItemStack(ItemList.jailLink);
                     is.stackTagCompound = new NBTTagCompound();
                     is.stackTagCompound.setString("jailName", astring[2]);
-                    player.dropPlayerItem(is).delayBeforeCanPickup = 0;
+                    player.entityDropItem(is, 0).delayBeforeCanPickup = 0;
                 }
             }
         }
@@ -265,22 +263,22 @@ public class PrisonCraftCommand implements ICommand
     {
         if (!(sender instanceof EntityPlayer))
         {
-            sender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()).addKey("string.mustbeplayer"));
+            sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.mustbeplayer")));
             return;
         }
         if (astring.length != 1)
         {
-            sender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()).addKey("string.invalidArgument"));
+            sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.invalidArgument")));
         }
         else
         {
             if (sender instanceof EntityPlayerMP)
             {
-                ((EntityPlayerMP) sender).setGameType(EnumGameType.SURVIVAL);
+                ((EntityPlayerMP) sender).setGameType(GameType.SURVIVAL);
             }
             else
             {
-                PrisonCraft.logger.severe("Gamemode not set. Player obj not of type EntityPlayerMP in doneconfiguring command.");
+                PrisonCraft.logger.error("Gamemode not set. Player obj not of type EntityPlayerMP in doneconfiguring command.");
             }
         }
     }

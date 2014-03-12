@@ -65,12 +65,13 @@ public class PrisonCraftWorldSave extends WorldSavedData
     public void readFromNBT(NBTTagCompound tags)
     {
         people.clear();
+//        System.out.println("PC World Save read!");
 //        JailedPersonData jT = new JailedPersonData();
 //        jT.coord = new int[] { 0, 0, 0 };
 //        jT.name = "abc1";
 //        jT.reason = ":P";
 //        jT.time = 200;
-//        jT.jail = "MAIN";
+//        jT.jail = "Number1";
 //        people.add(jT);
 //
 //        JailedPersonData j2 = new JailedPersonData();
@@ -89,7 +90,7 @@ public class PrisonCraftWorldSave extends WorldSavedData
                 NBTTagCompound t = tags.getCompoundTag(i + "");
                 JailManRef ref = new JailManRef();
                 ref.coord = t.getIntArray("coord");
-                TileEntity te = worldObj.getBlockTileEntity(ref.coord[0], ref.coord[1], ref.coord[2]);
+                TileEntity te = worldObj.getTileEntity(ref.coord[0], ref.coord[1], ref.coord[2]);
                 if (te instanceof TileEntityPrisonManager)
                 {
                     TileEntityPrisonManager tp = (TileEntityPrisonManager) te;
@@ -123,7 +124,7 @@ public class PrisonCraftWorldSave extends WorldSavedData
             NBTTagCompound t = new NBTTagCompound();
             t.setString("jailname", tesList.get(i).jailName);
             t.setIntArray("coord", tesList.get(i).coord);
-            tags.setCompoundTag(i + "", t);// HACKY! :D
+            tags.setTag(i + "", t);// HACKY! :D
         }
     }
 

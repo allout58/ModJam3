@@ -12,24 +12,25 @@ import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.constants.TextureConstants;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
 import net.minecraft.client.gui.ChatLine;
-import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.util.Icon;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 public class ItemConfigWand extends Item
 {
-    private Icon main;
-    private Icon lock;
+    private IIcon main;
+    private IIcon lock;
 
-    public ItemConfigWand(int id)
+    public ItemConfigWand()
     {
-        super(id - ModConstants.ITEM_ID_DIFF);
+        super();
         setUnlocalizedName("prisonConfigWand");
 //        setCreativeTab(PrisonCraft.creativeTab);
         setMaxStackSize(1);
@@ -44,14 +45,14 @@ public class ItemConfigWand extends Item
 
     @Override
     @SideOnly(Side.CLIENT)
-    public void registerIcons(IconRegister ir)
+    public void registerIcons(IIconRegister ir)
     {
         main = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + getUnlocalizedName().substring(5));
         lock = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + getUnlocalizedName().substring(5) + ".lock");
     }
 
     @Override
-    public Icon getIcon(ItemStack stack, int renderPass)
+    public IIcon getIcon(ItemStack stack, int renderPass)
     {
         // If locked
         // if (stack.getItemDamage() == 1)
@@ -101,7 +102,7 @@ public class ItemConfigWand extends Item
             }
             if (stack.getItemDamage() == 0)
             {
-                if (world.getBlockId(x, y, z) == BlockList.prisonMan.blockID) return false;
+                if (world.getBlock(x, y, z) == BlockList.prisonMan) return false;
 
                 if (!stack.stackTagCompound.hasKey("jailCoord1"))
                 {
@@ -111,7 +112,7 @@ public class ItemConfigWand extends Item
                     coord[1] = y;
                     coord[2] = z;
                     stack.stackTagCompound.setIntArray("jailCoord1", coord);
-                    player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.nextpt"));
+                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("string.configwand.nextpt")));
                 }
                 else if (!stack.stackTagCompound.hasKey("jailCoord2"))
                 {
@@ -120,7 +121,7 @@ public class ItemConfigWand extends Item
                     coord[1] = y;
                     coord[2] = z;
                     stack.stackTagCompound.setIntArray("jailCoord2", coord);
-                    player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.tpin"));
+                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("string.configwand.tpin")));
                 }
                 else if (!stack.stackTagCompound.hasKey("tpIn"))
                 {
@@ -129,7 +130,7 @@ public class ItemConfigWand extends Item
                     coord[1] = y + 1;
                     coord[2] = z;
                     stack.stackTagCompound.setIntArray("tpIn", coord);
-                    player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.tpout"));
+                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("string.configwand.tpout")));
                 }
                 else if (!stack.stackTagCompound.hasKey("tpOut"))
                 {
@@ -138,7 +139,7 @@ public class ItemConfigWand extends Item
                     coord[1] = y + 1;
                     coord[2] = z;
                     stack.stackTagCompound.setIntArray("tpOut", coord);
-                    player.sendChatToPlayer(new ChatMessageComponent().addKey("string.configwand.done"));
+                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("string.configwand.done")));
                 }
                 return true;
             }

@@ -14,8 +14,12 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
+import net.minecraft.util.StatCollector;
 
 public class ChangeJailPermsCommand implements ICommand
 {
@@ -43,7 +47,7 @@ public class ChangeJailPermsCommand implements ICommand
     @Override
     public String getCommandUsage(ICommandSender icommandsender)
     {
-        return "/prisonperms <add|remove> <playername> <permlevel>\n /prisonperms <reload|save>";
+        return "/prisonperms <add|remove> <playername> <permlevel>\n/prisonperms <reload|save>";
     }
 
     @Override
@@ -108,9 +112,11 @@ public class ChangeJailPermsCommand implements ICommand
     @Override
     public void processCommand(ICommandSender icommandsender, String[] astring)
     {
+    	IChatComponent invalidArg=new ChatComponentTranslation("string.invalidArgument");
+    	invalidArg.getChatStyle().setColor(EnumChatFormatting.RED);
         if (astring.length < 1 || astring.length > 3)
         {
-            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString() ).addKey("string.invalidArgument"));
+            icommandsender.addChatMessage(invalidArg);
         }
         else
         {
@@ -119,7 +125,7 @@ public class ChangeJailPermsCommand implements ICommand
             {
                 if (astring.length != 3)
                 {
-                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString() ).addKey("string.invalidArgument"));
+                    icommandsender.addChatMessage(invalidArg);
                 }
                 EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[1]);
                 if (player != null)
@@ -132,21 +138,21 @@ public class ChangeJailPermsCommand implements ICommand
                         {
                             if (JailPermissions.getInstance().addUserPlayer(astring[1], pl))
                             {
-                                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(astring[1] + " ").addKey("string.was").addText(" ").addKey("string.added").addText(" ").addKey("string.jailperms"));
-                                if (!icommandsender.getCommandSenderName().equalsIgnoreCase(server.getCommandSenderName()))
+                                icommandsender.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] "+astring[1] + " "+ StatCollector.translateToLocal("string.was")+" "+StatCollector.translateToLocal("string.add")+" "+StatCollector.translateToLocal("string.jailperms")));
+                            	if (!icommandsender.getCommandSenderName().equalsIgnoreCase(server.getCommandSenderName()))
                                 {
-                                    server.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(astring[1] + " ").addKey("string.was").addText(" ").addKey("string.added").addText(" ").addKey("string.jailperms"));
+                                    server.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + astring[1] + " " + StatCollector.translateToLocal("string.was") + " " + StatCollector.translateToLocal("string.added") + " " + StatCollector.translateToLocal("string.jailperms")));
                                 }
-                                player.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.youare").addKey("string.added").addText(" ").addKey("string.jailperms"));
+                                player.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.youare") + StatCollector.translateToLocal("string.added") + " " + StatCollector.translateToLocal("string.jailperms")));
                             }
                             else
                             {
-                                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(EnumChatFormatting.RED.toString() +astring[1] + " ").addKey("string.alreadyperms").addText(" ").addKey("string.added").addText(" ").addKey("string.jailperms"));
+                                icommandsender.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() +astring[1] + " " + StatCollector.translateToLocal("string.alreadyperms") + " " + StatCollector.translateToLocal("string.added") + " " + StatCollector.translateToLocal("string.jailperms")));
                             }
                         }
                         else
                         {
-                            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(EnumChatFormatting.RED.toString() ).addKey("string.invalidperms"));
+                            icommandsender.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] "  + EnumChatFormatting.RED.toString()  + StatCollector.translateToLocal("string.invalidperms")));
                         }
                     }
                 }
@@ -155,7 +161,7 @@ public class ChangeJailPermsCommand implements ICommand
             {
                 if (astring.length != 2)
                 {
-                    icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString() ).addKey("string.invalidArgument"));
+                    icommandsender.addChatMessage(invalidArg);
                 }
                 EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[1]);
                 if (player != null)
@@ -164,21 +170,21 @@ public class ChangeJailPermsCommand implements ICommand
                     {
                         if (JailPermissions.getInstance().removeUserPlayer(astring[1]))
                         {
-                            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(astring[1] + " ").addKey("string.was").addText(" ").addKey("string.removed").addText(" ").addKey("string.jailperms"));
+                            icommandsender.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + astring[1] + " " + StatCollector.translateToLocal("string.was") + " " + StatCollector.translateToLocal("string.removed") + " " + StatCollector.translateToLocal("string.jailperms")));
                             if (!icommandsender.getCommandSenderName().equalsIgnoreCase(server.getCommandSenderName()))
                             {
-                                server.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(astring[1] + " ").addKey("string.was").addText(" ").addKey("string.removed").addText(" ").addKey("string.jailperms"));
+                                server.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + astring[1] + " " + StatCollector.translateToLocal("string.was") + " " + StatCollector.translateToLocal("string.removed") + " " + StatCollector.translateToLocal("string.jailperms")));
                             }
-                            player.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.youare").addKey("string.removed").addText(" ").addKey("string.jailperms"));
+                            player.addChatComponentMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.youare") + StatCollector.translateToLocal("string.removed") + " " + StatCollector.translateToLocal("string.jailperms")));
                         }
                         else
                         {
-                            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(EnumChatFormatting.RED.toString() +astring[1] + " ").addKey("string.alreadyperms").addText(" ").addKey("string.removed").addText(" ").addKey("string.jailperms"));
+                            icommandsender.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " +EnumChatFormatting.RED.toString() +astring[1] + " " + StatCollector.translateToLocal("string.alreadyperms")+ " " + StatCollector.translateToLocal("string.removed") + " " + StatCollector.translateToLocal("string.jailperms")));
                         }
                     }
                     else
                     {
-                        icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addText(EnumChatFormatting.RED.toString() ).addKey("string.invalidperms"));
+                        icommandsender.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.invalidperms")));
                     }
                 }
             }
@@ -186,22 +192,22 @@ public class ChangeJailPermsCommand implements ICommand
             {
                 JailPermissions.getInstance().clear();
                 JailPermissions.getInstance().load();
-                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.reloadperms"));
+                icommandsender.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.reloadperms")));
                 if (!icommandsender.getCommandSenderName().equalsIgnoreCase(server.getCommandSenderName()))
                 {
-                    server.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.reloadperms"));
+                    server.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.reloadperms")));
                 }
             }
             else if (astring[0].equalsIgnoreCase("save"))
             {
                 JailPermissions.getInstance().save();
-                icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.saveperms"));
+                icommandsender.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.saveperms")));
                 if (!icommandsender.getCommandSenderName().equalsIgnoreCase(server.getCommandSenderName()))
                 {
-                    server.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.saveperms"));
+                    server.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.saveperms")));
                 }
             }
-            else icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString() ).addKey("string.invalidArgument"));
+            else icommandsender.addChatMessage(invalidArg);
         }
     }
 

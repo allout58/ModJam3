@@ -1,28 +1,30 @@
 package allout58.mods.prisoncraft.tileentities;
 
-import allout58.mods.prisoncraft.blocks.BlockList;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet132TileEntityData;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityPrisonUnbreakable extends TileEntity
 {
-    private int fakeBlockID = 1;
+//    private int fakeBlockID = 1;
+    private Block fakeBlock=Blocks.stone;
     private int fakeBlockMeta = 0;
     private boolean isReverting = false;
 
     private Boolean isDirty = false;
 
-    public int getFakeBlockID()
+    public Block getFakeBlock()
     {
-        return fakeBlockID;
+        return fakeBlock;
     }
 
-    public void setFakeBlockID(int id)
+    public void setFakeBlock(Block block)
     {
-        fakeBlockID = id;
+        fakeBlock=block;
         isDirty = true;
     }
 
@@ -40,7 +42,7 @@ public class TileEntityPrisonUnbreakable extends TileEntity
     public void revert()
     {
         isReverting = true;
-        worldObj.setBlock(xCoord, yCoord, zCoord, fakeBlockID, fakeBlockMeta, 3);
+        worldObj.setBlock(xCoord, yCoord, zCoord, fakeBlock, fakeBlockMeta, 3);
     }
 
     public boolean canDestroy()
@@ -54,7 +56,7 @@ public class TileEntityPrisonUnbreakable extends TileEntity
         if (isDirty)
         {
             isDirty = false;
-            worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+            worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
         }
     }
 
@@ -62,7 +64,8 @@ public class TileEntityPrisonUnbreakable extends TileEntity
     public void readFromNBT(NBTTagCompound tags)
     {
         super.readFromNBT(tags);
-        fakeBlockID = tags.getInteger("fakeBlockID");
+        String name=tags.getString("fakeBlockName");
+        fakeBlock = Block.getBlockFromName(name);
         fakeBlockMeta = tags.getInteger("fakeBlockMeta");
     }
 
@@ -70,7 +73,7 @@ public class TileEntityPrisonUnbreakable extends TileEntity
     public void writeToNBT(NBTTagCompound tags)
     {
         super.writeToNBT(tags);
-        tags.setInteger("fakeBlockID", fakeBlockID);
+        tags.setString("fakeBlockName",Block.blockRegistry.getNameForObject(fakeBlock)); 
         tags.setInteger("fakeBlockMeta", fakeBlockMeta);
     }
 
@@ -80,13 +83,13 @@ public class TileEntityPrisonUnbreakable extends TileEntity
     {
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
-        return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
+        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
     }
 
     @Override
-    public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
     {
-        readFromNBT(packet.data);
-        worldObj.markBlockForRenderUpdate(xCoord, yCoord, zCoord);
+        readFromNBT(packet.func_148857_g());
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 }

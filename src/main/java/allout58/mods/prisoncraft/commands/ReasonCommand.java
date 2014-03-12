@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import allout58.mods.prisoncraft.jail.JailMan;
-import allout58.mods.prisoncraft.permissions.JailPermissions;
-import allout58.mods.prisoncraft.permissions.PermissionLevel;
-
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
+import allout58.mods.prisoncraft.jail.JailMan;
+import allout58.mods.prisoncraft.permissions.JailPermissions;
+import allout58.mods.prisoncraft.permissions.PermissionLevel;
 
 public class ReasonCommand implements ICommand
 {
@@ -54,7 +54,7 @@ public class ReasonCommand implements ICommand
     {
         if(astring.length<2)
         {
-            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString()).addKey("string.invalidArgument"));
+            icommandsender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.invalidArgument")));
         }
         else
         {

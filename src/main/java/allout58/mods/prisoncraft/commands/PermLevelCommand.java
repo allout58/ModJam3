@@ -12,8 +12,9 @@ import allout58.mods.prisoncraft.permissions.PermissionLevel;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 
 public class PermLevelCommand implements ICommand
 {
@@ -54,7 +55,7 @@ public class PermLevelCommand implements ICommand
     {
         if (astring.length > 1)
         {
-            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString() ).addKey("string.invalidArgument"));
+            icommandsender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED.toString()  + StatCollector.translateToLocal("string.invalidArgument")));
         }
         else
         {
@@ -67,7 +68,7 @@ public class PermLevelCommand implements ICommand
             {
                 pl = JailPermissions.getInstance().getPlayerPermissionLevel(astring[0]);
             }
-            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText("[" + ModConstants.NAME + "] ").addKey("string.permlevel").addText(pl.toString()));
+            icommandsender.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.permlevel") +pl.toString()));
         }
     }
 

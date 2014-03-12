@@ -16,12 +16,12 @@ public class BlockList
 
     public static void init()
     {
-        prisonMan = new BlockPrisonManager(Config.prisonManager, Material.rock);
-        prisonUnbreak = new BlockPrisonUnbreakable(Config.prisonUnbreak, Material.rock);
-        prisonUnbreakGlass = new BlockPrisonUnbreakableGlass(Config.prisonUnbreakGlass, Material.glass);
-        prisonUnbreakPaneGlass = new BlockPrisonUnbreakablePane(Config.prisonUnbreakPaneGlass, "glass", "glass_pane_top", Material.rock);
-        prisonUnbreakPaneIron = new BlockPrisonUnbreakablePane(Config.prisonUnbreakPaneIron, "iron_bars", "iron_bars", Material.rock);
-        prisonJailView=new BlockJailView(Config.prisonJailView, Material.iron);
+        prisonMan = new BlockPrisonManager(Material.rock);
+        prisonUnbreak = new BlockPrisonUnbreakable(Material.rock);
+        prisonUnbreakGlass = new BlockPrisonUnbreakableGlass(Material.glass);
+        prisonUnbreakPaneGlass = new BlockPrisonUnbreakablePane("glass", "glass_pane_top", Material.rock);
+        prisonUnbreakPaneIron = new BlockPrisonUnbreakablePane("iron_bars", "iron_bars", Material.rock);
+        prisonJailView = new BlockJailView(Material.iron);
 
         GameRegistry.registerBlock(prisonMan, "prisonMan");
         GameRegistry.registerBlock(prisonUnbreak, "prisonUnbreak");

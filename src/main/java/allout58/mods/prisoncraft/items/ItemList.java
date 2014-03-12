@@ -14,10 +14,10 @@ public class ItemList
 
     public static void init()
     {
-        configWand = new ItemConfigWand(Config.configWand);
-        banhammer = new ItemBanHammer(Config.banhammer);
-        oliveBranch = new ItemOliveBranch(Config.oliveBranch);
-        jailLink = new ItemJailLink(Config.jailLink);
+        configWand = new ItemConfigWand();
+        banhammer = new ItemBanHammer();
+        oliveBranch = new ItemOliveBranch();
+        jailLink = new ItemJailLink();
 
         GameRegistry.registerItem(configWand, "prisonConfigWand");
         GameRegistry.registerItem(banhammer, "banhammer");

@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.network.PacketDispatcher;
+//import cpw.mods.fml.common.network.PacketDispatcher;
 
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.jail.JailMan;
@@ -19,11 +19,13 @@ import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.packet.Packet250CustomPayload;
+//import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 
 public class UnJailCommand implements ICommand
 {
@@ -64,7 +66,9 @@ public class UnJailCommand implements ICommand
     {
         if (astring.length != 1)
         {
-            icommandsender.sendChatToPlayer(new ChatMessageComponent().addText(EnumChatFormatting.RED.toString() ).addKey("string.invalidArgument"));
+        	IChatComponent msg=new ChatComponentTranslation("string.invalidArgument");
+        	msg.getChatStyle().setColor(EnumChatFormatting.RED);
+            icommandsender.addChatMessage(msg);
         }
         else
         {

@@ -1,5 +1,8 @@
 package allout58.mods.prisoncraft.constants;
 
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+
 public class ModConstants
 {
     public static final String MODID = "prisoncraft";
@@ -12,5 +15,10 @@ public class ModConstants
 
     public static final int ITEM_ID_DIFF = 256;
 
-    public static final int[] WHITELIST_WALL_IDS = { 1, 4, 7, 20, 24, 41, 42, 45, 48, 49, 57, 98, 101, 102, 112, 133 };
+    public static final String[] WHITELIST_WALL_BLOCKS = { getName(Blocks.stone), getName(Blocks.cobblestone), getName(Blocks.bedrock), getName(Blocks.glass), getName(Blocks.sandstone), getName(Blocks.gold_block), getName(Blocks.iron_block), getName(Blocks.brick_block), getName(Blocks.mossy_cobblestone), getName(Blocks.obsidian), getName(Blocks.diamond_block), getName(Blocks.stonebrick), getName(Blocks.iron_bars), getName(Blocks.glass_pane), getName(Blocks.nether_brick), getName(Blocks.emerald_block) };
+    
+    private static final String getName(Block b)
+    {
+        return Block.blockRegistry.getNameForObject(b);
+    }
 }

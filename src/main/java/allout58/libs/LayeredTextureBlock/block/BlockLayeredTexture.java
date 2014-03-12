@@ -2,7 +2,9 @@ package allout58.libs.LayeredTextureBlock.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.util.Icon;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.util.IIcon;
+import allout58.mods.prisoncraft.constants.TextureConstants;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -16,7 +18,7 @@ public abstract class BlockLayeredTexture extends Block
     /**
      * Icon used when a side doesn't need to be rendered on a pass.
      */
-    public Icon blank = new Icon()
+    public IIcon blank = new IIcon()
     {
         @Override
         @SideOnly(Side.CLIENT)
@@ -84,9 +86,9 @@ public abstract class BlockLayeredTexture extends Block
 
     };
 
-    public BlockLayeredTexture(int par1, Material par2Material)
+    public BlockLayeredTexture( Material par2Material)
     {
-        super(par1, par2Material);
+        super(par2Material);
     }
 
     @Override
@@ -100,5 +102,12 @@ public abstract class BlockLayeredTexture extends Block
     public final int getRenderBlockPass()
     {
         return 1;
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void registerBlockIcons(IIconRegister ir)
+    {
+        this.blank = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":blank");
     }
 }

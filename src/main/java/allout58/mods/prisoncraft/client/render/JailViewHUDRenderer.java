@@ -10,8 +10,6 @@ import static org.lwjgl.opengl.GL11.glRotated;
 import static org.lwjgl.opengl.GL11.glScalef;
 import static org.lwjgl.opengl.GL11.glTranslated;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,19 +18,20 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
-
-import allout58.mods.prisoncraft.constants.ModConstants;
+import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.jail.JailedPersonData;
-import allout58.mods.prisoncraft.jail.PrisonCraftWorldSave;
-import allout58.mods.prisoncraft.network.PacketHandler;
+import allout58.mods.prisoncraft.network.JVRequestPacket;
 import allout58.mods.prisoncraft.tileentities.TileEntityJailView;
+import cpw.mods.fml.common.network.FMLOutboundHandler;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.relauncher.Side;
+// import net.minecraft.network.packet.Packet250CustomPayload;
+// import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class JailViewHUDRenderer extends TileEntitySpecialRenderer
 {
@@ -52,27 +51,18 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
     @Override
     public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float tick)
     {
+        if(tileentity.blockMetadata==0)
+        {
+            //drawText("Not linked", 20, 20, 1);
+            return;
+        }
         if (!hasFirstChecked)
         {
             hasFirstChecked = true;
-            ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
-            DataOutputStream outputStream = new DataOutputStream(bos);
-            try
-            {
-                // Ask for them all again
-                outputStream.writeByte(PacketHandler.JV_SEND_ALL);
-            }
-            catch (Exception ex)
-            {
-                ex.printStackTrace();
-            }
+            System.out.println("First time: send all please!");
 
-            Packet250CustomPayload packet = new Packet250CustomPayload();
-            packet.channel = ModConstants.JV_CLIENT_TO_SERVER_PACKET_CHANNEL;
-            packet.data = bos.toByteArray();
-            packet.length = bos.size();
-            PacketDispatcher.sendPacketToServer(packet);
-            // System.out.println("First time: send all!");
+            PrisonCraft.channels.get(Side.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
+            PrisonCraft.channels.get(Side.CLIENT).writeAndFlush(new JVRequestPacket());
         }
 
         ticks++;
@@ -85,12 +75,17 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
                 {
                     people.get(i).time--;
                 }
+                if (people.get(i).time==0)
+                {
+                    people.remove(i);
+                }
+                    
             }
         }
         if (ticks % 1000 == 0)
         {
             updateAllPeople();
-            // System.out.println("Update all people");
+            System.out.println("Update all people");
         }
         if (ticks >= 4000)
         {
@@ -105,7 +100,7 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
         glDisable(GL_TEXTURE_2D);
         glDisable(GL_LIGHTING);
 
-        glTranslated(x + 0.5, y + .5, z + 0.5);
+        glTranslated(x + 0.5, y + .52, z + 0.5);
 
         EntityLivingBase player = Minecraft.getMinecraft().renderViewEntity;
 
@@ -123,7 +118,7 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
         double dz = 0;
 
         tess.startDrawingQuads();
-        tess.setColorRGBA(255, 255, 255, 255);
+        tess.setColorRGBA(0x8e, 0x8e, 0x8e, 255);
         tess.addVertex(dx, dy, dz);
         tess.addVertex(dx, dy + HEIGHT, dz);
         tess.addVertex(dx + WIDTH, dy + HEIGHT, dz);
@@ -149,7 +144,7 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
             if (people.get(i).jail.equals(((TileEntityJailView) tileentity).jailname))
             {
                 String time = "\u221E";
-                if (people.get(i).time != -1)
+                if (people.get(i).time >= -1)
                 {
                     time = Integer.toString(people.get(i).time);
                 }
@@ -175,7 +170,7 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
         {
             size += .015F;
             extraX = 1.33;
-            extraY = .51;
+            extraY = .295;
         }
         glTranslated(WIDTH * .5 - .1 + extraX, HEIGHT - .1 + extraY, -.005);
         glRotated(180, 0, 0, 1);
@@ -200,23 +195,8 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
 
     private void getPerson(JailedPersonData person)
     {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream(8);
-        DataOutputStream outputStream = new DataOutputStream(bos);
-        try
-        {
-            outputStream.writeByte(PacketHandler.JV_SEND_ONE);
-            outputStream.writeUTF(person.name);
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
-
-        Packet250CustomPayload packet = new Packet250CustomPayload();
-        packet.channel = ModConstants.JV_CLIENT_TO_SERVER_PACKET_CHANNEL;
-        packet.data = bos.toByteArray();
-        packet.length = bos.size();
-        PacketDispatcher.sendPacketToServer(packet);
+        PrisonCraft.channels.get(Side.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
+        PrisonCraft.channels.get(Side.CLIENT).writeOutbound(new JVRequestPacket(person.name));
     }
 
     public static String clampString(String s, int size)
