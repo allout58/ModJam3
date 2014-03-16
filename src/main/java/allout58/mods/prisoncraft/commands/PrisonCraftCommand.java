@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
+import net.minecraft.block.Block;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -113,6 +116,7 @@ public class PrisonCraftCommand implements ICommand
         {
             if (astring[0].equalsIgnoreCase("ids"))
             {
+                if ("list".startsWith(ARG_LC)) MATCHES.add("list");
                 if ("add".startsWith(ARG_LC)) MATCHES.add("add");
                 if ("remove".startsWith(ARG_LC)) MATCHES.add("remove");
                 if ("save".startsWith(ARG_LC)) MATCHES.add("save");
@@ -122,6 +126,37 @@ public class PrisonCraftCommand implements ICommand
             {
                 if ("cell".startsWith(ARG_LC)) MATCHES.add("cell");
                 if ("jail".startsWith(ARG_LC)) MATCHES.add("jail");
+            }
+        }
+        if (astring.length == 3)
+        {
+            if (astring[1].equalsIgnoreCase("remove"))
+            {
+                for (String s : ConfigChangableBlocks.getInstance().getNames())
+                {
+                    if (s.startsWith(ARG_LC)) MATCHES.add(s);
+                    if (s.contains(":"))
+                    {
+                        String sDomless = s.substring(s.indexOf(":"));
+                        if (sDomless.startsWith(ARG_LC)) MATCHES.add(s);
+                    }
+                }
+            }
+            if (astring[1].equalsIgnoreCase("add"))
+            {
+                for (Object o : Block.blockRegistry.getKeys())
+                {
+                    if (o instanceof String)
+                    {
+                        String s = (String) o;
+                        if (s.startsWith(ARG_LC)) MATCHES.add(s);
+                        if (s.contains(":"))
+                        {
+                            String sDomless = s.substring(s.indexOf(":"));
+                            if (sDomless.startsWith(ARG_LC)) MATCHES.add(s);
+                        }
+                    }
+                }
             }
         }
         return MATCHES.isEmpty() ? null : MATCHES;
@@ -165,6 +200,10 @@ public class PrisonCraftCommand implements ICommand
                         MinecraftServer.getServer().addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.loadedconfig")));
                     }
                 }
+                else if (astring[1].equalsIgnoreCase("list"))
+                {
+                    sender.addChatMessage(new ChatComponentText(StringUtils.join(ConfigChangableBlocks.getInstance().getNames(),", ")));
+                }
                 else
                 {
                     sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.invalidArgument")));
@@ -176,7 +215,7 @@ public class PrisonCraftCommand implements ICommand
                 {
                     try
                     {
-                        ConfigChangableBlocks.getInstance().addName(astring[2]);
+                        ConfigChangableBlocks.getInstance().addWhitelist(astring[2]);
                         sender.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.idadded")));
                         if (!sender.getCommandSenderName().equalsIgnoreCase("server"))
                         {
@@ -188,11 +227,11 @@ public class PrisonCraftCommand implements ICommand
                         sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.invalidArgument")));
                     }
                 }
-                if (astring[1].equalsIgnoreCase("remove"))
+                else if (astring[1].equalsIgnoreCase("remove"))
                 {
                     try
                     {
-                        if (ConfigChangableBlocks.getInstance().removeName(astring[2]))
+                        if (ConfigChangableBlocks.getInstance().removeWhiteList(astring[2]))
                         {
                             sender.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.idremoved")));
                             if (!sender.getCommandSenderName().equalsIgnoreCase("server"))
@@ -230,8 +269,8 @@ public class PrisonCraftCommand implements ICommand
             if (astring[1].equalsIgnoreCase("cell"))
             {
                 EntityPlayer player = (EntityPlayer) sender;
-                player.dropItem(ItemList.configWand,1).delayBeforeCanPickup = 0;
-                player.dropItem(Item.getItemFromBlock(BlockList.prisonMan),1).delayBeforeCanPickup = 0;
+                player.dropItem(ItemList.configWand, 1).delayBeforeCanPickup = 0;
+                player.dropItem(Item.getItemFromBlock(BlockList.prisonMan), 1).delayBeforeCanPickup = 0;
                 if (player instanceof EntityPlayerMP)
                 {
                     ((EntityPlayerMP) player).setGameType(GameType.CREATIVE);

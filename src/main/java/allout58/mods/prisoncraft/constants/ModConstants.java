@@ -15,7 +15,11 @@ public class ModConstants
 
     public static final int ITEM_ID_DIFF = 256;
 
-    public static final String[] WHITELIST_WALL_BLOCKS = { getName(Blocks.stone), getName(Blocks.cobblestone), getName(Blocks.bedrock), getName(Blocks.glass), getName(Blocks.sandstone), getName(Blocks.gold_block), getName(Blocks.iron_block), getName(Blocks.brick_block), getName(Blocks.mossy_cobblestone), getName(Blocks.obsidian), getName(Blocks.diamond_block), getName(Blocks.stonebrick), getName(Blocks.iron_bars), getName(Blocks.glass_pane), getName(Blocks.nether_brick), getName(Blocks.emerald_block) };
+    public static final String[] getWHITELIST_WALL_BLOCKS()
+    {
+        String[] wht={ getName(Blocks.stone), getName(Blocks.cobblestone), getName(Blocks.bedrock), getName(Blocks.glass), getName(Blocks.sandstone), getName(Blocks.gold_block), getName(Blocks.iron_block), getName(Blocks.brick_block), getName(Blocks.mossy_cobblestone), getName(Blocks.obsidian), getName(Blocks.diamond_block), getName(Blocks.stonebrick), getName(Blocks.iron_bars), getName(Blocks.glass_pane), getName(Blocks.nether_brick), getName(Blocks.emerald_block) };
+        return wht;
+    }
     
     private static final String getName(Block b)
     {

@@ -30,7 +30,7 @@ public class Config
     // Logging options
     public static boolean logJailing;
 
-    public static int[] unbreakIDWhitelistDefault;
+    public static String[] unbreakIDWhitelistDefault=ModConstants.getWHITELIST_WALL_BLOCKS();
     
     private static boolean isInit=false;
     private static Configuration conf;

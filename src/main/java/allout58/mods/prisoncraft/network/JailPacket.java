@@ -15,25 +15,28 @@ public class JailPacket implements IPacket
 {
     private String playerToJail = "";
     private String jailer = "";
-    private int jailTime = -1;
+    private String jailname = "";
+    private double jailTime = -1;
 
     public JailPacket()
     {
     }
 
-    public JailPacket(String playerToJail, String jailer, int jailTime)
+    public JailPacket(String playerToJail, String jailer, String jailname, double jailTime)
     {
         this.playerToJail = playerToJail;
         this.jailer = jailer;
+        this.jailname = jailname;
         this.jailTime = jailTime;
     }
 
     @Override
     public void readBytes(ByteBuf bytes)
     {
-        this.playerToJail=NetworkUtils.readString(bytes);
-        this.jailer=NetworkUtils.readString(bytes);
-        this.jailTime=bytes.readInt();
+        this.playerToJail = NetworkUtils.readString(bytes);
+        this.jailer = NetworkUtils.readString(bytes);
+        this.jailname=NetworkUtils.readString(bytes);
+        this.jailTime = bytes.readInt();
 
     }
 
@@ -41,17 +44,17 @@ public class JailPacket implements IPacket
     public void writeBytes(ByteBuf bytes)
     {
         NetworkUtils.writeString(bytes, this.playerToJail);
-        NetworkUtils.writeString(bytes, this.jailer);        
-        bytes.writeInt(this.jailTime);
+        NetworkUtils.writeString(bytes, this.jailer);
+        NetworkUtils.writeString(bytes, this.jailname);
+        bytes.writeDouble(this.jailTime);
     }
 
-    
     @Override
     public void postProcess()
     {
         if (JailPermissions.getInstance().playerCanUse(jailer, PermissionLevel.Jailer))
         {
-            JailMan.getInstance().TryJailPlayer(playerToJail, jailer, "", jailTime);
+            JailMan.getInstance().TryJailPlayer(playerToJail, jailer, jailname, jailTime);
         }
         else
         {

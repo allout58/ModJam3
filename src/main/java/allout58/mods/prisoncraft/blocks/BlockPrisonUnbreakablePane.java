@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockPane;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
@@ -22,7 +23,7 @@ public class BlockPrisonUnbreakablePane extends BlockPane implements ITileEntity
         super(iconName, topIcon, mat, false);
         setBlockUnbreakable();
         setResistance(6000000.0F);
-        setLightLevel(.2F);
+//        setLightLevel(.2F);
         setBlockName("prisonUnbreakablePane");
     }
     
@@ -39,6 +40,36 @@ public class BlockPrisonUnbreakablePane extends BlockPane implements ITileEntity
         return null;
     }
 
+    @Override
+    public int getLightValue(IBlockAccess world, int x, int y, int z)
+    {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if(te instanceof TileEntityPrisonUnbreakable)
+        {
+            return ((TileEntityPrisonUnbreakable)te).getFakeBlock().getLightValue();
+        }
+        else
+            return getLightValue();
+    }
+    
+    @Override
+    public int getLightOpacity(IBlockAccess world, int x, int y, int z)
+    {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if(te instanceof TileEntityPrisonUnbreakable)
+        {
+            return ((TileEntityPrisonUnbreakable)te).getFakeBlock().getLightOpacity();
+        }
+        else
+            return getLightOpacity();
+    }
+    
+    @Override
+    public boolean canCreatureSpawn(EnumCreatureType type, IBlockAccess world, int x, int y, int z)
+    {
+        return false;
+    }
+    
     @Override
     public boolean canPaneConnectTo(IBlockAccess access, int x, int y, int z, ForgeDirection dir)
     {

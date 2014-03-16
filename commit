@@ -1,1 +1,5 @@
-1.7 - Straight(ish) port of v0.0.4 from 1.6
+Banhammer updates
+
+Added the ability to configure the time and jailname for a banhammer
+-Untested on multiplayer
+	Added packet and gui for this...

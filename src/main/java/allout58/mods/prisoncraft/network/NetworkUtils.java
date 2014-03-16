@@ -25,11 +25,11 @@ public class NetworkUtils
     public static String readString(ByteBuf buff)
     {
         int size = buff.readInt();
-        char[] s1 = new char[size];
+        String s = "";
         for (int i = 0; i < size; i++)
         {
-            s1[i] = buff.readChar();
+            s += buff.readChar();
         }
-        return s1.toString();
+        return s;
     }
 }

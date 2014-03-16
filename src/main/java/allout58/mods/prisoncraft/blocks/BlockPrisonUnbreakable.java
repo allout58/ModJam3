@@ -5,6 +5,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -25,10 +26,40 @@ public class BlockPrisonUnbreakable extends BlockContainer
         super(par2Material);
         setBlockUnbreakable();
         setResistance(6000000.0F);
-        setLightLevel(.2F);
+//        setLightLevel(.2F);
         setBlockName("prisonUnbreakable");
         setBlockTextureName("minecraft:bedrock");
 
+    }
+    
+    @Override
+    public int getLightValue(IBlockAccess world, int x, int y, int z)
+    {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if(te instanceof TileEntityPrisonUnbreakable)
+        {
+            return ((TileEntityPrisonUnbreakable)te).getFakeBlock().getLightValue();
+        }
+        else
+            return getLightValue();
+    }
+    
+    @Override
+    public int getLightOpacity(IBlockAccess world, int x, int y, int z)
+    {
+        TileEntity te = world.getTileEntity(x, y, z);
+        if(te instanceof TileEntityPrisonUnbreakable)
+        {
+            return ((TileEntityPrisonUnbreakable)te).getFakeBlock().getLightOpacity();
+        }
+        else
+            return getLightOpacity();
+    }
+    
+    @Override
+    public boolean canCreatureSpawn(EnumCreatureType type, IBlockAccess world, int x, int y, int z)
+    {
+        return false;
     }
 
     public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)

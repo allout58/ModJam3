@@ -33,7 +33,7 @@ public class BlockJailView extends BlockLayeredTexture implements ITileEntityPro
         setResistance(6000000.0F);
         setBlockName("jailView");
         setBlockTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side");
-        setCreativeTab(PrisonCraft.creativeTab);
+//        setCreativeTab(PrisonCraft.creativeTab);
         setBlockBounds(0, 0, 0, 1, (float) .5, 1);
     }
     

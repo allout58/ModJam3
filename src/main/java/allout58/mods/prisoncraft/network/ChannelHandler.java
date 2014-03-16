@@ -12,6 +12,7 @@ public class ChannelHandler extends FMLIndexedMessageToMessageCodec<IPacket>
         addDiscriminator(1, UnjailPacket.class);
         addDiscriminator(2, JVRequestPacket.class);
         addDiscriminator(3, JVSendPersonPacket.class);
+        addDiscriminator(4, UpdateHammerPacket.class);
     }
 
     @Override

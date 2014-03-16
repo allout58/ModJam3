@@ -3,8 +3,8 @@
   "modid": "prisoncraft",
   "name" : "PrisonCraft",
   "description" : "Jail players - WITH FORGE!",
-  "version": "0.0.4",
-  "url": "www.github.com/allout58/ModJam3/",
+  "version": "${version}",
+  "url": "http://www.github.com/allout58/PrisonCraft",
   "updateUrl": "",
   "authorList": [
     "allout58"

@@ -16,6 +16,7 @@ public class ConfigChangableBlocks
     private static ConfigChangableBlocks instance;
 
     private List<Block> unbreakIDWhitelist = new ArrayList<Block>();
+    private List<Block> blockBlacklist = new ArrayList<Block>();
     private File propFile;
 
     public static ConfigChangableBlocks getInstance()
@@ -27,6 +28,8 @@ public class ConfigChangableBlocks
         return instance;
     }
 
+    /*Load/save functions*/
+    
     public void load(File f)
     {
         unbreakIDWhitelist.clear();
@@ -38,7 +41,7 @@ public class ConfigChangableBlocks
                 f.createNewFile();
                 for (int i = 0; i < Config.unbreakIDWhitelistDefault.length; i++)
                 {
-                    unbreakIDWhitelist.add(Block.getBlockFromName(ModConstants.WHITELIST_WALL_BLOCKS[i]));
+                    addWhitelist(ModConstants.getWHITELIST_WALL_BLOCKS()[i]);
                 }
                 save();
 
@@ -57,7 +60,7 @@ public class ConfigChangableBlocks
             {
                 try
                 {
-                    this.addName(ln);
+                    this.addWhitelist(ln);
                 }
                 catch (NumberFormatException e)
                 {
@@ -79,7 +82,7 @@ public class ConfigChangableBlocks
 
             for (int i = 0; i < unbreakIDWhitelist.size(); i++)
             {
-                writer.write(unbreakIDWhitelist.get(i).toString() + "\n");
+                writer.write(Block.blockRegistry.getNameForObject(unbreakIDWhitelist.get(i)) + "\n");
             }
             writer.close();
         }
@@ -89,6 +92,8 @@ public class ConfigChangableBlocks
         }
     }
 
+    /*Currently whitelisted blocks*/
+    
     public String[] getNames()
     {
         String[] ret = new String[unbreakIDWhitelist.size()];
@@ -99,25 +104,28 @@ public class ConfigChangableBlocks
         return ret;
     }
 
-    public boolean addName(String name)
+    /* Whitelist functions */
+    
+    public boolean addWhitelist(String name)
     {
         Block b = Block.getBlockFromName(name);
-        if (b != null) return unbreakIDWhitelist.add(b);
+        if (b != null) return addWhitelist(b);
         return false;
     }
 
-    public boolean addBlock(Block block)
+    public boolean addWhitelist(Block block)
     {
-        return unbreakIDWhitelist.add(block);
+        if (blockBlacklist.contains(block)) return false;
+        else return unbreakIDWhitelist.add(block);
     }
 
-    public boolean removeName(String name)
+    public boolean removeWhiteList(String name)
     {
         Block b = Block.getBlockFromName(name);
-        return removeBlock(b);
+        return removeWhitelist(b);
     }
 
-    public boolean removeBlock(Block block)
+    public boolean removeWhitelist(Block block)
     {
         int loc = unbreakIDWhitelist.indexOf(block);
         if (loc > -1)
@@ -125,5 +133,19 @@ public class ConfigChangableBlocks
             unbreakIDWhitelist.remove(loc);
         }
         return loc > -1;
+    }
+
+    /*Blacklist functions*/
+    
+    public boolean addBlacklist(String name)
+    {
+        Block b = Block.getBlockFromName(name);
+        if (b != null) return addBlacklist(b);
+        return false;
+    }
+
+    public boolean addBlacklist(Block block)
+    {
+        return blockBlacklist.add(block);
     }
 }

@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import allout58.mods.prisoncraft.CommonProxy;
 import allout58.mods.prisoncraft.PrisonCraft;
+import allout58.mods.prisoncraft.constants.GuiIDs;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.constants.TextureConstants;
 import allout58.mods.prisoncraft.network.JailPacket;
@@ -24,24 +25,44 @@ public class ItemBanHammer extends ItemEntityTargetTool
         setUnlocalizedName("banhammer");
         setTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + getUnlocalizedName().substring(5));
     }
+    
+    @Override
+    public boolean getShareTag()
+    {
+        return true;
+    }
 
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
     {
-        super.onItemRightClick(stack, world, player);
-
-        if (stack.hasTagCompound() && stack.stackTagCompound.hasKey("userHit"))
+        if (player.isSneaking())
         {
-            // System.out.printf("%s: User-> %s%s", world.isRemote ?
-            // "Client" : "Server",
-            // stack.stackTagCompound.getString("userHit"),
-            // System.lineSeparator());
-            // Build packet
-            
-            PrisonCraft.channels.get(Side.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
-            PrisonCraft.channels.get(Side.CLIENT).writeOutbound(new JailPacket(stack.stackTagCompound.getString("userHit"), player.getDisplayName(), -1));
-            
-            stack.stackTagCompound = null;
+            player.openGui(PrisonCraft.instance, GuiIDs.BANHAMMER_GUI, world, (int)player.posX, (int)player.posY, (int)player.posZ);
+        }
+        else
+        {
+            super.onItemRightClick(stack, world, player);
+
+            if (stack.hasTagCompound() && stack.stackTagCompound.hasKey("userHit"))
+            {
+                String name="";
+                double time=-1;
+                
+                if(stack.getTagCompound().hasKey("jailname"))
+                {
+                    name=stack.getTagCompound().getString("jailname");
+                }
+                if(stack.getTagCompound().hasKey("time"))
+                {
+                    time=stack.getTagCompound().getDouble("time");
+                }
+                
+                // Build packet
+                PrisonCraft.channels.get(Side.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
+                PrisonCraft.channels.get(Side.CLIENT).writeOutbound(new JailPacket(stack.stackTagCompound.getString("userHit"), player.getDisplayName(), name, time));
+
+                stack.stackTagCompound.removeTag("userHit");
+            }
         }
 
         return stack;
@@ -56,6 +77,18 @@ public class ItemBanHammer extends ItemEntityTargetTool
         if (CommonProxy.shouldAddAdditionalInfo())
         {
             infoList.add("Use this tool to send the player you are looking at to jail!");
+            
+            if(stack.hasTagCompound())
+            {
+                if(stack.getTagCompound().hasKey("jailname"))
+                {
+                    infoList.add("Jail name: "+stack.getTagCompound().getString("jailname"));
+                }
+                if(stack.getTagCompound().hasKey("time"))
+                {
+                    infoList.add("Time: "+stack.getTagCompound().getDouble("time"));
+                }
+            }
         }
         else
         {
