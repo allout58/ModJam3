@@ -58,8 +58,8 @@ public class PrisonCraftCommand implements ICommand
     {
         String use = "/prisoncraft configure <cell|jail> [jailname]\n";
         use += "/prisoncraft doneconfig\n";
-        use += "/prisoncraft ids <add|remove> <id>\n";
-        use += "/prisoncraft ids <save|reload>";
+        use += "/prisoncraft whitelist <add|remove> <id>\n";
+        use += "/prisoncraft whitelist <save|reload>";
         return use;
     }
 
@@ -78,7 +78,7 @@ public class PrisonCraftCommand implements ICommand
         }
         else
         {
-            if (astring[0].equalsIgnoreCase("ids"))
+            if (astring[0].equalsIgnoreCase("whitelist"))
             {
                 processIds(icommandsender, astring);
             }
@@ -108,13 +108,13 @@ public class PrisonCraftCommand implements ICommand
         final String ARG_LC = astring[astring.length - 1].toLowerCase();
         if (astring.length == 1)
         {
-            if ("ids".startsWith(ARG_LC)) MATCHES.add("ids");
+            if ("whitelist".startsWith(ARG_LC)) MATCHES.add("whitelist");
             if ("configure".startsWith(ARG_LC)) MATCHES.add("configure");
             if ("doneconfig".startsWith(ARG_LC)) MATCHES.add("doneconfig");
         }
         if (astring.length == 2)
         {
-            if (astring[0].equalsIgnoreCase("ids"))
+            if (astring[0].equalsIgnoreCase("whitelist"))
             {
                 if ("list".startsWith(ARG_LC)) MATCHES.add("list");
                 if ("add".startsWith(ARG_LC)) MATCHES.add("add");
@@ -137,7 +137,7 @@ public class PrisonCraftCommand implements ICommand
                     if (s.startsWith(ARG_LC)) MATCHES.add(s);
                     if (s.contains(":"))
                     {
-                        String sDomless = s.substring(s.indexOf(":"));
+                        String sDomless = s.substring(s.indexOf(":") + 1);
                         if (sDomless.startsWith(ARG_LC)) MATCHES.add(s);
                     }
                 }
@@ -148,11 +148,31 @@ public class PrisonCraftCommand implements ICommand
                 {
                     if (o instanceof String)
                     {
+                        //if block already in whitelist, don't show
                         String s = (String) o;
+                        List<String> sList = new ArrayList<String>();
+                        for (String t : ConfigChangableBlocks.getInstance().getNames())
+                        {
+                            sList.add(t);
+                        }
+                        if (sList.contains(s)) continue;
+                        
+                        //If block in blacklist, don't show
+                        //reuse sList
+                        sList.clear();
+                        for (String t : ConfigChangableBlocks.getInstance().getBlackList())
+                        {
+                            sList.add(t);
+                        }
+                        if (sList.contains(s)) continue;
+                        
+                        //starts with what's there, add it
                         if (s.startsWith(ARG_LC)) MATCHES.add(s);
+                        
+                        //add the ability to ignore the domain
                         if (s.contains(":"))
                         {
-                            String sDomless = s.substring(s.indexOf(":"));
+                            String sDomless = s.substring(s.indexOf(":") + 1);
                             if (sDomless.startsWith(ARG_LC)) MATCHES.add(s);
                         }
                     }
@@ -202,7 +222,16 @@ public class PrisonCraftCommand implements ICommand
                 }
                 else if (astring[1].equalsIgnoreCase("list"))
                 {
-                    sender.addChatMessage(new ChatComponentText(StringUtils.join(ConfigChangableBlocks.getInstance().getNames(),", ")));
+                    List<String> sL = new ArrayList<String>();
+                    for (String e : ConfigChangableBlocks.getInstance().getNames())
+                    {
+                        if (e.contains("minecraft:"))
+                        {
+                            e = e.replace("minecraft:", "");
+                        }
+                        sL.add(e);
+                    }
+                    sender.addChatMessage(new ChatComponentText(StringUtils.join(sL, ", ")));
                 }
                 else
                 {
@@ -215,11 +244,13 @@ public class PrisonCraftCommand implements ICommand
                 {
                     try
                     {
-                        ConfigChangableBlocks.getInstance().addWhitelist(astring[2]);
-                        sender.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.idadded")));
-                        if (!sender.getCommandSenderName().equalsIgnoreCase("server"))
+                        if (ConfigChangableBlocks.getInstance().addWhitelist(astring[2]))
                         {
-                            MinecraftServer.getServer().addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.idadded")));
+                            sender.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.idadded")));
+                            if (!sender.getCommandSenderName().equalsIgnoreCase("server"))
+                            {
+                                MinecraftServer.getServer().addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + StatCollector.translateToLocal("string.idadded")));
+                            }
                         }
                     }
                     catch (NumberFormatException e)

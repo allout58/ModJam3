@@ -60,6 +60,7 @@ public class JVSendPersonPacket implements IPacket
                 NetworkUtils.writeString(bytes, peeps.get(i).jail);
                 NetworkUtils.writeString(bytes, peeps.get(i).name);
                 bytes.writeInt(peeps.get(i).time);
+                if(peeps.get(i).reason==null)peeps.get(i).reason="";
                 NetworkUtils.writeString(bytes, peeps.get(i).reason);
             }
         }

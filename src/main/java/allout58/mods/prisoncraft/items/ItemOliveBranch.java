@@ -66,8 +66,10 @@ public class ItemOliveBranch extends ItemEntityTargetTool
         // TODO See if this can be localized
         if (CommonProxy.shouldAddAdditionalInfo())
         {
-            infoList.add("Use this tool to release the player you are looking at from jail!");
-            infoList.add("Can also be used on a prison manager to release its player.");
+            infoList.add("Use this tool to release the player");
+            infoList.add(" you are looking at from jail!");
+            infoList.add("Can also be used on a prison manager");
+            infoList.add(" to release its player.");
         }
         else
         {

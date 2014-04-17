@@ -3,6 +3,7 @@ package allout58.mods.prisoncraft.items;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.util.List;
+import java.util.zip.DeflaterOutputStream;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -23,7 +24,7 @@ public class ItemBanHammer extends ItemEntityTargetTool
     {
         super();
         setUnlocalizedName("banhammer");
-        setTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + getUnlocalizedName().substring(5));
+        setTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + getUnlocalizedName().substring(5)); 
     }
     
     @Override
@@ -76,7 +77,8 @@ public class ItemBanHammer extends ItemEntityTargetTool
         // TODO See if this can be localized
         if (CommonProxy.shouldAddAdditionalInfo())
         {
-            infoList.add("Use this tool to send the player you are looking at to jail!");
+            infoList.add("Use this tool to send the player");
+            infoList.add("you are looking at to jail!");
             
             if(stack.hasTagCompound())
             {

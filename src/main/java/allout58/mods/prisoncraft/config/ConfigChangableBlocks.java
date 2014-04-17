@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import allout58.mods.prisoncraft.blocks.BlockList;
 import allout58.mods.prisoncraft.constants.ModConstants;
 
 public class ConfigChangableBlocks
@@ -28,10 +29,18 @@ public class ConfigChangableBlocks
         return instance;
     }
 
-    /*Load/save functions*/
+    /* Load/save functions */
     
     public void load(File f)
     {
+        //Blacklist all PC blocks
+        addBlacklist(BlockList.prisonUnbreakPaneIron);
+        addBlacklist(BlockList.prisonUnbreakPaneGlass);
+        addBlacklist(BlockList.prisonUnbreakGlass);
+        addBlacklist(BlockList.prisonUnbreak);
+        addBlacklist(BlockList.prisonMan);
+        addBlacklist(BlockList.prisonJailView);
+        
         unbreakIDWhitelist.clear();
         propFile = f;
         if (!f.exists())
@@ -147,5 +156,10 @@ public class ConfigChangableBlocks
     public boolean addBlacklist(Block block)
     {
         return blockBlacklist.add(block);
+    }
+    
+    public String[] getBlackList()
+    {
+        return (String[])blockBlacklist.toArray();
     }
 }

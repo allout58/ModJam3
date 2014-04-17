@@ -1,5 +1,1 @@
-Banhammer updates
-
-Added the ability to configure the time and jailname for a banhammer
--Untested on multiplayer
-	Added packet and gui for this...
+Begin working on FakeWorld in prep for replacing TEs

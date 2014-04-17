@@ -43,8 +43,6 @@ public class GuiBanHammer extends GuiScreen
         centerX = this.width / 2;
         centerY = this.height / 2;
         super.initGui();
-        
-
 
         Keyboard.enableRepeatEvents(true);
 
@@ -61,24 +59,25 @@ public class GuiBanHammer extends GuiScreen
         time.setEnabled(true);
         time.setEnableBackgroundDrawing(true);
         time.setMaxStringLength(30);
-        time.setText("-1"); 
-        
+        time.setText("-1");
+
         ItemStack is = this.mc.thePlayer.getCurrentEquippedItem();
-        if(is!=null&&is.getItem() instanceof ItemBanHammer)
+        if (is != null && is.getItem() instanceof ItemBanHammer)
         {
-            if(is.getTagCompound().hasKey("jailname"))
+            if (is.getTagCompound().hasKey("jailname"))
             {
                 jailname.setText(is.getTagCompound().getString("jailname"));
             }
-            if(is.getTagCompound().hasKey("time"))
+            if (is.getTagCompound().hasKey("time"))
             {
-                double d=is.getTagCompound().getDouble("time");
+                double d = is.getTagCompound().getDouble("time");
                 time.setText(String.valueOf(d));
             }
         }
 
         // id, x, y, width, height, text
-        buttonList.add(new GuiButton(1, centerX - 24, 122, 48, 20, "OK"));
+        buttonList.add(new GuiButton(1, centerX - 50, 122, 48, 20, "OK"));
+        buttonList.add(new GuiButton(1, centerX + 2, 122, 48, 20, "Cancel"));
     }
 
     public void onGuiClosed()
@@ -94,15 +93,17 @@ public class GuiBanHammer extends GuiScreen
         switch (guibutton.id)
         {
             case 1:
-//                System.out.println("OK Clicked");
                 if (isJailOK && isTimeOK)
                 {
                     PrisonCraft.channels.get(Side.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
                     PrisonCraft.channels.get(Side.CLIENT).writeAndFlush(new UpdateHammerPacket(Minecraft.getMinecraft().thePlayer.getDisplayName(), jailname.getText(), Double.parseDouble(time.getText())));
-                    this.mc.displayGuiScreen((GuiScreen)null);
+                    this.mc.displayGuiScreen((GuiScreen) null);
                     this.mc.setIngameFocus();
                 }
                 break;
+            case 2:
+                this.mc.displayGuiScreen(null);
+                this.mc.setIngameFocus();
             default:
                 FMLLog.severe("Unknown button clicked!");
         }
@@ -112,16 +113,10 @@ public class GuiBanHammer extends GuiScreen
     public void drawScreen(int p1, int p2, float p3)
     {
         this.drawDefaultBackground();
-        drawBG();
         super.drawScreen(p1, p2, p3);
         jailname.drawTextBox();
         time.drawTextBox();
         drawFG();
-    }
-
-    private void drawBG()
-    {
-
     }
 
     private void drawFG()
@@ -158,15 +153,15 @@ public class GuiBanHammer extends GuiScreen
     protected void mouseClicked(int par1, int par2, int par3)
     {
         super.mouseClicked(par1, par2, par3);
-        boolean jF=jailname.isFocused();
-        boolean tF=time.isFocused();
+        boolean jF = jailname.isFocused();
+        boolean tF = time.isFocused();
         jailname.mouseClicked(par1, par2, par3);
         time.mouseClicked(par1, par2, par3);
-        if(jF&&!jailname.isFocused())//if jailname lost focus
+        if (jF && !jailname.isFocused())// if jailname lost focus
         {
             tryParseJail();
         }
-        if(tF&&!time.isFocused())//if time lost focus
+        if (tF && !time.isFocused())// if time lost focus
         {
             tryParseTime();
         }
