@@ -1,9 +1,11 @@
 package allout58.mods.prisoncraft.client.render;
 
 import allout58.mods.prisoncraft.PrisonCraft;
+import allout58.mods.prisoncraft.constants.TextureConstants;
 import allout58.mods.prisoncraft.jail.JailedPersonData;
 import allout58.mods.prisoncraft.network.JVRequestPacket;
 import allout58.mods.prisoncraft.tileentities.TileEntityJailView;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.Minecraft;
@@ -92,9 +94,9 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
         glPushMatrix();
 
         glDisable(GL_TEXTURE_2D);
-        glDisable(GL_LIGHTING);
+//        glDisable(GL_LIGHTING);
 
-        glTranslated(x + 0.5, y + .52, z + 0.5);
+        glTranslated(x + 0.5, y + 1.02, z + 0.5);
 
         EntityLivingBase player = Minecraft.getMinecraft().renderViewEntity;
 
@@ -112,7 +114,7 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
         double dz = 0;
 
         tess.startDrawingQuads();
-        tess.setColorRGBA(0x8e, 0x8e, 0x8e, 255);
+        tess.setColorRGBA(113, 160, 254, 200);
         tess.addVertex(dx, dy, dz);
         tess.addVertex(dx, dy + HEIGHT, dz);
         tess.addVertex(dx + WIDTH, dy + HEIGHT, dz);
@@ -120,7 +122,19 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
         tess.draw();
 
         glEnable(GL_TEXTURE_2D);
-        glEnable(GL_LIGHTING);
+//        glEnable(GL_LIGHTING);
+
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(TextureConstants.holoBottom);
+
+        tess.startDrawingQuads();
+        tess.addVertexWithUV(dx,dy-.49,dz,1,1);
+        tess.addVertexWithUV(dx,dy,dz,1,0);
+        tess.addVertexWithUV(dx+WIDTH,dy,dz,0,0);
+        tess.addVertexWithUV(dx+WIDTH,dy-.49,dz,0,1);
+
+        tess.draw();
+
+
 
         drawText(EnumChatFormatting.UNDERLINE.toString() + "Name", COL_1_X, 0, 0.012F);
         drawText(EnumChatFormatting.UNDERLINE.toString() + "Time", COL_2_X - 10, 0, 0.012F);
@@ -135,7 +149,7 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
             if (people.get(i).jail.equals(((TileEntityJailView) tileentity).jailname))
             {
                 String time = "\u221E";
-                if (people.get(i).time >= -1)
+                if (people.get(i).time > -1)
                 {
                     time = Integer.toString(people.get(i).time);
                 }
@@ -159,9 +173,9 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
         double extraY = 0;
         if (text.equals("\u221E"))
         {
-            size += .015F;
-            extraX = 1.33;
-            extraY = .295;
+            size += .002F;
+            extraX = .13;
+            extraY = .05;
         }
         glTranslated(WIDTH * .5 - .1 + extraX, HEIGHT - .1 + extraY, -.005);
         glRotated(180, 0, 0, 1);

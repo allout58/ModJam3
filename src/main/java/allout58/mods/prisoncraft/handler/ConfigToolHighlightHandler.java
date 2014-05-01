@@ -39,13 +39,13 @@ public class ConfigToolHighlightHandler
             if (stackTags.hasKey("tpIn"))
             {
                 int coord[] = stackTags.getIntArray("tpIn");
-                RenderHelper.DrawColoredSingleBoxInWorld(player, partialTicks, coord[0], coord[1], coord[2], offset, 255, 255, 255, 200);
+                RenderHelper.DrawColoredBigBoxInWorld(player, partialTicks, coord[0], coord[1], coord[2],coord[0],coord[1]+1,coord[2], offset, 255, 255, 255, 200);
             }
 
             if (stackTags.hasKey("tpOut"))
             {
                 int coord[] = stackTags.getIntArray("tpOut");
-                RenderHelper.DrawColoredSingleBoxInWorld(player, partialTicks, coord[0], coord[1], coord[2], offset, 0, 255, 0, 125);
+                RenderHelper.DrawColoredBigBoxInWorld(player, partialTicks, coord[0], coord[1], coord[2], coord[0],coord[1]+1,coord[2],offset, 0, 255, 0, 125);
             }
 
             if (stackTags.hasKey("jailCoord1") && !stackTags.hasKey("jailCoord2"))
@@ -101,7 +101,8 @@ public class ConfigToolHighlightHandler
                             if (te != null)
                                 RenderHelper.DrawColoredSingleBoxInWorld(player, partialTicks, i, j, k, 0.04, 200, 0, 10, 120);
 
-                            if (!ConfigChangableBlocks.getInstance().isValidName(b.blockRegistry.getNameForObject(b)))
+                            String name=b.blockRegistry.getNameForObject(b);
+                            if (!ConfigChangableBlocks.getInstance().isValidName(name))
                                 RenderHelper.DrawColoredSingleBoxInWorld(player, partialTicks, i, j, k, 0.04, 200, 0, 10, 120);
                         }
                     }

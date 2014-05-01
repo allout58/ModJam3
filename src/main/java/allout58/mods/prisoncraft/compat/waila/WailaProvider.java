@@ -70,6 +70,7 @@ public class WailaProvider implements IWailaDataProvider
                 currenttip.add("Currently jailed player: " + te.playerName);
             else
                 currenttip.add("No player currently jailed.");
+            currenttip.add("Jail name: "+te.jailname);
         }
         //DEBUG CODE :D maybe...
         if (accessor.getPlayer().isSneaking())

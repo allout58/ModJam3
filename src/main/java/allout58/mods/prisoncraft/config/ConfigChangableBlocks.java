@@ -144,7 +144,8 @@ public class ConfigChangableBlocks
     {
         for (Block n : unbreakIDWhitelist)
         {
-            if (name.equals(n))
+            String nameForObject=n.blockRegistry.getNameForObject(n);
+            if (name.equals(nameForObject))
             {
                 return true;
             }

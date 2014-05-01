@@ -86,7 +86,8 @@ public class BlockJailView extends BlockLayeredTexture
         super.registerBlockIcons(ir);
         this.side = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side");
         this.side_nolink = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side_nolink");
-        this.bottom = this.top = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_top_bottom");
+        this.top = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_top");
+        this.bottom = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT+":"+this.getUnlocalizedName().substring(5)+"_bottom");
 
     }
 
