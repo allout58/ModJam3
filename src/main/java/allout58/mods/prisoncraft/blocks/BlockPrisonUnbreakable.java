@@ -1,61 +1,60 @@
 package allout58.mods.prisoncraft.blocks;
 
-import java.util.Random;
-
+import allout58.mods.prisoncraft.tileentities.TileEntityPrisonUnbreakable;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import allout58.mods.prisoncraft.tileentities.TileEntityPrisonUnbreakable;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import java.util.Random;
 
 public class BlockPrisonUnbreakable extends BlockContainer
+        implements IPrisonCraftBlock
 {
     public BlockPrisonUnbreakable(Material par2Material)
     {
         super(par2Material);
         setBlockUnbreakable();
         setResistance(6000000.0F);
-//        setLightLevel(.2F);
+        //        setLightLevel(.2F);
         setBlockName("prisonUnbreakable");
         setBlockTextureName("minecraft:bedrock");
 
     }
-    
+
     @Override
     public int getLightValue(IBlockAccess world, int x, int y, int z)
     {
         TileEntity te = world.getTileEntity(x, y, z);
-        if(te instanceof TileEntityPrisonUnbreakable)
+        if (te instanceof TileEntityPrisonUnbreakable)
         {
-            return ((TileEntityPrisonUnbreakable)te).getFakeBlock().getLightValue();
+            return ((TileEntityPrisonUnbreakable) te).getFakeBlock().getLightValue();
         }
         else
             return getLightValue();
     }
-    
+
     @Override
     public int getLightOpacity(IBlockAccess world, int x, int y, int z)
     {
         TileEntity te = world.getTileEntity(x, y, z);
-        if(te instanceof TileEntityPrisonUnbreakable)
+        if (te instanceof TileEntityPrisonUnbreakable)
         {
-            return ((TileEntityPrisonUnbreakable)te).getFakeBlock().getLightOpacity();
+            return ((TileEntityPrisonUnbreakable) te).getFakeBlock().getLightOpacity();
         }
         else
             return getLightOpacity();
     }
-    
+
     @Override
     public boolean canCreatureSpawn(EnumCreatureType type, IBlockAccess world, int x, int y, int z)
     {
@@ -69,7 +68,7 @@ public class BlockPrisonUnbreakable extends BlockContainer
         {
             Block block = ((TileEntityPrisonUnbreakable) te).getFakeBlock();
             int meta = ((TileEntityPrisonUnbreakable) te).getFakeBlockMeta();
-            return new ItemStack(block, 1, block.getDamageValue(world, x, y, z));
+            return new ItemStack(block, 1, meta);
         }
         return null;
     }
@@ -145,5 +144,4 @@ public class BlockPrisonUnbreakable extends BlockContainer
             }
         }
     }
-
 }

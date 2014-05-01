@@ -1,5 +1,12 @@
 package allout58.mods.prisoncraft.blocks;
 
+import allout58.libs.LayeredTextureBlock.block.BlockLayeredTexture;
+import allout58.mods.prisoncraft.constants.ModConstants;
+import allout58.mods.prisoncraft.constants.TextureConstants;
+import allout58.mods.prisoncraft.items.ItemList;
+import allout58.mods.prisoncraft.tileentities.TileEntityJailView;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -13,16 +20,9 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import allout58.libs.LayeredTextureBlock.block.BlockLayeredTexture;
-import allout58.mods.prisoncraft.PrisonCraft;
-import allout58.mods.prisoncraft.constants.ModConstants;
-import allout58.mods.prisoncraft.constants.TextureConstants;
-import allout58.mods.prisoncraft.items.ItemList;
-import allout58.mods.prisoncraft.tileentities.TileEntityJailView;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockJailView extends BlockLayeredTexture implements ITileEntityProvider
+public class BlockJailView extends BlockLayeredTexture
+        implements ITileEntityProvider, IPrisonCraftBlock
 {
     public IIcon top, bottom, side, side_nolink;
 
@@ -33,10 +33,10 @@ public class BlockJailView extends BlockLayeredTexture implements ITileEntityPro
         setResistance(6000000.0F);
         setBlockName("jailView");
         setBlockTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side");
-//        setCreativeTab(PrisonCraft.creativeTab);
+        //        setCreativeTab(PrisonCraft.creativeTab);
         setBlockBounds(0, 0, 0, 1, (float) .5, 1);
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta)
@@ -129,22 +129,23 @@ public class BlockJailView extends BlockLayeredTexture implements ITileEntityPro
         }
         return false;
     }
-    
+
     @Override
     public TileEntity createNewTileEntity(World world, int metadata)
     {
         return new TileEntityJailView();
     }
-    
+
     @Override
     public boolean isOpaqueCube()
     {
         return false;
     }
-    
+
     @Override
     public boolean renderAsNormalBlock()
     {
         return false;
     }
+
 }

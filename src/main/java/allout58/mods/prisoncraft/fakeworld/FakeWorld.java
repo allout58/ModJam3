@@ -1,21 +1,25 @@
 package allout58.mods.prisoncraft.fakeworld;
 
+import allout58.mods.prisoncraft.tileentities.TileEntityPrisonUnbreakable;
+import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.profiler.Profiler;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Vec3Pool;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldSettings;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.common.util.ForgeDirection;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.block.Block;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Vec3Pool;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.util.ForgeDirection;
-import allout58.mods.prisoncraft.tileentities.TileEntityPrisonUnbreakable;
-
-public class FakeWorld implements IBlockAccess
+public class FakeWorld extends World implements IBlockAccess
 {
     /*
      * TODO: Save FakeCoords and FakeTES to disk
@@ -27,6 +31,7 @@ public class FakeWorld implements IBlockAccess
 
     public FakeWorld(World real)
     {
+        super(real.getSaveHandler(), real.getWorldInfo().getWorldName(), real.provider, new WorldSettings(real.getWorldInfo()), new Profiler());
         realWorld = real;
     }
 
@@ -85,6 +90,12 @@ public class FakeWorld implements IBlockAccess
     public BiomeGenBase getBiomeGenForCoords(int i, int i2)
     {
         return realWorld.getBiomeGenForCoords(i, i2);
+    }
+
+    @Override protected IChunkProvider createChunkProvider()
+    {
+        //TODO: Auto-generated method stub
+        return null;
     }
 
     @Override
@@ -147,21 +158,23 @@ public class FakeWorld implements IBlockAccess
     {
         return findFakeNDX(x, y, z) != -1;
     }
-    
-    /** WARNING: Must call {@link #registerFakeBlockLoc(int, int, int) registerFakeBlockLoc}
-     *  before calling this. Not doing so will return immediately.
-     * 
-     * @param x
-     * @param y
-     * @param z
+
+    /**
+     * WARNING: Must call {@link #registerFakeBlockLoc(int, int, int) registerFakeBlockLoc}
+     * before calling this. Not doing so will return immediately.
+     *
+     * @param x X coord
+     * @param y Y coord
+     * @param z Z coord
      * @param tag The result of the TE's writeToNBT()
      */
     public void registerFakeTileEntity(int x, int y, int z, NBTTagCompound tag)
     {
-        int fNdx=findFakeNDX(x, y, z);
-        if(fNdx==-1) return;
-        TileEntity te=getBlock(x, y, z).createTileEntity(realWorld, getBlockMetadata(x, y, z));
+        int fNdx = findFakeNDX(x, y, z);
+        if (fNdx == -1) return;
+        TileEntity te = getBlock(x, y, z).createTileEntity(realWorld, getBlockMetadata(x, y, z));
         te.readFromNBT(tag);
+        te.setWorldObj(this);
         fakeTEs.put(fNdx, te);
     }
 
@@ -199,11 +212,17 @@ public class FakeWorld implements IBlockAccess
         }
         return meta;
     }
-    
+
     protected TileEntity getFakeTE(int x, int y, int z)
     {
-        int fNdx=findFakeNDX(x, y, z);
-        if(fNdx==-1) return null;
+        int fNdx = findFakeNDX(x, y, z);
+        if (fNdx == -1) return null;
         return fakeTEs.get(fNdx);
+    }
+
+    @Override
+    public Entity getEntityByID(int var1)
+    {
+        return realWorld.getEntityByID(var1);
     }
 }

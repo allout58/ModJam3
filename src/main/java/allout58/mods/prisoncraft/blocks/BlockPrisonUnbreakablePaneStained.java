@@ -2,9 +2,8 @@ package allout58.mods.prisoncraft.blocks;
 
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonUnbreakable;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockPane;
+import net.minecraft.block.BlockStainedGlassPane;
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -15,17 +14,19 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.Random;
 
-public class BlockPrisonUnbreakablePane extends BlockPane
+/**
+ * Created by James Hollowell on 4/30/2014.
+ */
+public class BlockPrisonUnbreakablePaneStained extends BlockStainedGlassPane
         implements ITileEntityProvider, IPrisonCraftBlock
 {
-
-    public BlockPrisonUnbreakablePane(String iconName, String topIcon, Material mat)
+    public BlockPrisonUnbreakablePaneStained()
     {
-        super(iconName, topIcon, mat, false);
+        super();
         setBlockUnbreakable();
         setResistance(6000000.0F);
-        //        setLightLevel(.2F);
-        setBlockName("prisonUnbreakablePane");
+        setBlockName("prisonUnbreakablePaneStained");
+        setBlockTextureName("glass");
     }
 
     @Override

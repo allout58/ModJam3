@@ -1,7 +1,9 @@
 package allout58.mods.prisoncraft.tileentities;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityJailView extends TileEntity
@@ -12,9 +14,10 @@ public class TileEntityJailView extends TileEntity
 
     public boolean setJailName(String name)
     {
-        if (jailname=="NULL")
+        if (jailname == "NULL")
         {
             jailname = name;
+            isDirty = true;
             this.worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, 1, 3);
             return true;
         }
@@ -23,7 +26,6 @@ public class TileEntityJailView extends TileEntity
             return false;
         }
     }
-    
 
     @Override
     public void updateEntity()
@@ -51,18 +53,18 @@ public class TileEntityJailView extends TileEntity
     }
 
     /* Packets */
-//    @Override
-//    public Packet getDescriptionPacket()
-//    {
-//        NBTTagCompound tag = new NBTTagCompound();
-//        writeToNBT(tag);
-//        return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
-//    }
-//
-//    @Override
-//    public void onDataPacket(INetworkManager net, Packet132TileEntityData packet)
-//    {
-//        readFromNBT(packet.data);
-//        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-//    }
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+        writeToNBT(tag);
+        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
+    {
+        readFromNBT(packet.func_148857_g());
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
 }

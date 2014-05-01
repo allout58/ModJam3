@@ -1,26 +1,7 @@
 package allout58.mods.prisoncraft;
 
-import java.io.File;
-import java.util.EnumMap;
-
-import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.world.storage.SaveHandler;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
-
-import org.apache.logging.log4j.Logger;
-
 import allout58.mods.prisoncraft.blocks.BlockList;
-import allout58.mods.prisoncraft.commands.ChangeJailPermsCommand;
-import allout58.mods.prisoncraft.commands.JailCommand;
-import allout58.mods.prisoncraft.commands.PermLevelCommand;
-import allout58.mods.prisoncraft.commands.PrisonCraftCommand;
-import allout58.mods.prisoncraft.commands.ReasonCommand;
-import allout58.mods.prisoncraft.commands.UnJailCommand;
+import allout58.mods.prisoncraft.commands.*;
 import allout58.mods.prisoncraft.config.Config;
 import allout58.mods.prisoncraft.config.ConfigChangableBlocks;
 import allout58.mods.prisoncraft.constants.ModConstants;
@@ -36,23 +17,31 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
+import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.event.FMLInterModComms.IMCEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.FMLEmbeddedChannel;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.world.storage.SaveHandler;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.util.EnumMap;
 
 @Mod(modid = ModConstants.MODID, name = ModConstants.NAME)
 //@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels={ModConstants.JAIL_PACKET_CHANNEL,ModConstants.UNJAIL_PACKET_CHANNEL, ModConstants.JV_CLIENT_TO_SERVER_PACKET_CHANNEL,ModConstants.JV_SERVER_TO_CLIENT_PACKET_CHANNEL}, packetHandler = PacketHandler.class)
 public class PrisonCraft
 {
     public static EnumMap<Side, FMLEmbeddedChannel> channels;
-  
+
     public static CreativeTabs creativeTab = new CreativeTabs("PrisonCraft")
     {
         @Override
@@ -70,25 +59,27 @@ public class PrisonCraft
     public static CommonProxy proxy;
 
     public static Logger logger;
-    
-//    private File configBase;
+
+    //    private File configBase;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        channels=NetworkRegistry.INSTANCE.newChannel(ModConstants.MODID, new ChannelHandler());
+        FMLInterModComms.sendMessage("Waila", "register", "allout58.mods.prisoncraft.compat.waila.WailaProvider.callbackRegister");
+
+        channels = NetworkRegistry.INSTANCE.newChannel(ModConstants.MODID, new ChannelHandler());
         proxy.registerRenderers();
-        logger=event.getModLog();
+        logger = event.getModLog();
 
         Config.init(new Configuration(event.getSuggestedConfigurationFile()));
-//        configBase=event.getModConfigurationDirectory();
-        
+        //        configBase=event.getModConfigurationDirectory();
+
         MinecraftForge.EVENT_BUS.register(new ConfigToolHighlightHandler());
 
         BlockList.init();
         ItemList.init();
         TileEntityList.init();
-        
+
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, proxy);
     }
 
@@ -97,13 +88,13 @@ public class PrisonCraft
     {
         FMLInterModComms.sendMessage("prisoncraft", "blacklist", Block.blockRegistry.getNameForObject(Blocks.bookshelf));
     }
-    
+
     @EventHandler
     public void handleIMC(IMCEvent event)
     {
         IMCHandler.HandleIMC(event.getMessages());
     }
-    
+
     @EventHandler
     public void serverLoad(FMLServerStartingEvent event)
     {
@@ -117,9 +108,9 @@ public class PrisonCraft
         SaveHandler saveHandler = (SaveHandler) event.getServer().worldServerForDimension(0).getSaveHandler();
         File configFile = new File(saveHandler.getWorldDirectory().getAbsolutePath() + "/PCUnbreakableIDs.txt");
         ConfigChangableBlocks.getInstance().load(configFile);
-        
-//        ConfigServer.init(new Configuration(new File(configBase,ModConstants.MODID+"-server.cfg")));
-        
+
+        //        ConfigServer.init(new Configuration(new File(configBase,ModConstants.MODID+"-server.cfg")));
+
         if (Config.logJailing)
         {
             File jailRecordFile = new File(saveHandler.getWorldDirectory().getAbsolutePath() + "/JailingRecord.csv");

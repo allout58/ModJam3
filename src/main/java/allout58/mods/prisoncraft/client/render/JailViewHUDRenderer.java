@@ -1,18 +1,11 @@
 package allout58.mods.prisoncraft.client.render;
 
-import static org.lwjgl.opengl.GL11.GL_LIGHTING;
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glRotated;
-import static org.lwjgl.opengl.GL11.glScalef;
-import static org.lwjgl.opengl.GL11.glTranslated;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import allout58.mods.prisoncraft.PrisonCraft;
+import allout58.mods.prisoncraft.jail.JailedPersonData;
+import allout58.mods.prisoncraft.network.JVRequestPacket;
+import allout58.mods.prisoncraft.tileentities.TileEntityJailView;
+import cpw.mods.fml.common.network.FMLOutboundHandler;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
@@ -20,23 +13,17 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
-
 import org.lwjgl.util.vector.Vector3f;
 
-import allout58.mods.prisoncraft.PrisonCraft;
-import allout58.mods.prisoncraft.jail.JailedPersonData;
-import allout58.mods.prisoncraft.network.JVRequestPacket;
-import allout58.mods.prisoncraft.tileentities.TileEntityJailView;
-import cpw.mods.fml.common.network.FMLOutboundHandler;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.relauncher.Side;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.lwjgl.opengl.GL11.*;
 // import net.minecraft.network.packet.Packet250CustomPayload;
 // import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class JailViewHUDRenderer extends TileEntitySpecialRenderer
 {
-    public static List<JailedPersonData> people = new ArrayList<JailedPersonData>();
-
     public static final double WIDTH = 3;
     public static final double HEIGHT = 2;
     public static final int FONT_HEIGHT = 15;
@@ -44,14 +31,21 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
     public static final int COL_2_X = 75;
     public static final int COL_3_X = 100;
     public static final int MAX_ROWS = 13;
-
+    public static List<JailedPersonData> people = new ArrayList<JailedPersonData>();
     private int ticks = 0;
     private boolean hasFirstChecked = false;
+
+    public static String clampString(String s, int size)
+    {
+        if (s.length() <= size) return s;
+        if (size < 4) return "";
+        return s.substring(0, size - 3) + "...";
+    }
 
     @Override
     public void renderTileEntityAt(TileEntity tileentity, double x, double y, double z, float tick)
     {
-        if(tileentity.blockMetadata==0)
+        if (tileentity.blockMetadata == 0)
         {
             //drawText("Not linked", 20, 20, 1);
             return;
@@ -75,11 +69,11 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
                 {
                     people.get(i).time--;
                 }
-                if (people.get(i).time==0)
+                if (people.get(i).time == 0)
                 {
                     people.remove(i);
                 }
-                    
+
             }
         }
         if (ticks % 1000 == 0)
@@ -124,9 +118,6 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
         tess.addVertex(dx + WIDTH, dy + HEIGHT, dz);
         tess.addVertex(dx + WIDTH, dy, dz);
         tess.draw();
-
-        float var14 = 0.01266667F * 1.5F;
-        float var17 = 0.015F;
 
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_LIGHTING);
@@ -197,12 +188,5 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
     {
         PrisonCraft.channels.get(Side.CLIENT).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TOSERVER);
         PrisonCraft.channels.get(Side.CLIENT).writeOutbound(new JVRequestPacket(person.name));
-    }
-
-    public static String clampString(String s, int size)
-    {
-        if (s.length() <= size) return s;
-        if (size < 4) return "";
-        return s.substring(0, size - 3) + "...";
     }
 }

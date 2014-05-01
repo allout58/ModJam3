@@ -1,15 +1,14 @@
 package allout58.mods.prisoncraft.handler;
 
-import org.lwjgl.opengl.GL11;
-
+import allout58.mods.prisoncraft.config.ConfigChangableBlocks;
 import allout58.mods.prisoncraft.items.ItemConfigWand;
-import allout58.mods.prisoncraft.jail.PrisonCraftWorldSave;
-
+import allout58.mods.prisoncraft.tileentities.TileEntityPrisonUnbreakable;
+import allout58.mods.prisoncraft.util.RenderHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -22,231 +21,92 @@ public class ConfigToolHighlightHandler
     public void onRenderWorldLast(RenderWorldLastEvent event)
     {
         //Some source and many ideas come from ProfMobius and his mod Opis. Thanks!
-        
+
         if (Minecraft.getMinecraft().thePlayer.inventory.getCurrentItem() != null)
         {
-            if (!(Minecraft.getMinecraft().thePlayer.inventory.getCurrentItem().getItem() instanceof ItemConfigWand)) return;
-            if (!(Minecraft.getMinecraft().thePlayer.inventory.getCurrentItem().hasTagCompound())) return;
-
-             
-            // if
-            // (Minecraft.getMinecraft().theWorld.isAirBlock(modOpis.selectedBlock.x,
-            // modOpis.selectedBlock.y, modOpis.selectedBlock.z)) return;
+            if (!(Minecraft.getMinecraft().thePlayer.inventory.getCurrentItem().getItem() instanceof ItemConfigWand))
+                return;
+            if (!(Minecraft.getMinecraft().thePlayer.inventory.getCurrentItem().hasTagCompound()))
+                return;
 
             NBTTagCompound stackTags = Minecraft.getMinecraft().thePlayer.inventory.getCurrentItem().stackTagCompound;
-//            if (Minecraft.getMinecraft().theWorld.provider.dimensionId != stackTags.getInteger(par1Str)) return;
             double partialTicks = event.partialTicks;
 
             EntityLivingBase player = Minecraft.getMinecraft().renderViewEntity;
-            double px = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
-            double py = player.lastTickPosY + (player.posY - player.lastTickPosY) * partialTicks;
-            double pz = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * partialTicks;
 
-            double offset = 0.05;
-            double delta = 1 + 2 * offset;
+            final double offset = 0.05;
 
-            GL11.glPushAttrib(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-
-            GL11.glDisable(GL11.GL_TEXTURE_2D);
-            GL11.glEnable(GL11.GL_BLEND);
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            GL11.glDepthMask(false);
             if (stackTags.hasKey("tpIn"))
             {
                 int coord[] = stackTags.getIntArray("tpIn");
-                int bx = coord[0];
-                int by = coord[1];
-                int bz = coord[2];
-                double x = bx - px - offset;
-                double y = by - py - offset;
-                double z = bz - pz - offset;
-                drawSingleBox(x, y, z, delta, 255, 255, 255, 175);
+                RenderHelper.DrawColoredSingleBoxInWorld(player, partialTicks, coord[0], coord[1], coord[2], offset, 255, 255, 255, 200);
             }
 
             if (stackTags.hasKey("tpOut"))
             {
                 int coord[] = stackTags.getIntArray("tpOut");
-                int bx = coord[0];
-                int by = coord[1];
-                int bz = coord[2];
-                double x = bx - px - offset;
-                double y = by - py - offset;
-                double z = bz - pz - offset;
-                drawSingleBox(x, y, z, delta, 0, 255, 0, 125);
+                RenderHelper.DrawColoredSingleBoxInWorld(player, partialTicks, coord[0], coord[1], coord[2], offset, 0, 255, 0, 125);
             }
 
             if (stackTags.hasKey("jailCoord1") && !stackTags.hasKey("jailCoord2"))
             {
                 int coord[] = stackTags.getIntArray("jailCoord1");
-                int bx = coord[0];
-                int by = coord[1];
-                int bz = coord[2];
-                double x = bx - px - offset;
-                double y = by - py - offset;
-                double z = bz - pz - offset;
-                drawSingleBox(x, y, z, delta, 255, 0, 0, 125);
+                RenderHelper.DrawColoredSingleBoxInWorld(player, partialTicks, coord[0], coord[1], coord[2], offset, 0, 0, 175, 100);
             }
             if (stackTags.hasKey("jailCoord2"))
             {
                 int coord[] = stackTags.getIntArray("jailCoord1");
-                int bx = coord[0];
-                int by = coord[1];
-                int bz = coord[2];
-                double x = bx - px - offset;
-                double y = by - py - offset;
-                double z = bz - pz - offset;
                 int coord2[] = stackTags.getIntArray("jailCoord2");
-                int bx2 = coord2[0];
-                int by2 = coord2[1];
-                int bz2 = coord2[2];
-                double x2 = bx2 - px - offset;
-                double y2 = by2 - py - offset;
-                double z2 = bz2 - pz - offset;
+                RenderHelper.DrawColoredBigBoxInWorld(player, partialTicks, coord[0], coord[1], coord[2], coord2[0], coord2[1], coord2[2], offset, 0, 0, 175, 100);
 
-                if (x > x2)
+                //Find unusable blocks
+                // give xyz names
+                int x1 = coord[0];
+                int y1 = coord[1];
+                int z1 = coord[2];
+                int x2 = coord2[0];
+                int y2 = coord2[1];
+                int z2 = coord2[2];
+                // force ..1 to be lower than ..2
+                if (x1 > x2)
                 {
-                    double tmp = x;
-                    x = x2;
-                    x2 = tmp;
+                    x1 += x2;
+                    x2 = x1 - x2;
+                    x1 -= x2;
                 }
-                if (y > y2)
+                if (y1 > y2)
                 {
-                    double tmp = y;
-                    y = y2;
-                    y2 = tmp;
+                    y1 += y2;
+                    y2 = y1 - y2;
+                    y1 -= y2;
                 }
-
-                if (z > z2)
+                if (z1 > z2)
                 {
-                    double tmp = z;
-                    z = z2;
-                    z2 = tmp;
+                    z1 += z2;
+                    z2 = z1 - z2;
+                    z1 -= z2;
                 }
+                // loop through each block
+                for (int i = x1; i <= x2; i++)
+                {
+                    for (int j = y1; j <= y2; j++)
+                    {
+                        for (int k = z1; k <= z2; k++)
+                        {
+                            Block b = player.worldObj.getBlock(i, j, k);
+                            TileEntity te = player.worldObj.getTileEntity(i, j, k);
+                            if (b.isAir(player.worldObj, i, j, k)) continue;
+                            if (te instanceof TileEntityPrisonUnbreakable)
+                                continue;
+                            if (te != null)
+                                RenderHelper.DrawColoredSingleBoxInWorld(player, partialTicks, i, j, k, 0.04, 200, 0, 10, 120);
 
-                Tessellator tessellator = Tessellator.instance;
-                tessellator.startDrawingQuads();
-
-                tessellator.setColorRGBA(255, 0, 0, 100);
-
-                // Bottom outside
-                tessellator.addVertex(x, y, z);
-                tessellator.addVertex(x2 + delta, y, z);
-                tessellator.addVertex(x2 + delta, y, z2 + delta);
-                tessellator.addVertex(x, y, z2 + delta);
-
-                // Bottom inside
-                tessellator.addVertex(x, y, z2 + delta);
-                tessellator.addVertex(x2 + delta, y, z2 + delta);
-                tessellator.addVertex(x2 + delta, y, z);
-                tessellator.addVertex(x, y, z);
-
-                // Top outside
-                tessellator.addVertex(x, y2 + delta, z);
-                tessellator.addVertex(x, y2 + delta, z2 + delta);
-                tessellator.addVertex(x2 + delta, y2 + delta, z2 + delta);
-                tessellator.addVertex(x2 + delta, y2 + delta, z);
-
-                // Top inside
-                tessellator.addVertex(x2 + delta, y2 + delta, z);
-                tessellator.addVertex(x2 + delta, y2 + delta, z2 + delta);
-                tessellator.addVertex(x, y2 + delta, z2 + delta);
-                tessellator.addVertex(x, y2 + delta, z);
-
-                // Z-
-                tessellator.addVertex(x, y, z);
-                tessellator.addVertex(x, y2 + delta, z);
-                tessellator.addVertex(x2 + delta, y2 + delta, z);
-                tessellator.addVertex(x2 + delta, y, z);
-
-                // Z- inside
-                tessellator.addVertex(x2 + delta, y, z);
-                tessellator.addVertex(x2 + delta, y2 + delta, z);
-                tessellator.addVertex(x, y2 + delta, z);
-                tessellator.addVertex(x, y, z);
-
-                // Z+ outside
-                tessellator.addVertex(x, y, z2 + delta);
-                tessellator.addVertex(x2 + delta, y, z2 + delta);
-                tessellator.addVertex(x2 + delta, y2 + delta, z2 + delta);
-                tessellator.addVertex(x, y2 + delta, z2 + delta);
-
-                // Z+ inside
-                tessellator.addVertex(x, y2 + delta, z2 + delta);
-                tessellator.addVertex(x2 + delta, y2 + delta, z2 + delta);
-                tessellator.addVertex(x2 + delta, y, z2 + delta);
-                tessellator.addVertex(x, y, z2 + delta);
-
-                // X1 outside
-                tessellator.addVertex(x, y, z);
-                tessellator.addVertex(x, y, z2 + delta);
-                tessellator.addVertex(x, y2 + delta, z2 + delta);
-                tessellator.addVertex(x, y2 + delta, z);
-
-                // X1 inside
-                tessellator.addVertex(x, y2 + delta, z);
-                tessellator.addVertex(x, y2 + delta, z2 + delta);
-                tessellator.addVertex(x, y, z2 + delta);
-                tessellator.addVertex(x, y, z);
-
-                // X2 outside
-                tessellator.addVertex(x2 + delta, y, z);
-                tessellator.addVertex(x2 + delta, y2 + delta, z);
-                tessellator.addVertex(x2 + delta, y2 + delta, z2 + delta);
-                tessellator.addVertex(x2 + delta, y, z2 + delta);
-
-                // X2 inside
-                tessellator.addVertex(x2 + delta, y, z2 + delta);
-                tessellator.addVertex(x2 + delta, y2 + delta, z2 + delta);
-                tessellator.addVertex(x2 + delta, y2 + delta, z);
-                tessellator.addVertex(x2 + delta, y, z);
-
-                tessellator.draw();
+                            if (!ConfigChangableBlocks.getInstance().isValidName(b.blockRegistry.getNameForObject(b)))
+                                RenderHelper.DrawColoredSingleBoxInWorld(player, partialTicks, i, j, k, 0.04, 200, 0, 10, 120);
+                        }
+                    }
+                }
             }
-
-            GL11.glEnable(GL11.GL_TEXTURE_2D);
-
-            GL11.glPopAttrib();
         }
-
-    }
-
-    private void drawSingleBox(double x, double y, double z, double delta, int r, int g, int b, int a)
-    {
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-
-        tessellator.setColorRGBA(r, g, b, a);
-
-        tessellator.addVertex(x, y, z);
-        tessellator.addVertex(x + delta, y, z);
-        tessellator.addVertex(x + delta, y, z + delta);
-        tessellator.addVertex(x, y, z + delta);
-
-        tessellator.addVertex(x, y + delta, z);
-        tessellator.addVertex(x, y + delta, z + delta);
-        tessellator.addVertex(x + delta, y + delta, z + delta);
-        tessellator.addVertex(x + delta, y + delta, z);
-
-        tessellator.addVertex(x, y, z);
-        tessellator.addVertex(x, y + delta, z);
-        tessellator.addVertex(x + delta, y + delta, z);
-        tessellator.addVertex(x + delta, y, z);
-
-        tessellator.addVertex(x, y, z + delta);
-        tessellator.addVertex(x + delta, y, z + delta);
-        tessellator.addVertex(x + delta, y + delta, z + delta);
-        tessellator.addVertex(x, y + delta, z + delta);
-
-        tessellator.addVertex(x, y, z);
-        tessellator.addVertex(x, y, z + delta);
-        tessellator.addVertex(x, y + delta, z + delta);
-        tessellator.addVertex(x, y + delta, z);
-
-        tessellator.addVertex(x + delta, y, z);
-        tessellator.addVertex(x + delta, y + delta, z);
-        tessellator.addVertex(x + delta, y + delta, z + delta);
-        tessellator.addVertex(x + delta, y, z + delta);
-
-        tessellator.draw();
     }
 }

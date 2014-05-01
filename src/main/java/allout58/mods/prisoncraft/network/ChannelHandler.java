@@ -1,8 +1,8 @@
 package allout58.mods.prisoncraft.network;
 
+import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
-import cpw.mods.fml.common.network.FMLIndexedMessageToMessageCodec;
 
 public class ChannelHandler extends FMLIndexedMessageToMessageCodec<IPacket>
 {
@@ -13,10 +13,12 @@ public class ChannelHandler extends FMLIndexedMessageToMessageCodec<IPacket>
         addDiscriminator(2, JVRequestPacket.class);
         addDiscriminator(3, JVSendPersonPacket.class);
         addDiscriminator(4, UpdateHammerPacket.class);
+        addDiscriminator(5, SettingSyncPacket.class);
     }
 
     @Override
-    public void encodeInto(ChannelHandlerContext ctx, IPacket msg, ByteBuf target) throws Exception
+    public void encodeInto(ChannelHandlerContext ctx, IPacket msg, ByteBuf target)
+            throws Exception
     {
         msg.writeBytes(target);
     }

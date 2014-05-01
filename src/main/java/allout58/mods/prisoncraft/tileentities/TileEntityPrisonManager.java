@@ -1,28 +1,5 @@
 package allout58.mods.prisoncraft.tileentities;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.play.server.S33PacketUpdateSign;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
-import net.minecraft.world.WorldSettings.GameType;
-
-import org.lwjgl.util.vector.Vector3f;
-
 import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.blocks.BlockList;
 import allout58.mods.prisoncraft.config.Config;
@@ -37,18 +14,37 @@ import allout58.mods.prisoncraft.permissions.PermissionLevel;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.FMLOutboundHandler;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S33PacketUpdateSign;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.WorldSettings.GameType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TileEntityPrisonManager extends TileEntity// implements IInventory
 {
-    private ItemStack[] playerInventory;
     public static final int INVENTORY_SIZE = 40;
-
     public static final int START_MAIN = 0;
     public static final int START_HOTBAR = 32; // ??
     public static final int START_ARMOR = 36; // ??
-
     public boolean hasJailedPlayer = false;
-
     public int dimension = 0;
     public int jailCoord1[] = new int[3];
     public int jailCoord2[] = new int[3];
@@ -57,15 +53,12 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
     public String playerName;
     public String jailname;
     public String reason;
-
+    public int secsLeftJailTime;
+    private ItemStack[] playerInventory;
     private List signs = new ArrayList();
-
     private GameType jailedPlayerGM;
     private EntityPlayer jailedPlayer;
     private PermissionLevel jailedPlayerPrevJailPerms;
-
-    public int secsLeftJailTime;
-
     private boolean isDirty = false;
 
     public TileEntityPrisonManager()
@@ -116,9 +109,10 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                 {
                     for (int k = z1; k <= z2; k++)
                     {
+                        if (worldObj.getTileEntity(i, j, k) != null) continue;
                         Block block = worldObj.getBlock(i, j, k);
                         int meta = worldObj.getBlockMetadata(i, j, k);
-                        if (isValidName(block.blockRegistry.getNameForObject(block)))
+                        if (ConfigChangableBlocks.getInstance().isValidName(block.blockRegistry.getNameForObject(block)))
                         {
                             if (block == Blocks.iron_bars)
                             {
@@ -127,6 +121,10 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                             else if (block == Blocks.glass_pane)
                             {
                                 worldObj.setBlock(i, j, k, BlockList.prisonUnbreakPaneGlass, 0, 3);
+                            }
+                            else if (block == Blocks.stained_glass_pane)
+                            {
+                                worldObj.setBlock(i, j, k, BlockList.prisonUnbreakPaneStained, meta, 3);
                             }
                             else if (!block.isOpaqueCube())
                             {
@@ -227,7 +225,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
             ref.jailName = jailname;
             PrisonCraftWorldSave.forWorld(worldObj).getTesList().add(ref);
             PrisonCraftWorldSave.forWorld(worldObj).addJailName(ref.jailName);
-            
+            isDirty = true;
             return true;
         }
         else
@@ -239,6 +237,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
     public void setReason(String reason)
     {
         this.reason = reason;
+        isDirty = true;
         List<JailedPersonData> list = PrisonCraftWorldSave.forWorld(worldObj).people;
         for (int i = 0; i < list.size(); i++)
         {
@@ -249,18 +248,6 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
         }
         PrisonCraft.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
         PrisonCraft.channels.get(Side.SERVER).writeOutbound(new JVSendPersonPacket(list));
-    }
-
-    private boolean isValidName(String name)
-    {
-        for (int i = 0; i < ConfigChangableBlocks.getInstance().getNames().length; i++)
-        {
-            if (name.equals(ConfigChangableBlocks.getInstance().getNames()[i]))
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     public boolean isInitialized()
@@ -346,7 +333,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                         MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
                         if (server != null)
                         {
-                            server.getConfigurationManager().sendToAllNear(xCoord, yCoord, zCoord, 100, this.worldObj.provider.dimensionId, new S33PacketUpdateSign(te.xCoord, te.yCoord, te.zCoord, ((TileEntitySign)te).signText));
+                            server.getConfigurationManager().sendToAllNear(xCoord, yCoord, zCoord, 100, this.worldObj.provider.dimensionId, new S33PacketUpdateSign(te.xCoord, te.yCoord, te.zCoord, ((TileEntitySign) te).signText));
                         }
                         else
                         {
@@ -421,7 +408,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                     ((TileEntitySign) te).signText[1] = "";
                     ((TileEntitySign) te).signText[2] = "";
                     ((TileEntitySign) te).signText[3] = "";
-                    
+
                     // Taken from the old Forge PacketHandler
                     MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
                     if (server != null)
@@ -446,8 +433,8 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
             hasJailedPlayer = false;
             jailedPlayer = null;
             playerName = "";
-            reason="";
-            isDirty=true;
+            reason = "";
+            isDirty = true;
             PrisonCraft.channels.get(Side.SERVER).attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.ALL);
             PrisonCraft.channels.get(Side.SERVER).writeOutbound(new JVSendPersonPacket(l));
             return true;
@@ -475,7 +462,8 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                 {
                     jailedPlayer.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 120, 300, false));
                 }
-                if (Config.noJumping && worldObj.getTotalWorldTime() % 20 == 0)
+                if (Config.noJumping && worldObj
+                        .getTotalWorldTime() % 20 == 0)
                 {
                     jailedPlayer.setPositionAndUpdate(jailedPlayer.posX, tpCoordIn[1], jailedPlayer.posZ);
                 }
@@ -484,11 +472,11 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                     // TP back in
                     if (worldObj.getTotalWorldTime() % 200 == 0)
                     {
-                        float x=(float) (jailedPlayer.posX-tpCoordIn[0]);
-                        float y=(float) (jailedPlayer.posY-tpCoordIn[1]);
-                        float z=(float) (jailedPlayer.posZ-tpCoordIn[2]);
-                        float len=(float) Math.sqrt(x*x+y*y+z*z);
-                        if (len > 30 || len < -30)
+                        float x = (float) (jailedPlayer.posX - tpCoordIn[0]);
+                        float y = (float) (jailedPlayer.posY - tpCoordIn[1]);
+                        float z = (float) (jailedPlayer.posZ - tpCoordIn[2]);
+                        float len = (float) Math.sqrt(x * x + y * y + z * z);
+                        if (len > Config.holdingRadius || len < -Config.holdingRadius)
                         {
                             jailedPlayer.setPositionAndUpdate(tpCoordIn[0] + .5, tpCoordIn[1], tpCoordIn[2] + .5);
                         }
@@ -564,10 +552,8 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
             TileEntity te = worldObj.getTileEntity(coord[0], coord[1], coord[2]);
             if (te instanceof TileEntityPrisonManager)
             {
-                if (te != null)
-                {
-                    if (((TileEntityPrisonManager) te).playerName != null && ((TileEntityPrisonManager) te).playerName.equalsIgnoreCase(username)) return true;
-                }
+                if (((TileEntityPrisonManager) te).playerName != null && ((TileEntityPrisonManager) te).playerName.equalsIgnoreCase(username))
+                    return true;
             }
         }
         return false;
@@ -688,19 +674,18 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
     }
 
     /* Packets */
-    // @Override
-    // public Packet getDescriptionPacket()
-    // {
-    // NBTTagCompound tag = new NBTTagCompound();
-    // writeToNBT(tag);
-    // return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, tag);
-    // }
-    //
-    // @Override
-    // public void onDataPacket(INetworkManager net, Packet132TileEntityData
-    // packet)
-    // {
-    // readFromNBT(packet.data);
-    // worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-    // }
+    @Override
+    public Packet getDescriptionPacket()
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+        writeToNBT(tag);
+        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, tag);
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
+    {
+        readFromNBT(packet.func_148857_g());
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
 }

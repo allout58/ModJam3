@@ -1,16 +1,12 @@
 package allout58.mods.prisoncraft.config;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.block.Block;
 import allout58.mods.prisoncraft.blocks.BlockList;
 import allout58.mods.prisoncraft.constants.ModConstants;
+import net.minecraft.block.Block;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConfigChangableBlocks
 {
@@ -144,6 +140,18 @@ public class ConfigChangableBlocks
         return loc > -1;
     }
 
+    public boolean isValidName(String name)
+    {
+        for (Block n : unbreakIDWhitelist)
+        {
+            if (name.equals(n))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /*Blacklist functions*/
     
     public boolean addBlacklist(String name)
@@ -160,6 +168,12 @@ public class ConfigChangableBlocks
     
     public String[] getBlackList()
     {
-        return (String[])blockBlacklist.toArray();
+        String[] ret = new String[blockBlacklist.size()];
+        for (int i = 0; i < blockBlacklist.size(); i++)
+        {
+            ret[i] = Block.blockRegistry.getNameForObject(blockBlacklist.get(i));
+        }
+        return ret;
     }
+
 }

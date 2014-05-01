@@ -1,5 +1,13 @@
 package allout58.mods.prisoncraft.blocks;
 
+import allout58.libs.LayeredTextureBlock.block.BlockLayeredTexture;
+import allout58.mods.prisoncraft.constants.ModConstants;
+import allout58.mods.prisoncraft.constants.TextureConstants;
+import allout58.mods.prisoncraft.items.ItemList;
+import allout58.mods.prisoncraft.jail.PrisonCraftWorldSave;
+import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -15,16 +23,9 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import allout58.libs.LayeredTextureBlock.block.BlockLayeredTexture;
-import allout58.mods.prisoncraft.constants.ModConstants;
-import allout58.mods.prisoncraft.constants.TextureConstants;
-import allout58.mods.prisoncraft.items.ItemList;
-import allout58.mods.prisoncraft.jail.PrisonCraftWorldSave;
-import allout58.mods.prisoncraft.tileentities.TileEntityPrisonManager;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockPrisonManager extends BlockLayeredTexture implements ITileEntityProvider
+public class BlockPrisonManager extends BlockLayeredTexture
+        implements ITileEntityProvider, IPrisonCraftBlock
 {
     public IIcon top, bottom, side, side_nolink, side_uninit;
 
@@ -60,7 +61,8 @@ public class BlockPrisonManager extends BlockLayeredTexture implements ITileEnti
         }
         else if (renderPass == 1)
         {
-            if (side == ForgeDirection.DOWN.ordinal() || side == ForgeDirection.UP.ordinal()) return this.blank;
+            if (side == ForgeDirection.DOWN.ordinal() || side == ForgeDirection.UP.ordinal())
+                return this.blank;
             if (meta == 0)
             {
                 return this.side_uninit;
@@ -183,7 +185,8 @@ public class BlockPrisonManager extends BlockLayeredTexture implements ITileEnti
             if (te instanceof TileEntityPrisonManager && !te.getWorldObj().isRemote)
             {
                 String msg = StatCollector.translateToLocal("string.playerInJail");
-                if (((TileEntityPrisonManager) te).hasJailedPlayer) msg += ((TileEntityPrisonManager) te).playerName;
+                if (((TileEntityPrisonManager) te).hasJailedPlayer)
+                    msg += ((TileEntityPrisonManager) te).playerName;
                 else msg += StatCollector.translateToLocal("string.noOne");
                 entityPlayer.addChatMessage(new ChatComponentText(msg));
 
