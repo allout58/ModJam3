@@ -5,6 +5,7 @@ import allout58.mods.prisoncraft.commands.*;
 import allout58.mods.prisoncraft.config.Config;
 import allout58.mods.prisoncraft.config.ConfigChangableBlocks;
 import allout58.mods.prisoncraft.constants.ModConstants;
+import allout58.mods.prisoncraft.fakeworld.FakeWorldProvider;
 import allout58.mods.prisoncraft.handler.ConfigToolHighlightHandler;
 import allout58.mods.prisoncraft.handler.IMCHandler;
 import allout58.mods.prisoncraft.items.ItemList;
@@ -98,6 +99,7 @@ public class PrisonCraft
     @EventHandler
     public void serverLoad(FMLServerStartingEvent event)
     {
+        event.getServer().worldServerForDimension(0);
         event.registerServerCommand(new JailCommand());
         event.registerServerCommand(new UnJailCommand());
         event.registerServerCommand(new ChangeJailPermsCommand());
@@ -108,6 +110,8 @@ public class PrisonCraft
         SaveHandler saveHandler = (SaveHandler) event.getServer().worldServerForDimension(0).getSaveHandler();
         File configFile = new File(saveHandler.getWorldDirectory().getAbsolutePath() + "/PCUnbreakableIDs.txt");
         ConfigChangableBlocks.getInstance().load(configFile);
+
+        FakeWorldProvider.initFakeWorlds(event.getServer());
 
         //        ConfigServer.init(new Configuration(new File(configBase,ModConstants.MODID+"-server.cfg")));
 

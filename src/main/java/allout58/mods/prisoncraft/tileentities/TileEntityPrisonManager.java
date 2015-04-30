@@ -5,6 +5,8 @@ import allout58.mods.prisoncraft.blocks.BlockList;
 import allout58.mods.prisoncraft.config.Config;
 import allout58.mods.prisoncraft.config.ConfigChangableBlocks;
 import allout58.mods.prisoncraft.constants.ModConstants;
+import allout58.mods.prisoncraft.fakeworld.FakeWorld;
+import allout58.mods.prisoncraft.fakeworld.FakeWorldProvider;
 import allout58.mods.prisoncraft.jail.JailManRef;
 import allout58.mods.prisoncraft.jail.JailedPersonData;
 import allout58.mods.prisoncraft.jail.PrisonCraftWorldSave;
@@ -18,6 +20,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -109,11 +112,17 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                 {
                     for (int k = z1; k <= z2; k++)
                     {
-                        if (worldObj.getTileEntity(i, j, k) != null) continue;
+
                         Block block = worldObj.getBlock(i, j, k);
                         int meta = worldObj.getBlockMetadata(i, j, k);
                         if (ConfigChangableBlocks.getInstance().isValidName(block.blockRegistry.getNameForObject(block)))
                         {
+                            if (worldObj.getTileEntity(i, j, k) != null)
+                            {
+                                convertTE(i, j, k);
+                                //worldObj.removeTileEntity(i,j,k);
+//                                worldObj.setTileEntity(i,k,k,null);
+                            }
                             if (block == Blocks.iron_bars)
                             {
                                 worldObj.setBlock(i, j, k, BlockList.prisonUnbreakPaneIron, 0, 3);
@@ -164,6 +173,25 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
         }
     }
 
+    private boolean convertTE(int x, int y, int z)
+    {
+        TileEntity te = worldObj.getTileEntity(x, y, z);
+        NBTTagCompound nbt = new NBTTagCompound();
+        te.writeToNBT(nbt);
+//        if (FakeWorldProvider.getWorldFromDimension(0) == null)
+        FakeWorldProvider.getWorldFromDimension(0).registerFakeBlockLoc(x, y, z);
+        FakeWorldProvider.getWorldFromDimension(0).registerFakeTileEntity(x, y, z, nbt);
+        if(te instanceof IInventory)
+        {
+            int size=((IInventory) te).getSizeInventory();
+            for(int i=0;i<size;i++)
+            {
+                ((IInventory) te).setInventorySlotContents(i,null);
+            }
+        }
+        return true;
+    }
+
     public void revertBlocks()
     {
         isDirty = true;
@@ -204,9 +232,26 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                     if (te instanceof TileEntityPrisonUnbreakable)
                     {
                         ((TileEntityPrisonUnbreakable) te).revert();
+                        revertTE(i, j, k);
                     }
                 }
             }
+        }
+    }
+
+    private void revertTE(int x, int y, int z)
+    {
+        if (FakeWorldProvider.getWorldFromDimension(0) == null) return;
+        if (FakeWorldProvider.getWorldFromDimension(0).isFakeBlockLoc(x, y, z))
+        {
+            TileEntity te = worldObj.getTileEntity(x, y, z);
+            int meta=worldObj.getBlockMetadata(x,y,z);
+            NBTTagCompound nbt = new NBTTagCompound();
+            TileEntity fake = FakeWorldProvider.getWorldFromDimension(0).getTileEntity(x, y, z);
+            fake.writeToNBT(nbt);
+            te.readFromNBT(nbt);
+            worldObj.setBlockMetadataWithNotify(x,y,z,meta,3);
+            FakeWorldProvider.getWorldFromDimension(0).unregisterFakeBlockLoc(x, y, z);
         }
     }
 

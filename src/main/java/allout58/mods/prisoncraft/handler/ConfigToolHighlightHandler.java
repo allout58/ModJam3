@@ -98,8 +98,8 @@ public class ConfigToolHighlightHandler
                             if (b.isAir(player.worldObj, i, j, k)) continue;
                             if (te instanceof TileEntityPrisonUnbreakable)
                                 continue;
-                            if (te != null)
-                                RenderHelper.DrawColoredSingleBoxInWorld(player, partialTicks, i, j, k, 0.04, 200, 0, 10, 120);
+//                            if (te != null)
+//                                RenderHelper.DrawColoredSingleBoxInWorld(player, partialTicks, i, j, k, 0.04, 200, 0, 10, 120);
 
                             String name=b.blockRegistry.getNameForObject(b);
                             if (!ConfigChangableBlocks.getInstance().isValidName(name))

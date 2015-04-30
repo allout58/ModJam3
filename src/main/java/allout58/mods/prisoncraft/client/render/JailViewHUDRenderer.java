@@ -93,8 +93,7 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
 
         glPushMatrix();
 
-        glDisable(GL_TEXTURE_2D);
-//        glDisable(GL_LIGHTING);
+        glDisable(GL_LIGHTING);
 
         glTranslated(x + 0.5, y + 1.02, z + 0.5);
 
@@ -113,28 +112,27 @@ public class JailViewHUDRenderer extends TileEntitySpecialRenderer
         double dy = 0;
         double dz = 0;
 
-        tess.startDrawingQuads();
-        tess.setColorRGBA(113, 160, 254, 200);
-        tess.addVertex(dx, dy, dz);
-        tess.addVertex(dx, dy + HEIGHT, dz);
-        tess.addVertex(dx + WIDTH, dy + HEIGHT, dz);
-        tess.addVertex(dx + WIDTH, dy, dz);
-        tess.draw();
+        FMLClientHandler.instance().getClient().renderEngine.bindTexture(TextureConstants.holoTop);
 
-        glEnable(GL_TEXTURE_2D);
-//        glEnable(GL_LIGHTING);
+        tess.startDrawingQuads();
+        //tess.setColorRGBA(113, 160, 254, 200);
+        tess.addVertexWithUV(dx, dy, dz, 1, 1);
+        tess.addVertexWithUV(dx, dy + HEIGHT, dz, 1, 0);
+        tess.addVertexWithUV(dx + WIDTH, dy + HEIGHT, dz, 0, 0);
+        tess.addVertexWithUV(dx + WIDTH, dy, dz, 0, 1);
+        tess.draw();
 
         FMLClientHandler.instance().getClient().renderEngine.bindTexture(TextureConstants.holoBottom);
 
         tess.startDrawingQuads();
-        tess.addVertexWithUV(dx,dy-.49,dz,1,1);
-        tess.addVertexWithUV(dx,dy,dz,1,0);
-        tess.addVertexWithUV(dx+WIDTH,dy,dz,0,0);
-        tess.addVertexWithUV(dx+WIDTH,dy-.49,dz,0,1);
+        tess.addVertexWithUV(dx, dy - .49, dz, 1, 1);
+        tess.addVertexWithUV(dx, dy, dz, 1, 0);
+        tess.addVertexWithUV(dx + WIDTH, dy, dz, 0, 0);
+        tess.addVertexWithUV(dx + WIDTH, dy - .49, dz, 0, 1);
 
         tess.draw();
 
-
+        glEnable(GL_LIGHTING);
 
         drawText(EnumChatFormatting.UNDERLINE.toString() + "Name", COL_1_X, 0, 0.012F);
         drawText(EnumChatFormatting.UNDERLINE.toString() + "Time", COL_2_X - 10, 0, 0.012F);

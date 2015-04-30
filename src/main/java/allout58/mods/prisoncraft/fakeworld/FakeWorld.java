@@ -3,9 +3,11 @@ package allout58.mods.prisoncraft.fakeworld;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonUnbreakable;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.Vec3Pool;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -150,7 +152,9 @@ public class FakeWorld extends World implements IBlockAccess
         int fNDX = findFakeNDX(x, y, z);
         if (fNDX != -1)
         {
-            fakecoords.remove(fNDX);
+            fakeTEs.remove(fNDX);
+            //FIXME: remove fake coords... can't right now because then coord NDX won't match fakeTE NDX
+//            fakecoords.remove(fNDX);
         }
     }
 
@@ -172,10 +176,11 @@ public class FakeWorld extends World implements IBlockAccess
     {
         int fNdx = findFakeNDX(x, y, z);
         if (fNdx == -1) return;
-        TileEntity te = getBlock(x, y, z).createTileEntity(realWorld, getBlockMetadata(x, y, z));
+        TileEntity te = realWorld.getBlock(x, y, z).createTileEntity(realWorld, getBlockMetadata(x, y, z));
         te.readFromNBT(tag);
         te.setWorldObj(this);
         fakeTEs.put(fNdx, te);
+
     }
 
     protected int findFakeNDX(int x, int y, int z)

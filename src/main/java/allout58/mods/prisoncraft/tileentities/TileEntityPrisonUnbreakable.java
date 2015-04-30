@@ -10,8 +10,8 @@ import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityPrisonUnbreakable extends TileEntity
 {
-//    private int fakeBlockID = 1;
-    private Block fakeBlock=Blocks.stone;
+    //    private int fakeBlockID = 1;
+    private Block fakeBlock = Blocks.stone;
     private int fakeBlockMeta = 0;
     private boolean isReverting = false;
 
@@ -24,7 +24,7 @@ public class TileEntityPrisonUnbreakable extends TileEntity
 
     public void setFakeBlock(Block block)
     {
-        fakeBlock=block;
+        fakeBlock = block;
         isDirty = true;
     }
 
@@ -43,6 +43,7 @@ public class TileEntityPrisonUnbreakable extends TileEntity
     {
         isReverting = true;
         worldObj.setBlock(xCoord, yCoord, zCoord, fakeBlock, fakeBlockMeta, 3);
+        worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, fakeBlockMeta, 3);
     }
 
     public boolean canDestroy()
@@ -64,7 +65,7 @@ public class TileEntityPrisonUnbreakable extends TileEntity
     public void readFromNBT(NBTTagCompound tags)
     {
         super.readFromNBT(tags);
-        String name=tags.getString("fakeBlockName");
+        String name = tags.getString("fakeBlockName");
         fakeBlock = Block.getBlockFromName(name);
         fakeBlockMeta = tags.getInteger("fakeBlockMeta");
     }
@@ -73,7 +74,7 @@ public class TileEntityPrisonUnbreakable extends TileEntity
     public void writeToNBT(NBTTagCompound tags)
     {
         super.writeToNBT(tags);
-        tags.setString("fakeBlockName",Block.blockRegistry.getNameForObject(fakeBlock)); 
+        tags.setString("fakeBlockName", Block.blockRegistry.getNameForObject(fakeBlock));
         tags.setInteger("fakeBlockMeta", fakeBlockMeta);
     }
 

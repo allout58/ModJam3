@@ -1,5 +1,7 @@
 package allout58.mods.prisoncraft.blocks;
 
+import allout58.mods.prisoncraft.fakeworld.FakeWorld;
+import allout58.mods.prisoncraft.fakeworld.FakeWorldProvider;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonUnbreakable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -104,7 +106,7 @@ public class BlockPrisonUnbreakable extends BlockContainer
             fake = ((TileEntityPrisonUnbreakable) logic).getFakeBlock();
             meta = ((TileEntityPrisonUnbreakable) logic).getFakeBlockMeta();
         }
-        // return fake.getBlockTexture(world, x, y, z, side);
+//        return fake.getIcon(FakeWorldProvider.getWorldFromDimension(world.), x, y, z, side);
         return fake.getIcon(side, meta);
     }
 

@@ -1,24 +1,21 @@
 package allout58.mods.prisoncraft.client.gui;
 
-import static org.lwjgl.opengl.GL11.*;
+import allout58.mods.prisoncraft.PrisonCraft;
+import allout58.mods.prisoncraft.items.ItemBanHammer;
+import allout58.mods.prisoncraft.network.UpdateHammerPacket;
+import allout58.mods.prisoncraft.util.ColorUtil;
+import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.network.FMLOutboundHandler;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
-
 import org.lwjgl.input.Keyboard;
 
-import allout58.mods.prisoncraft.PrisonCraft;
-import allout58.mods.prisoncraft.items.ItemBanHammer;
-import allout58.mods.prisoncraft.network.JVRequestPacket;
-import allout58.mods.prisoncraft.network.UpdateHammerPacket;
-import allout58.mods.prisoncraft.util.ColorUtil;
-
-import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.network.FMLOutboundHandler;
-import cpw.mods.fml.relauncher.Side;
+import static org.lwjgl.opengl.GL11.GL_LIGHTING;
+import static org.lwjgl.opengl.GL11.glDisable;
 
 public class GuiBanHammer extends GuiScreen
 {
@@ -62,7 +59,7 @@ public class GuiBanHammer extends GuiScreen
         time.setText("-1");
 
         ItemStack is = this.mc.thePlayer.getCurrentEquippedItem();
-        if (is != null && is.getItem() instanceof ItemBanHammer)
+        if (is != null && is.getItem() instanceof ItemBanHammer && is.hasTagCompound())
         {
             if (is.getTagCompound().hasKey("jailname"))
             {
