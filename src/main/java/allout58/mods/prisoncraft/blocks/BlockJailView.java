@@ -1,6 +1,7 @@
 package allout58.mods.prisoncraft.blocks;
 
 import allout58.libs.LayeredTextureBlock.block.BlockLayeredTexture;
+import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.constants.TextureConstants;
 import allout58.mods.prisoncraft.items.ItemList;
@@ -33,7 +34,7 @@ public class BlockJailView extends BlockLayeredTexture
         setResistance(6000000.0F);
         setBlockName("jailView");
         setBlockTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side");
-        //        setCreativeTab(PrisonCraft.creativeTab);
+        setCreativeTab(PrisonCraft.creativeTab);
         setBlockBounds(0, 0, 0, 1, (float) .5, 1);
     }
 
@@ -87,7 +88,7 @@ public class BlockJailView extends BlockLayeredTexture
         this.side = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side");
         this.side_nolink = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side_nolink");
         this.top = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_top");
-        this.bottom = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT+":"+this.getUnlocalizedName().substring(5)+"_bottom");
+        this.bottom = ir.registerIcon(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_bottom");
 
     }
 

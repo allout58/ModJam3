@@ -17,61 +17,110 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "0.0.5"
+boolean fullbuild=true
+
+version = "0.0.6b1"
 group = "allout58.mods.prisoncraft" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "PrisonCraft"
+version = "${minecraft.version}-$version"
+
+repositories{
+    maven { // The repo from which to get waila
+        name "Mobius Repo"
+        url "http://mobiusstrip.eu/maven"
+    }
+	maven {
+		name = "chickenbones"
+		url = "http://chickenbones.net/maven"
+	}
+
+}
+dependencies {
+    compile "mcp.mobius.waila:Waila:1.5.8a_1.7.10:dev"
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+    }
+}
 
 minecraft {
-    version = "1.7.2-10.12.1.1060"
+    version = "1.7.10-10.13.2.1240"
+    runDir = "run"
+
+    // replacing
+    replace "@MC_VERSION@", project.minecraft.version
+    replace "@VERSION@", project.version
 }
+
+if (System.getenv()['BUILD_NUMBER']) {
+    version += "-jnks" + System.getenv()['BUILD_NUMBER']
+    fullbuild=false
+}
+
+if(System.getenv().DRONE_BUILD_NUMBER)
+{
+	version += "-droneio"+System.getenv().DRONE_BUILD_NUMBER
+    fullbuild=false
+}
+
 processResources
-        {
-            // this will ensure that this task is redone when the versions change.
-            inputs.property "version", project.version
-            inputs.property "mcversion", project.minecraft.version
-
-            // replace stuff in mcmod.info, nothing else
-            from(sourceSets.main.resources.srcDirs) {
-                include 'mcmod.info'
-
-                // replace version and mcversion
-                expand 'version': project.version, 'mcversion': project.minecraft.version
-            }
-
-            // copy everything else, thats not the mcmod.info
-            from(sourceSets.main.resources.srcDirs) {
-                exclude 'mcmod.info'
-            }
-        }
-// add some stuff to the version
-version = "${minecraft.version}-$version"
+{
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+                
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
 
 // change the name of my obfuscated jar
 jar {
-    appendix = 'universal'
+    classifier = 'universal'
 }
 
 // add a source jar
 task sourceJar(type: Jar) {
     from sourceSets.main.allSource
-    appendix = 'src'
+    classifier = 'src'
 }
 
 // add a javadoc jar
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    appendix = 'javadoc'
     from 'build/docs/javadoc'
+    classifier = 'javadoc'
 }
 
 // because the normal output has been made to be obfuscated
 task deobfJar(type: Jar) {
     from sourceSets.main.output
-    appendix = 'deobf'
+    classifier = 'deobf'
 }
 
 
 artifacts {
-    archives sourceJar
-    archives deobfJar
-    archives javadocJar
+    if(fullbuild)
+    {
+        archives sourceJar
+        archives deobfJar
+        archives javadocJar
+    }
 }

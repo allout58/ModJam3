@@ -117,12 +117,12 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                         int meta = worldObj.getBlockMetadata(i, j, k);
                         if (ConfigChangableBlocks.getInstance().isValidName(block.blockRegistry.getNameForObject(block)))
                         {
-                            if (worldObj.getTileEntity(i, j, k) != null)
+                            /*if (worldObj.getTileEntity(i, j, k) != null)
                             {
                                 convertTE(i, j, k);
                                 //worldObj.removeTileEntity(i,j,k);
 //                                worldObj.setTileEntity(i,k,k,null);
-                            }
+                            }*/
                             if (block == Blocks.iron_bars)
                             {
                                 worldObj.setBlock(i, j, k, BlockList.prisonUnbreakPaneIron, 0, 3);
@@ -173,7 +173,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
         }
     }
 
-    private boolean convertTE(int x, int y, int z)
+    /*private boolean convertTE(int x, int y, int z)
     {
         TileEntity te = worldObj.getTileEntity(x, y, z);
         NBTTagCompound nbt = new NBTTagCompound();
@@ -190,7 +190,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
             }
         }
         return true;
-    }
+    }*/
 
     public void revertBlocks()
     {
@@ -232,14 +232,14 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
                     if (te instanceof TileEntityPrisonUnbreakable)
                     {
                         ((TileEntityPrisonUnbreakable) te).revert();
-                        revertTE(i, j, k);
+                        //revertTE(i, j, k);
                     }
                 }
             }
         }
     }
 
-    private void revertTE(int x, int y, int z)
+    /*private void revertTE(int x, int y, int z)
     {
         if (FakeWorldProvider.getWorldFromDimension(0) == null) return;
         if (FakeWorldProvider.getWorldFromDimension(0).isFakeBlockLoc(x, y, z))
@@ -253,7 +253,7 @@ public class TileEntityPrisonManager extends TileEntity// implements IInventory
             worldObj.setBlockMetadataWithNotify(x,y,z,meta,3);
             FakeWorldProvider.getWorldFromDimension(0).unregisterFakeBlockLoc(x, y, z);
         }
-    }
+    }*/
 
     public boolean setJailName(String name)
     {

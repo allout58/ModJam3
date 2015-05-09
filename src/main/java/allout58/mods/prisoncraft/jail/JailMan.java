@@ -163,7 +163,7 @@ public class JailMan
 
     public boolean TryJailPlayer(String playerName, ICommandSender jailer, String jailName, double time)
     {
-        return TryJailPlayer(MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playerName), jailer, jailName, time);
+        return TryJailPlayer(MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerName), jailer, jailName, time);
     }
 
     /**
@@ -171,7 +171,7 @@ public class JailMan
      */
     public boolean TryJailPlayer(String playerName, String playerJailerName, String jailName, double time)
     {
-        return TryJailPlayer(playerName, MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playerJailerName), jailName, time);
+        return TryJailPlayer(playerName, MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerJailerName), jailName, time);
     }
 
     // Unjailing
@@ -219,7 +219,7 @@ public class JailMan
 
     public boolean TryUnjailPlayer(String playerName, ICommandSender jailer)
     {
-        return TryUnjailPlayer(MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(playerName), jailer);
+        return TryUnjailPlayer(MinecraftServer.getServer().getConfigurationManager().func_152612_a(playerName), jailer);
     }
 
     /**
@@ -227,7 +227,7 @@ public class JailMan
      */
     public boolean TryUnjailPlayer(String playerName, String jailerName)
     {
-        return TryUnjailPlayer(playerName, MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(jailerName));
+        return TryUnjailPlayer(playerName, MinecraftServer.getServer().getConfigurationManager().func_152612_a(jailerName));
     }
 
     public boolean TrySetReason(String player, ICommandSender jailer, String reason)

@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class FakeWorldProvider
 {
-    private static Map<Integer, FakeWorld> fakeWorlds = new HashMap<Integer, FakeWorld>();
+    /*private static Map<Integer, FakeWorld> fakeWorlds = new HashMap<Integer, FakeWorld>();
 
     public static void initFakeWorlds(MinecraftServer server)
     {
@@ -35,5 +35,5 @@ public class FakeWorldProvider
             return null;
         }
         return ret;
-    }
+    }*/
 }

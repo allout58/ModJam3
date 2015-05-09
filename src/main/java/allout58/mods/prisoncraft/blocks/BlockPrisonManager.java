@@ -1,6 +1,7 @@
 package allout58.mods.prisoncraft.blocks;
 
 import allout58.libs.LayeredTextureBlock.block.BlockLayeredTexture;
+import allout58.mods.prisoncraft.PrisonCraft;
 import allout58.mods.prisoncraft.constants.ModConstants;
 import allout58.mods.prisoncraft.constants.TextureConstants;
 import allout58.mods.prisoncraft.items.ItemList;
@@ -36,7 +37,7 @@ public class BlockPrisonManager extends BlockLayeredTexture
         setResistance(6000000.0F);
         setBlockName("prisonManager");
         setBlockTextureName(TextureConstants.RESOURCE_CONTEXT + ":" + this.getUnlocalizedName().substring(5) + "_side");
-        // setCreativeTab(PrisonCraft.creativeTab);
+        setCreativeTab(PrisonCraft.creativeTab);
     }
 
     @Override

@@ -3,13 +3,9 @@ package allout58.mods.prisoncraft.fakeworld;
 import allout58.mods.prisoncraft.tileentities.TileEntityPrisonUnbreakable;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3Pool;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -21,13 +17,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FakeWorld extends World implements IBlockAccess
+public class FakeWorld// extends World implements IBlockAccess
 {
     /*
      * TODO: Save FakeCoords and FakeTES to disk
      */
 
-    World realWorld;
+    /*World realWorld;
     List<int[]> fakecoords = new ArrayList<int[]>();
     Map<Integer, TileEntity> fakeTEs = new HashMap<Integer, TileEntity>();
 
@@ -94,7 +90,8 @@ public class FakeWorld extends World implements IBlockAccess
         return realWorld.getBiomeGenForCoords(i, i2);
     }
 
-    @Override protected IChunkProvider createChunkProvider()
+    @Override
+    protected IChunkProvider createChunkProvider()
     {
         //TODO: Auto-generated method stub
         return null;
@@ -154,25 +151,25 @@ public class FakeWorld extends World implements IBlockAccess
         {
             fakeTEs.remove(fNDX);
             //FIXME: remove fake coords... can't right now because then coord NDX won't match fakeTE NDX
-//            fakecoords.remove(fNDX);
+            //            fakecoords.remove(fNDX);
         }
     }
 
     public boolean isFakeBlockLoc(int x, int y, int z)
     {
         return findFakeNDX(x, y, z) != -1;
-    }
+    }*/
 
     /**
      * WARNING: Must call {@link #registerFakeBlockLoc(int, int, int) registerFakeBlockLoc}
      * before calling this. Not doing so will return immediately.
      *
-     * @param x X coord
-     * @param y Y coord
-     * @param z Z coord
+     * @param x   X coord
+     * @param y   Y coord
+     * @param z   Z coord
      * @param tag The result of the TE's writeToNBT()
      */
-    public void registerFakeTileEntity(int x, int y, int z, NBTTagCompound tag)
+    /*public void registerFakeTileEntity(int x, int y, int z, NBTTagCompound tag)
     {
         int fNdx = findFakeNDX(x, y, z);
         if (fNdx == -1) return;
@@ -229,5 +226,5 @@ public class FakeWorld extends World implements IBlockAccess
     public Entity getEntityByID(int var1)
     {
         return realWorld.getEntityByID(var1);
-    }
+    }*/
 }

@@ -127,7 +127,7 @@ public class ChangeJailPermsCommand implements ICommand
                 {
                     icommandsender.addChatMessage(invalidArg);
                 }
-                EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[1]);
+                EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(astring[1]); //getPlayerForUsername
                 if (player != null)
                 {
                     PermissionLevel pl = PermissionLevel.valueOf(astring[2]);
@@ -163,7 +163,7 @@ public class ChangeJailPermsCommand implements ICommand
                 {
                     icommandsender.addChatMessage(invalidArg);
                 }
-                EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(astring[1]);
+                EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(astring[1]); //getPlayerForUsername
                 if (player != null)
                 {
                     if (JailPermissions.getInstance().getPlayerPermissionLevel(player).getValue() < JailPermissions.getInstance().getPlayerPermissionLevel(icommandsender).getValue())

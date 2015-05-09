@@ -58,7 +58,7 @@ public class JailPacket implements IPacket
         }
         else
         {
-            EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(jailer);
+            EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().func_152612_a(jailer); //getPlayerForUsername
             if (player != null)
             {
                 player.addChatMessage(new ChatComponentText("[" + ModConstants.NAME + "] " + EnumChatFormatting.RED.toString() + StatCollector.translateToLocal("string.invalidperms.tool")));

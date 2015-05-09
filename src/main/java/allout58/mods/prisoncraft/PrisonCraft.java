@@ -87,7 +87,7 @@ public class PrisonCraft
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-        FMLInterModComms.sendMessage("prisoncraft", "blacklist", Block.blockRegistry.getNameForObject(Blocks.bookshelf));
+        //FMLInterModComms.sendMessage("prisoncraft", "blacklist", Block.blockRegistry.getNameForObject(Blocks.bookshelf));
     }
 
     @EventHandler
@@ -111,7 +111,7 @@ public class PrisonCraft
         File configFile = new File(saveHandler.getWorldDirectory().getAbsolutePath() + "/PCUnbreakableIDs.txt");
         ConfigChangableBlocks.getInstance().load(configFile);
 
-        FakeWorldProvider.initFakeWorlds(event.getServer());
+        //FakeWorldProvider.initFakeWorlds(event.getServer());
 
         //        ConfigServer.init(new Configuration(new File(configBase,ModConstants.MODID+"-server.cfg")));
 
