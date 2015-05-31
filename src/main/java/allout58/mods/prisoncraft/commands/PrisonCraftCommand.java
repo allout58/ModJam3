@@ -1,12 +1,12 @@
 package allout58.mods.prisoncraft.commands;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-
+import allout58.mods.prisoncraft.PrisonCraft;
+import allout58.mods.prisoncraft.blocks.BlockList;
+import allout58.mods.prisoncraft.config.ConfigChangableBlocks;
+import allout58.mods.prisoncraft.constants.ModConstants;
+import allout58.mods.prisoncraft.items.ItemList;
+import allout58.mods.prisoncraft.permissions.JailPermissions;
+import allout58.mods.prisoncraft.permissions.PermissionLevel;
 import net.minecraft.block.Block;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -21,13 +21,12 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.WorldSettings.GameType;
 import net.minecraft.world.storage.SaveHandler;
-import allout58.mods.prisoncraft.PrisonCraft;
-import allout58.mods.prisoncraft.blocks.BlockList;
-import allout58.mods.prisoncraft.config.ConfigChangableBlocks;
-import allout58.mods.prisoncraft.constants.ModConstants;
-import allout58.mods.prisoncraft.items.ItemList;
-import allout58.mods.prisoncraft.permissions.JailPermissions;
-import allout58.mods.prisoncraft.permissions.PermissionLevel;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class PrisonCraftCommand implements ICommand
 {
@@ -56,9 +55,9 @@ public class PrisonCraftCommand implements ICommand
     @Override
     public String getCommandUsage(ICommandSender icommandsender)
     {
-        String use = "/prisoncraft configure <cell|jail> [jailname]\n";
-        use += "/prisoncraft doneconfig\n";
-        use += "/prisoncraft whitelist <add|remove> <id>\n";
+        String use = "/prisoncraft configure <cell|jail> [jailname]  ";
+        use += "/prisoncraft doneconfig  ";
+        use += "/prisoncraft whitelist <add|remove> <id>  ";
         use += "/prisoncraft whitelist <save|reload>";
         return use;
     }
@@ -82,14 +81,17 @@ public class PrisonCraftCommand implements ICommand
             {
                 processIds(icommandsender, astring);
             }
-            if (astring[0].equalsIgnoreCase("configure"))
+            else if (astring[0].equalsIgnoreCase("configure"))
             {
                 processConfigure(icommandsender, astring);
             }
-            if (astring[0].equalsIgnoreCase("doneconfig"))
+            else if (astring[0].equalsIgnoreCase("doneconfig"))
             {
                 processDoneConfig(icommandsender, astring);
             }
+            else if (astring[0].equalsIgnoreCase("help"))
+                icommandsender.addChatMessage(new ChatComponentText(getCommandUsage(icommandsender)));
+
         }
 
     }
@@ -156,7 +158,7 @@ public class PrisonCraftCommand implements ICommand
                             sList.add(t);
                         }
                         if (sList.contains(s)) continue;
-                        
+
                         //If block in blacklist, don't show
                         //reuse sList
                         sList.clear();
@@ -165,10 +167,10 @@ public class PrisonCraftCommand implements ICommand
                             sList.add(t);
                         }
                         if (sList.contains(s)) continue;
-                        
+
                         //starts with what's there, add it
                         if (s.startsWith(ARG_LC)) MATCHES.add(s);
-                        
+
                         //add the ability to ignore the domain
                         if (s.contains(":"))
                         {
